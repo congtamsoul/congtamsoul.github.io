@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intune Remote Help: cần license gì? — tamnguyen.dev</title>
+<meta name="description" content="Bóc tách yêu cầu license cho Microsoft Intune Remote Help: EMS E3, Office 365 E3, M365 E3 và add-on — kèm cách kiểm tra trong tenant.">
+<link rel="canonical" href="https://tamnguyen.dev/posts/bai-viet-mau.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Intune Remote Help: cần license gì?">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/styles.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Intune Remote Help: cần license gì và ai thực sự dùng được?",
+  "datePublished": "2026-09-18",
+  "author": { "@type": "Person", "name": "Tam Nguyen" }
+}
+</script>
+</head>
+<body>
+
+<div class="progress" id="progressBar"></div>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="../index.html">
+      <span class="brand-mark">TN</span>
+      <span>tamnguyen<span style="color:var(--accent)">.dev</span></span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Trang chủ</a></li>
+      <li><a href="../index.html#posts" class="active">Bài viết</a></li>
+      <li><a href="../index.html#topics">Chủ đề</a></li>
+      <li><a href="../index.html#about">Giới thiệu</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" aria-label="Đổi theme">◐</button>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main class="article">
+  <div class="container article-wrap">
+
+    <!-- ============================================ Nội dung bài viết -->
+    <article>
+      <div class="article-head">
+        <div class="tag-row">
+          <span class="tag">Microsoft 365</span>
+          <span class="tag">Intune</span>
+          <span class="tag">Licensing</span>
+        </div>
+        <h1>Intune Remote Help: cần license gì và ai thực sự dùng được?</h1>
+        <div class="byline">
+          <span class="avatar-sm">TN</span>
+          <span><b style="color:var(--text)">Tam Nguyen</b> · 18 Th9, 2026 · 9 phút đọc</span>
+        </div>
+      </div>
+
+      <div class="prose">
+        <p>
+          Đây là mẫu bài viết. Hãy giữ nguyên cấu trúc bên dưới và thay nội dung —
+          bố cục này đã tối ưu cho việc đọc và cho SEO: mở bài nêu vấn đề, thân bài chia
+          <code>h2</code> rõ ràng, có callout, bảng, code block và phần kết luận hành động được.
+        </p>
+
+        <blockquote>
+          <b>Tóm tắt nhanh:</b> nếu bạn chỉ cần câu trả lời, đây là chỗ đặt nó.
+          Người đọc kỹ thuật rất thích phần TL;DR ngay đầu bài.
+        </blockquote>
+
+        <h2>Bối cảnh: vì sao mình phải tìm hiểu chuyện này</h2>
+        <p>
+          Mở đầu bằng một tình huống thật trong công việc. Người đọc ở lại vì họ thấy
+          chính vấn đề của họ trong đoạn này. Nêu rõ quy mô môi trường (số thiết bị,
+          license đang có, ràng buộc) để bài viết có độ tin cậy.
+        </p>
+
+        <h2>Các gói license liên quan</h2>
+        <p>Dùng bảng khi so sánh — dễ đọc hơn nhiều so với gạch đầu dòng dài.</p>
+
+        <table>
+          <thead>
+            <tr><th>Gói</th><th>Bao gồm Intune</th><th>Ghi chú</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>EMS E3</td><td>Intune Plan 1</td><td>Không có các tính năng nâng cao</td></tr>
+            <tr><td>Microsoft 365 E3</td><td>Intune Plan 1</td><td>Kèm Windows &amp; Office</td></tr>
+            <tr><td>Intune Suite / add-on</td><td>Nâng cao</td><td>Mua bổ sung theo user</td></tr>
+          </tbody>
+        </table>
+
+        <div class="callout">
+          <span>💡</span>
+          <div><b>Tip</b>Luôn kiểm chứng license trên tài liệu chính thức của Microsoft trước khi quyết định mua — điều khoản thay đổi khá thường xuyên.</div>
+        </div>
+
+        <h2>Cách kiểm tra trong tenant của bạn</h2>
+        <p>Kèm command/script để người đọc làm theo được ngay. Đây là điểm khiến bài viết kỹ thuật được bookmark.</p>
+
+<pre><code># Liệt kê các SKU đang có trong tenant
+Connect-MgGraph -Scopes "Organization.Read.All"
+Get-MgSubscribedSku |
+    Select-Object SkuPartNumber, ConsumedUnits,
+        @{N='Enabled';E={$_.PrepaidUnits.Enabled}} |
+    Sort-Object SkuPartNumber |
+    Format-Table -AutoSize</code></pre>
+
+        <div class="callout warn">
+          <span>⚠️</span>
+          <div><b>Lưu ý</b>Chạy thử trên nhóm pilot trước khi áp dụng diện rộng. Ghi lại rollback plan.</div>
+        </div>
+
+        <h2>Những lỗi mình đã gặp</h2>
+        <ul>
+          <li><b>Lỗi 1</b> — mô tả triệu chứng, nguyên nhân gốc, cách xử lý.</li>
+          <li><b>Lỗi 2</b> — kèm đoạn log thật đã che thông tin nhạy cảm.</li>
+          <li><b>Lỗi 3</b> — cách phòng tránh cho lần sau.</li>
+        </ul>
+
+        <h2>Kết luận</h2>
+        <p>
+          Chốt lại bằng 3–4 câu và một hành động cụ thể người đọc nên làm tiếp.
+          Kết bài bằng câu hỏi mở để khuyến khích bình luận và kết nối.
+        </p>
+
+        <div class="share-row">
+          <a class="btn btn-ghost" href="#">Chia sẻ LinkedIn</a>
+          <a class="btn btn-ghost" href="#">Chia sẻ Facebook</a>
+          <a class="btn btn-ghost" href="#">Copy link</a>
+        </div>
+
+        <div class="author-box">
+          <div class="avatar">TN</div>
+          <div>
+            <h4>Tam Nguyen</h4>
+            <p>Senior System Administrator tại TP.HCM. Viết về Microsoft 365, Intune, Windows Server, macOS và bảo mật endpoint từ môi trường doanh nghiệp thật.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- ===================================================== Mục lục -->
+    <aside class="toc">
+      <h5>Mục lục</h5>
+      <ul id="tocList"></ul>
+    </aside>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-bottom" style="border:0;padding-top:0">
+    <span>© 2026 Tam Nguyen</span>
+    <span><a href="../index.html" style="color:var(--accent)">← Về trang chủ</a></span>
+  </div>
+</footer>
+
+<script src="../assets/main.js"></script>
+</body>
+</html>

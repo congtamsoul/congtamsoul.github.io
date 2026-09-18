@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tam Nguyen — Microsoft 365, Windows &amp; Endpoint Management</title>
+<meta name="description" content="Blog cá nhân của Tam Nguyen — Senior System Administrator. Chia sẻ kinh nghiệm thực chiến về Microsoft 365, Intune, Windows Server, macOS, SentinelOne, chuyển đổi số và phát triển bản thân.">
+<meta name="author" content="Tam Nguyen">
+
+<!-- Open Graph / SEO -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Tam Nguyen — Microsoft 365, Windows &amp; Endpoint Management">
+<meta property="og:description" content="Kinh nghiệm thực chiến về Microsoft 365, Intune, Windows, macOS và bảo mật endpoint.">
+<meta property="og:url" content="https://tamnguyen.dev/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://tamnguyen.dev/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css">
+
+<!-- Structured data giúp Google hiểu bạn là ai -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Tam Nguyen",
+  "jobTitle": "Senior System Administrator",
+  "url": "https://tamnguyen.dev",
+  "sameAs": ["https://www.linkedin.com/in/your-handle", "https://github.com/your-handle"],
+  "knowsAbout": ["Microsoft 365", "Microsoft Intune", "Windows Server", "macOS", "SentinelOne", "Endpoint Security"]
+}
+</script>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html">
+      <span class="brand-mark">TN</span>
+      <span>tamnguyen<span style="color:var(--accent)">.dev</span></span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Trang chủ</a></li>
+      <li><a href="#posts">Bài viết</a></li>
+      <li><a href="#topics">Chủ đề</a></li>
+      <li><a href="#about">Giới thiệu</a></li>
+      <li><a href="#newsletter">Newsletter</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" title="Đổi giao diện sáng/tối" aria-label="Đổi theme">◐</button>
+      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================== HERO -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">● Senior System Administrator</span>
+      <h1>Kiến thức <span>Microsoft 365</span> &amp; quản trị endpoint, viết lại từ môi trường thật.</h1>
+      <p class="lead">
+        Mình là Tâm. Mỗi tuần mình viết lại những gì đã làm, đã hỏng và đã sửa khi vận hành
+        Microsoft 365, Intune, Windows Server, macOS và SentinelOne cho hàng nghìn thiết bị —
+        kèm script, checklist và bài học rút ra.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="#posts">Đọc bài mới nhất →</a>
+        <a class="btn btn-ghost" href="#newsletter">Nhận bài qua email</a>
+      </div>
+    </div>
+
+    <aside class="hero-card">
+      <div class="avatar">TN</div>
+      <h3>Tam Nguyen</h3>
+      <p class="role">Senior System Administrator · TP. Hồ Chí Minh, Việt Nam</p>
+      <div class="stat-row">
+        <div class="stat"><b>10+</b><span>năm kinh nghiệm</span></div>
+        <div class="stat"><b>2.300+</b><span>endpoint quản trị</span></div>
+        <div class="stat"><b>M365</b><span>Intune · Server · macOS</span></div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============================================================= POSTS -->
+<section class="section" id="posts">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Bài viết mới nhất</h2>
+        <p>Hướng dẫn từng bước, troubleshooting thực tế và ghi chú vận hành.</p>
+      </div>
+      <a class="link-more" href="#posts">Xem tất cả →</a>
+    </div>
+
+    <div class="filter-row" id="filterRow">
+      <button class="chip active" data-filter="all">Tất cả</button>
+      <button class="chip" data-filter="m365">Microsoft 365</button>
+      <button class="chip" data-filter="windows">Windows</button>
+      <button class="chip" data-filter="macos">macOS</button>
+      <button class="chip" data-filter="security">Security</button>
+      <button class="chip" data-filter="career">Phát triển bản thân</button>
+      <button class="chip" data-filter="dx">Chuyển đổi số</button>
+    </div>
+
+    <div class="card-grid" id="postGrid">
+
+      <article class="post-card" data-cat="m365">
+        <div class="post-thumb m365">MICROSOFT 365</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">Intune</span><span class="tag">Licensing</span></div>
+          <h3><a href="posts/bai-viet-mau.html">Intune Remote Help: cần license gì và ai thực sự dùng được?</a></h3>
+          <p>Bóc tách ma trận license EMS E3, Office 365 E3, M365 E3 và add-on — kèm cách kiểm tra nhanh trong tenant.</p>
+          <div class="post-meta"><span>18 Th9, 2026</span><span>·</span><span>9 phút đọc</span></div>
+        </div>
+      </article>
+
+      <article class="post-card" data-cat="windows">
+        <div class="post-thumb win">WINDOWS</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">Windows 11</span><span class="tag">WSUS</span></div>
+          <h3><a href="posts/bai-viet-mau.html">Nâng cấp Windows 11 24H2 → 25H2 cho 2.000 máy: những gì mình làm sai</a></h3>
+          <p>Quy trình duyệt feature update qua WSUS + Intune, script chẩn đoán và 5 nguyên nhân fail phổ biến nhất.</p>
+          <div class="post-meta"><span>12 Th9, 2026</span><span>·</span><span>14 phút đọc</span></div>
+        </div>
+      </article>
+
+      <article class="post-card" data-cat="macos">
+        <div class="post-thumb mac">macOS</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">DDM</span><span class="tag">Intune</span></div>
+          <h3><a href="posts/bai-viet-mau.html">Declarative Device Management: vì sao macOS vẫn update dù bạn đã set deferral</a></h3>
+          <p>Giải thích cơ chế enforcement vs deferral, cách đọc log trên máy và cấu hình đúng cho major/minor update.</p>
+          <div class="post-meta"><span>05 Th9, 2026</span><span>·</span><span>11 phút đọc</span></div>
+        </div>
+      </article>
+
+      <article class="post-card" data-cat="security">
+        <div class="post-thumb sec">SECURITY</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">SentinelOne</span><span class="tag">EDR</span></div>
+          <h3><a href="posts/bai-viet-mau.html">Triển khai SentinelOne qua Intune: packaging, detection rule và xử lý agent lỗi</a></h3>
+          <p>Từ file .intunewin đến detection script chuẩn, cộng thêm cách dọn agent orphan trên diện rộng.</p>
+          <div class="post-meta"><span>28 Th8, 2026</span><span>·</span><span>12 phút đọc</span></div>
+        </div>
+      </article>
+
+      <article class="post-card" data-cat="dx">
+        <div class="post-thumb dx">CHUYỂN ĐỔI SỐ</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">Enterprise Architecture</span></div>
+          <h3><a href="posts/bai-viet-mau.html">TOGAF cho người làm hạ tầng: hiểu ADM qua ví dụ xây nhà</a></h3>
+          <p>Cách một sysadmin đọc hiểu business capability map, value stream và application portfolio mà không ngợp.</p>
+          <div class="post-meta"><span>20 Th8, 2026</span><span>·</span><span>10 phút đọc</span></div>
+        </div>
+      </article>
+
+      <article class="post-card" data-cat="career">
+        <div class="post-thumb growth">PHÁT TRIỂN BẢN THÂN</div>
+        <div class="post-body">
+          <div class="tag-row"><span class="tag">Career</span><span class="tag">Personal Brand</span></div>
+          <h3><a href="posts/bai-viet-mau.html">Từ helpdesk đến senior sysadmin: lộ trình 10 năm và 6 quyết định quan trọng</a></h3>
+          <p>Chọn học gì, bỏ gì, và cách xây quan hệ trong ngành IT để cơ hội tự tìm đến bạn.</p>
+          <div class="post-meta"><span>14 Th8, 2026</span><span>·</span><span>8 phút đọc</span></div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ TOPICS -->
+<section class="section section-alt" id="topics">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Chủ đề mình viết</h2>
+        <p>Sáu mảng chính, tất cả đều xuất phát từ công việc hằng ngày.</p>
+      </div>
+    </div>
+
+    <div class="topic-grid">
+      <div class="topic"><div class="ico">☁️</div><h4>Microsoft 365</h4><p>Tenant migration, Exchange Online, Entra ID, licensing và governance.</p></div>
+      <div class="topic"><div class="ico">🖥️</div><h4>Windows &amp; Server</h4><p>Autopilot, WSUS, Group Policy, feature update và troubleshooting log.</p></div>
+      <div class="topic"><div class="ico">🍎</div><h4>macOS trong doanh nghiệp</h4><p>Intune MDM, DDM, script bash và quản lý update cho Mac fleet.</p></div>
+      <div class="topic"><div class="ico">🛡️</div><h4>Endpoint Security</h4><p>SentinelOne, Defender, baseline bảo mật và phản ứng sự cố.</p></div>
+      <div class="topic"><div class="ico">🚀</div><h4>Chuyển đổi số</h4><p>Enterprise Architecture, tự động hoá quy trình, đo lường giá trị IT.</p></div>
+      <div class="topic"><div class="ico">🌱</div><h4>Phát triển bản thân</h4><p>Lộ trình nghề nghiệp, chứng chỉ, xây dựng quan hệ và thương hiệu cá nhân.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================= ABOUT -->
+<section class="section" id="about">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">Về mình</span>
+      <h2 style="font-size:30px;letter-spacing:-0.02em;margin:0 0 16px">Mình viết để chính mình 6 tháng sau đọc lại vẫn hiểu.</h2>
+      <p style="color:var(--text-muted);font-size:16.5px">
+        Hơn 10 năm làm system admin, mình nhận ra tài liệu chính thức thường đúng nhưng thiếu ngữ cảnh.
+        Blog này là nơi mình bổ sung phần còn thiếu đó: môi trường thật, ràng buộc thật, và cả những lần
+        rollback lúc 2 giờ sáng.
+      </p>
+      <p style="color:var(--text-muted);font-size:16.5px">
+        Nếu bạn đang gặp vấn đề tương tự, hoặc muốn trao đổi về Microsoft 365, Intune và bảo mật endpoint —
+        cứ kết nối với mình.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/your-handle">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://github.com/your-handle">GitHub</a>
+        <a class="btn btn-ghost" href="mailto:hello@tamnguyen.dev">Email</a>
+      </div>
+    </div>
+    <aside class="hero-card">
+      <h3 style="margin-top:0">Kỹ năng chính</h3>
+      <ul style="margin:0;padding-left:18px;color:var(--text-muted);font-size:15px;line-height:2">
+        <li>Microsoft 365 &amp; Entra ID</li>
+        <li>Microsoft Intune / Endpoint Manager</li>
+        <li>Windows Server, WSUS, Active Directory</li>
+        <li>macOS MDM &amp; Declarative Device Management</li>
+        <li>SentinelOne &amp; Microsoft Defender</li>
+        <li>PowerShell · Bash · Automation</li>
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================================================== NEWSLETTER -->
+<section class="section section-alt" id="newsletter">
+  <div class="container">
+    <div class="cta">
+      <h2>Nhận bài viết mới mỗi tuần</h2>
+      <p>Một email mỗi tuần: bài mới, script hữu ích và tin tức đáng chú ý từ hệ sinh thái Microsoft. Không spam, huỷ bất cứ lúc nào.</p>
+      <form class="subscribe" id="subscribeForm">
+        <input type="email" placeholder="email@congty.com" required aria-label="Email">
+        <button class="btn btn-primary" type="submit">Đăng ký</button>
+      </form>
+      <p id="subscribeMsg" style="margin-top:14px;font-size:14px;color:var(--accent);display:none">Cảm ơn bạn! Hãy kiểm tra hộp thư để xác nhận.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ FOOTER -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a class="brand" href="index.html"><span class="brand-mark">TN</span><span>tamnguyen.dev</span></a>
+        <p>Blog cá nhân về Microsoft 365, Windows, macOS và bảo mật endpoint — viết từ môi trường doanh nghiệp thật tại Việt Nam.</p>
+      </div>
+      <div>
+        <h5>Chủ đề</h5>
+        <ul>
+          <li><a href="#topics">Microsoft 365</a></li>
+          <li><a href="#topics">Windows &amp; Server</a></li>
+          <li><a href="#topics">macOS</a></li>
+          <li><a href="#topics">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Trang</h5>
+        <ul>
+          <li><a href="#posts">Bài viết</a></li>
+          <li><a href="#about">Giới thiệu</a></li>
+          <li><a href="#newsletter">Newsletter</a></li>
+          <li><a href="mailto:hello@tamnguyen.dev">Liên hệ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Kết nối</h5>
+        <ul>
+          <li><a href="https://www.linkedin.com/in/your-handle">LinkedIn</a></li>
+          <li><a href="https://github.com/your-handle">GitHub</a></li>
+          <li><a href="/rss.xml">RSS</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Tam Nguyen. Nội dung chia sẻ với mục đích học tập.</span>
+      <span>Built with HTML · CSS · JavaScript</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/main.js"></script>
+</body>
+</html>
