@@ -1,4 +1,4 @@
-# tamnguyen.dev — Personal Tech Blog
+# congtamsoul — Personal Tech Blog
 
 Static site (HTML + CSS + JS thuần, không cần build tool) cho blog cá nhân về
 Microsoft 365, Windows, macOS, endpoint security, chuyển đổi số và phát triển bản thân.
