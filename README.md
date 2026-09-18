@@ -51,8 +51,8 @@ Cách khác không cần Git: kéo thả cả thư mục vào <https://app.netli
 ## Cần thay trước khi public
 
 - `your-handle` trong link LinkedIn / GitHub
-- `hello@tamnguyen.dev` → email thật
-- `https://tamnguyen.dev` trong canonical & Open Graph
+- `congtamsoul@gmail.com` → email thật
+- `https://congtamsoul` trong canonical & Open Graph
 - Endpoint form newsletter trong `main.js` (Buttondown / Substack / Mailchimp / Formspree)
 - Thêm `og:image` (1200×630) để link đẹp khi share LinkedIn
 
