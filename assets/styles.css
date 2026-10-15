@@ -454,6 +454,7 @@ img { max-width: 100%; display: block; }
   border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
   color: var(--text);
 }
+.prose blockquote p { margin: 0; color: inherit; }
 
 .callout {
   display: flex; gap: 14px;

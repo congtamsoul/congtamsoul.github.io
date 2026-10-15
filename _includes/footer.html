@@ -1,0 +1,49 @@
+{%- if page.layout == 'post' -%}
+<footer class="site-footer">
+  <div class="container footer-bottom" style="border:0;padding-top:0">
+    <span>© 2026 {{ page.author | default: site.author }}</span>
+    <span><a href="{{ '/' | relative_url }}" style="color:var(--accent)">← Về trang chủ</a></span>
+  </div>
+</footer>
+{%- else -%}
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">TN</span><span>Nguyễn Công Tâm</span></a>
+        <p>Blog cá nhân về Microsoft 365, Windows, macOS và bảo mật endpoint — viết từ môi trường doanh nghiệp thật tại Việt Nam.</p>
+      </div>
+      <div>
+        <h5>Chủ đề</h5>
+        <ul>
+          <li><a href="#topics">Microsoft 365</a></li>
+          <li><a href="#topics">Windows &amp; Server</a></li>
+          <li><a href="#topics">macOS</a></li>
+          <li><a href="#topics">Security</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Trang</h5>
+        <ul>
+          <li><a href="#posts">Bài viết</a></li>
+          <li><a href="#about">Giới thiệu</a></li>
+          <li><a href="#newsletter">Newsletter</a></li>
+          <li><a href="mailto:congtamsoul@gmail.com">Liên hệ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Kết nối</h5>
+        <ul>
+          <li><a href="www.linkedin.com/in/nguyễn-công-tâm-8ab42a18b">LinkedIn</a></li>
+          <li><a href="https://congtamsoul.github.io">GitHub</a></li>
+          <li><a href="https://www.facebook.com/congtam.nguyen.758">FaceBook</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Nguyễn Công Tâm. Nội dung chia sẻ với mục đích học tập.</span>
+      <span>Built with HTML · CSS · JavaScript</span>
+    </div>
+  </div>
+</footer>
+{%- endif %}

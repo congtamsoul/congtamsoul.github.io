@@ -1,61 +1,9 @@
-<!DOCTYPE html>
-<html lang="vi" data-theme="dark">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Nguyễn Công Tâm — Microsoft 365, Windows &amp; Endpoint Management</title>
-<meta name="description" content="Blog cá nhân của Nguyễn Công Tâm — Senior System Administrator. Chia sẻ kinh nghiệm thực chiến về Microsoft 365, Intune, Windows Server, macOS, SentinelOne, chuyển đổi số và phát triển bản thân.">
-<meta name="author" content="Nguyễn Công Tâm">
-
-<!-- Open Graph / SEO -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="Nguyễn Công Tâm — Microsoft 365, Windows &amp; Endpoint Management">
-<meta property="og:description" content="Kinh nghiệm thực chiến về Microsoft 365, Intune, Windows, macOS và bảo mật endpoint.">
-<meta property="og:url" content="https://congtamsoul.github.io/">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="canonical" href="https://congtamsoul.github.io/">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/styles.css">
-
-<!-- Structured data giúp Google hiểu bạn là ai -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Nguyễn Công Tâm",
-  "jobTitle": "Senior System Administrator",
-  "url": "https://congtamsoul.github.io/",
-  "sameAs": ["www.linkedin.com/in/nguyễn-công-tâm-8ab42a18b", "https://congtamsoul.github.io/"],
-  "knowsAbout": ["Microsoft 365", "Microsoft Intune", "Windows Server", "macOS", "SentinelOne", "Endpoint Security"]
-}
-</script>
-</head>
-<body>
-
-<header class="site-header">
-  <div class="container nav">
-    <a class="brand" href="index.html">
-      <span class="brand-mark">TN</span>
-      <span>Nguyễn Công <span style="color:var(--accent)">Tâm</span></span>
-    </a>
-
-    <ul class="nav-links" id="navLinks">
-      <li><a href="index.html" class="active">Trang chủ</a></li>
-      <li><a href="#posts">Bài viết</a></li>
-      <li><a href="#topics">Chủ đề</a></li>
-      <li><a href="#about">Giới thiệu</a></li>
-      <li><a href="#newsletter">Newsletter</a></li>
-    </ul>
-
-    <div class="nav-actions">
-      <button class="icon-btn" id="themeToggle" title="Đổi giao diện sáng/tối" aria-label="Đổi theme">◐</button>
-      <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
-    </div>
-  </div>
-</header>
+---
+layout: default
+title: "Nguyễn Công Tâm — Microsoft 365, Windows & Endpoint Management"
+description: "Blog cá nhân của Nguyễn Công Tâm — Senior System Administrator. Chia sẻ kinh nghiệm thực chiến về Microsoft 365, Intune, Windows Server, macOS, SentinelOne, chuyển đổi số và phát triển bản thân."
+og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Windows, macOS và bảo mật endpoint."
+---
 
 <!-- ============================================================== HERO -->
 <section class="hero">
@@ -109,136 +57,28 @@
     </div>
 
     <div class="card-grid" id="postGrid">
+      {%- for post in site.posts %}
+      {%- assign card_tags = post.card_tags | default: post.tags %}
+      {%- case post.topic %}
+        {%- when 'm365' %}{% assign thumb = 'm365' %}{% assign thumb_default = 'MICROSOFT 365' %}
+        {%- when 'windows' %}{% assign thumb = 'win' %}{% assign thumb_default = 'WINDOWS' %}
+        {%- when 'macos' %}{% assign thumb = 'mac' %}{% assign thumb_default = 'macOS' %}
+        {%- when 'security' %}{% assign thumb = 'sec' %}{% assign thumb_default = 'SECURITY' %}
+        {%- when 'career' %}{% assign thumb = 'growth' %}{% assign thumb_default = 'PHÁT TRIỂN BẢN THÂN' %}
+        {%- when 'dx' %}{% assign thumb = 'dx' %}{% assign thumb_default = 'CHUYỂN ĐỔI SỐ' %}
+        {%- else %}{% assign thumb = '' %}{% assign thumb_default = '' %}
+      {%- endcase %}
 
-      <article class="post-card" data-cat="m365">
-        <div class="post-thumb m365">MICROSOFT 365</div>
+      <article class="post-card" data-cat="{{ post.topic }}">
+        <div class="post-thumb {{ thumb }}">{{ post.thumb_label | default: thumb_default | escape }}</div>
         <div class="post-body">
-          <div class="tag-row"><span class="tag">Intune</span><span class="tag">Licensing</span></div>
-          <h3><a href="posts/bai-viet-mau.html">Intune Remote Help: cần license gì và ai thực sự dùng được?</a></h3>
-          <p>Bóc tách ma trận license EMS E3, Office 365 E3, M365 E3 và add-on — kèm cách kiểm tra nhanh trong tenant.</p>
-          <div class="post-meta"><span>18 Th9, 2026</span><span>·</span><span>9 phút đọc</span></div>
+          <div class="tag-row">{% for tag in card_tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</div>
+          <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+          <p>{{ post.summary | default: post.description | escape }}</p>
+          <div class="post-meta"><span>{% include post-date.html date=post.date %}</span><span>·</span><span>{{ post.reading_time }} phút đọc</span></div>
         </div>
       </article>
-
-      <article class="post-card" data-cat="windows">
-        <div class="post-thumb win">WINDOWS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Windows 11</span><span class="tag">WSUS</span></div>
-          <h3><a href="posts/bai-viet-mau.html">Nâng cấp Windows 11 24H2 → 25H2 cho 2.000 máy: những gì mình làm sai</a></h3>
-          <p>Quy trình duyệt feature update qua WSUS + Intune, script chẩn đoán và 5 nguyên nhân fail phổ biến nhất.</p>
-          <div class="post-meta"><span>12 Th9, 2026</span><span>·</span><span>14 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="macos">
-        <div class="post-thumb mac">macOS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">DDM</span><span class="tag">Intune</span></div>
-          <h3><a href="posts/bai-viet-mau.html">Declarative Device Management: vì sao macOS vẫn update dù bạn đã set deferral</a></h3>
-          <p>Giải thích cơ chế enforcement vs deferral, cách đọc log trên máy và cấu hình đúng cho major/minor update.</p>
-          <div class="post-meta"><span>05 Th9, 2026</span><span>·</span><span>11 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="security">
-        <div class="post-thumb sec">SECURITY</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">SentinelOne</span><span class="tag">EDR</span></div>
-          <h3><a href="posts/bai-viet-mau.html">Triển khai SentinelOne qua Intune: packaging, detection rule và xử lý agent lỗi</a></h3>
-          <p>Từ file .intunewin đến detection script chuẩn, cộng thêm cách dọn agent orphan trên diện rộng.</p>
-          <div class="post-meta"><span>28 Th8, 2026</span><span>·</span><span>12 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="dx">
-        <div class="post-thumb dx">CHUYỂN ĐỔI SỐ</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Enterprise Architecture</span></div>
-          <h3><a href="posts/bai-viet-mau.html">TOGAF cho người làm hạ tầng: hiểu ADM qua ví dụ xây nhà</a></h3>
-          <p>Cách một sysadmin đọc hiểu business capability map, value stream và application portfolio mà không ngợp.</p>
-          <div class="post-meta"><span>20 Th8, 2026</span><span>·</span><span>10 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">PHÁT TRIỂN BẢN THÂN</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Career</span><span class="tag">Personal Brand</span></div>
-          <h3><a href="posts/bai-viet-mau.html">Từ helpdesk đến senior sysadmin: lộ trình 10 năm và 6 quyết định quan trọng</a></h3>
-          <p>Chọn học gì, bỏ gì, và cách xây quan hệ trong ngành IT để cơ hội tự tìm đến bạn.</p>
-          <div class="post-meta"><span>14 Th8, 2026</span><span>·</span><span>8 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">AI</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">AI</span></div>
-          <h3><a href="posts/cio-summit-2026-tu-nguoi-mo-mong-den-nguoi-ly-tri.html">Từ người mơ mộng đến người lý trí: những gì mình học sau CIO Summit 2026</a></h3>
-          <p>Khám phá trải nghiệm từ sự kiện CIO Summit 2026 và cách mình nhìn lại AI trong doanh nghiệp với tư duy thực tế hơn.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>6 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="dx">
-        <div class="post-thumb dx">DIGITAL LEADERS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Digital Leaders</span><span class="tag">EA</span></div>
-          <h3><a href="posts/nha-la-phai-co-noc-enterprise-architecture.html">“Nhà là phải có nóc”: những gì mình học sau môn Enterprise Architecture</a></h3>
-          <p>Học EA giúp mình dừng lại, nhìn tổng thể doanh nghiệp và nhận ra công nghệ chỉ là công cụ, không phải điểm khởi đầu.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>7 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">TEAM BUILDING</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Team Building</span><span class="tag">Career</span></div>
-          <h3><a href="posts/team-building-01-chuyen-di-de-nho.html">Team Building 01 – Chuyến đi để nhớ</a></h3>
-          <p>Hai ngày trôi qua với những khoảnh khắc gần gũi, những cuộc trò chuyện thật lòng và một cảm giác thuộc về tập thể rất khó quên.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>6 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">BRM &amp; LEADERSHIP</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">BRM</span><span class="tag">Leadership</span></div>
-          <h3><a href="posts/tu-mot-nguoi-quen-giu-he-thong-chay-on-den-luc-hoc-cach-tao-ra-gia-tri-cung-brm-leadership.html">Từ một người quen “giữ hệ thống chạy ổn” đến lúc học cách tạo ra giá trị cùng BRM &amp; Leadership</a></h3>
-          <p>Sau 4 tuần học BRM &amp; Leadership, mình nhận ra tạo ra giá trị không chỉ là hoàn thành công việc, mà là cùng người khác đi tới mục tiêu chung.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>8 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="dx">
-        <div class="post-thumb dx">DITS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">DITS</span><span class="tag">Digital Strategy</span></div>
-          <h3><a href="posts/dits-cam-nhan-su-chuyen-hoa-cua-ban-than.html">DITS: Cảm nhận sự chuyển hóa của bản thân</a></h3>
-          <p>Từ một người tập trung vào giải pháp kỹ thuật, mình bắt đầu nhìn lại vấn đề qua góc độ business, value và outcome.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>7 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">DIGITAL LEADERS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Digital Leaders</span><span class="tag">Leadership</span></div>
-          <h3><a href="posts/nhat-ky-digital-leaders-coaching-ss10-orientation-day.html">Nhật ký Digital Leaders Coaching SS10: Orientation Day</a></h3>
-          <p>Về những bài học đầu tiên về Leadership, High Performance Team và Excellence Mindset sau buổi Orientation Day.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>6 phút đọc</span></div>
-        </div>
-      </article>
-
-      <article class="post-card" data-cat="career">
-        <div class="post-thumb growth">DIGITAL LEADERS</div>
-        <div class="post-body">
-          <div class="tag-row"><span class="tag">Retreat</span><span class="tag">Leadership</span></div>
-          <h3><a href="posts/nhat-ky-digital-leaders-coaching-ss10-retreat-day.html">Nhật ký Digital Leaders Coaching SS10: Retreat Day</a></h3>
-          <p>Hai ngày một đêm để lại cho mình nhiều bài học về thời gian, sự tin tưởng, làm việc nhóm và việc bước qua giới hạn của chính mình.</p>
-          <div class="post-meta"><span>03 Th10, 2026</span><span>·</span><span>7 phút đọc</span></div>
-        </div>
-      </article>
+      {%- endfor %}
 
     </div>
   </div>
@@ -314,49 +154,3 @@
     </div>
   </div>
 </section>
-
-<!-- ============================================================ FOOTER -->
-<footer class="site-footer">
-  <div class="container">
-    <div class="footer-grid">
-      <div class="footer-about">
-        <a class="brand" href="index.html"><span class="brand-mark">TN</span><span>Nguyễn Công Tâm</span></a>
-        <p>Blog cá nhân về Microsoft 365, Windows, macOS và bảo mật endpoint — viết từ môi trường doanh nghiệp thật tại Việt Nam.</p>
-      </div>
-      <div>
-        <h5>Chủ đề</h5>
-        <ul>
-          <li><a href="#topics">Microsoft 365</a></li>
-          <li><a href="#topics">Windows &amp; Server</a></li>
-          <li><a href="#topics">macOS</a></li>
-          <li><a href="#topics">Security</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Trang</h5>
-        <ul>
-          <li><a href="#posts">Bài viết</a></li>
-          <li><a href="#about">Giới thiệu</a></li>
-          <li><a href="#newsletter">Newsletter</a></li>
-          <li><a href="mailto:congtamsoul@gmail.com">Liên hệ</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Kết nối</h5>
-        <ul>
-          <li><a href="www.linkedin.com/in/nguyễn-công-tâm-8ab42a18b">LinkedIn</a></li>
-          <li><a href="https://congtamsoul.github.io">GitHub</a></li>
-          <li><a href="https://www.facebook.com/congtam.nguyen.758">FaceBook</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 Nguyễn Công Tâm. Nội dung chia sẻ với mục đích học tập.</span>
-      <span>Built with HTML · CSS · JavaScript</span>
-    </div>
-  </div>
-</footer>
-
-<script src="assets/main.js"></script>
-</body>
-</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.seo_title | default: page.title | escape }}</title>
+<meta name="description" content="{{ page.description | escape }}">
+{% if page.layout == 'post' %}
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{{ page.seo_title | default: page.title | escape }}">
+{% else %}
+<meta name="author" content="{{ site.author }}">
+
+<!-- Open Graph / SEO -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="{{ page.title | escape }}">
+<meta property="og:description" content="{{ page.og_description | default: page.description | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="{{ page.url | absolute_url }}">
+{% endif %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ '/assets/styles.css' | relative_url }}">
+
+{% if page.layout == 'post' %}
+{%- assign post_author = page.author | default: site.author -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": {{ page.title | jsonify }},
+  "datePublished": "{{ page.date | date: '%Y-%m-%d' }}",
+  "author": { "@type": "Person", "name": {{ post_author | jsonify }} }
+}
+</script>
+{% else %}
+<!-- Structured data giúp Google hiểu bạn là ai -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Nguyễn Công Tâm",
+  "jobTitle": "Senior System Administrator",
+  "url": "https://congtamsoul.github.io/",
+  "sameAs": ["www.linkedin.com/in/nguyễn-công-tâm-8ab42a18b", "https://congtamsoul.github.io/"],
+  "knowsAbout": ["Microsoft 365", "Microsoft Intune", "Windows Server", "macOS", "SentinelOne", "Endpoint Security"]
+}
+</script>
+{% endif %}
+</head>
+<body>
+
+{% include header.html %}
+
+{{ content }}
+
+{% include footer.html %}
+
+<script src="{{ '/assets/main.js' | relative_url }}"></script>
+</body>
+</html>

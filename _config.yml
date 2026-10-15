@@ -1,0 +1,25 @@
+title: "Nguyễn Công Tâm — Microsoft 365, Windows & Endpoint Management"
+lang: vi
+url: "https://congtamsoul.github.io"
+baseurl: ""
+timezone: Asia/Ho_Chi_Minh
+author: "Nguyễn Công Tâm"
+
+permalink: /posts/:title/
+
+markdown: kramdown
+plugins:
+  - jekyll-redirect-from
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - vendor

@@ -1,0 +1,47 @@
+---
+layout: default
+---
+<div class="progress" id="progressBar"></div>
+
+<main class="article">
+  <div class="container article-wrap">
+    <article>
+      <div class="article-head">
+        <div class="tag-row">
+          {%- for tag in page.tags %}
+          <span class="tag">{{ tag | escape }}</span>
+          {%- endfor %}
+        </div>
+        <h1>{{ page.title | escape }}</h1>
+        <div class="byline">
+          <span class="avatar-sm">TN</span>
+          <span><b style="color:var(--text)">{{ page.author | default: site.author }}</b> · {% include post-date.html date=page.date %} · {{ page.reading_time }} phút đọc</span>
+        </div>
+      </div>
+
+      <div class="prose">
+        {{ content }}
+
+        <div class="share-row">
+          <a class="btn btn-ghost" href="#">Chia sẻ LinkedIn</a>
+          <a class="btn btn-ghost" href="#">Chia sẻ Facebook</a>
+          <a class="btn btn-ghost" href="#">Copy link</a>
+        </div>
+
+        <div class="author-box">
+          <div class="avatar">TN</div>
+          <div>
+            <h4>{{ page.author | default: site.author }}</h4>
+            <p>Senior System Administrator tại TP.HCM. Viết về Microsoft 365, Intune, Windows Server, macOS và bảo mật endpoint từ môi trường doanh nghiệp thật.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <aside class="toc">
+      <h5>Mục lục</h5>
+      <ul id="tocList"></ul>
+    </aside>
+
+  </div>
+</main>

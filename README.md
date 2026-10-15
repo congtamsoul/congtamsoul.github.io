@@ -1,69 +1,80 @@
 # congtamsoul — Personal Tech Blog
 
-Static site (HTML + CSS + JS thuần, không cần build tool) cho blog cá nhân về
-Microsoft 365, Windows, macOS, endpoint security, chuyển đổi số và phát triển bản thân.
+Blog cá nhân (GitHub Pages + Jekyll) về Microsoft 365, Windows, macOS, endpoint security,
+chuyển đổi số và phát triển bản thân. Bài viết viết bằng Markdown.
 
 ## Cấu trúc
 
 ```
-tamnc-blog/
-├── index.html              # Trang chủ: hero, danh sách bài, chủ đề, about, newsletter
+├── _config.yml             # Cấu hình Jekyll (url, permalink /posts/:title/, plugin)
+├── _layouts/
+│   ├── default.html        # <head>, SEO/OG/JSON-LD, header, footer, script
+│   └── post.html           # Bố cục bài viết: tag, byline, TOC, share, author box
+├── _includes/
+│   ├── header.html
+│   ├── footer.html
+│   └── post-date.html      # Định dạng ngày "03 Th10, 2026"
+├── _posts/
+│   └── YYYY-MM-DD-slug.md  # Mỗi bài một file Markdown
 ├── assets/
-│   ├── styles.css          # Toàn bộ style + design tokens (dark/light)
-│   └── main.js             # Theme toggle, mobile nav, filter, TOC, progress bar
-├── posts/
-│   └── bai-viet-mau.html   # Template bài viết (copy file này cho mỗi bài mới)
-└── README.md
+│   ├── styles.css
+│   └── main.js             # Theme toggle, mobile nav, filter, TOC, progress bar, nút Copy
+├── images/<slug>/          # Ảnh của từng bài (tạo khi cần)
+└── index.html              # Trang chủ, card bài viết tự sinh từ _posts
 ```
+
+## Viết bài mới
+
+Tạo `_posts/YYYY-MM-DD-ten-bai-viet.md` rồi commit/push. Front matter:
+
+```yaml
+---
+layout: post
+title: "Tiêu đề bài viết"
+description: "Mô tả SEO (meta description)"
+date: 2026-10-03
+author: "Nguyễn Công Tâm"
+reading_time: 6               # số phút đọc, hiển thị ở byline và card
+topic: career                 # m365 | windows | macos | security | career | dx (dùng cho bộ lọc)
+thumb_label: "AI"             # chữ trên thumbnail card (mặc định theo topic)
+tags:                         # tag ở đầu bài
+  - Career
+  - AI
+card_tags:                    # tuỳ chọn: tag ở card trang chủ (mặc định = tags)
+  - AI
+summary: "Mô tả ngắn ở card"   # tuỳ chọn (mặc định = description)
+seo_title: "..."              # tuỳ chọn: <title>/og:title khác với tiêu đề bài
+---
+```
+
+- Mục lục bên phải tự sinh từ các heading `##`.
+- Ảnh: `![mô tả]({{ '/images/ten-bai-viet/anh-01.png' | relative_url }})`.
+- Callout dùng HTML trực tiếp trong Markdown:
+
+```html
+<div class="callout warn">
+  <span>⚠️</span>
+  <div><b>Lưu ý</b>Nội dung callout.</div>
+</div>
+```
+
+  Class: `callout`, `callout warn`, `callout danger`.
+- Bài mới có ngày trong tương lai sẽ không được build.
 
 ## Chạy thử local
 
 ```bash
-cd tamnc-blog
-python3 -m http.server 8000
-# mở http://localhost:8000
+gem install bundler jekyll
+jekyll serve
+# mở http://localhost:4000
 ```
 
-## Deploy miễn phí lên GitHub Pages
+## Deploy
 
-```bash
-git init
-git add .
-git commit -m "init blog"
-git branch -M main
-git remote add origin https://github.com/<user>/<user>.github.io.git
-git push -u origin main
-```
-
-Vào **Settings → Pages → Source: main / (root)**. Site chạy tại `https://<user>.github.io`.
-Gắn domain riêng: thêm file `CNAME` chứa domain, rồi trỏ DNS về GitHub Pages.
-
-Cách khác không cần Git: kéo thả cả thư mục vào <https://app.netlify.com/drop>.
-
-## Viết bài mới
-
-1. Copy `posts/bai-viet-mau.html` → `posts/ten-bai-viet.html` (slug không dấu, dùng gạch ngang).
-2. Sửa `<title>`, `<meta name="description">`, `<link rel="canonical">`, JSON-LD.
-3. Viết nội dung trong `<div class="prose">`. Mục lục tự sinh từ các thẻ `<h2>`.
-4. Thêm một `<article class="post-card">` vào `index.html`, đặt đúng `data-cat`
-   (`m365`, `windows`, `macos`, `security`, `career`, `dx`) để bộ lọc hoạt động.
+Settings → Pages → Source: Deploy from a branch → `main` / (root). GitHub Pages tự build Jekyll khi push.
 
 ## Cần thay trước khi public
 
-- `your-handle` trong link LinkedIn / GitHub
-- `congtamsoul@gmail.com` → email thật
-- `https://congtamsoul` trong canonical & Open Graph
-- Endpoint form newsletter trong `main.js` (Buttondown / Substack / Mailchimp / Formspree)
-- Thêm `og:image` (1200×630) để link đẹp khi share LinkedIn
-
-## Thành phần có sẵn
-
-| Component | Class |
-|---|---|
-| Card bài viết | `.post-card` + `.post-thumb.<m365\|win\|mac\|sec\|growth\|dx>` |
-| Nút | `.btn.btn-primary`, `.btn.btn-ghost` |
-| Chip lọc | `.chip` |
-| Callout | `.callout`, `.callout.warn`, `.callout.danger` |
-| Code block | `<pre><code>` (tự có nút Copy) |
-| Trích dẫn | `<blockquote>` |
-| Mục lục | `.toc` + `<ul id="tocList">` (tự sinh) |
+- Link LinkedIn ở `index.html`, `_includes/footer.html` và JSON-LD trong `_layouts/default.html` đang thiếu `https://`
+- Endpoint form newsletter trong `assets/main.js`
+- Thêm `og:image` (1200×630) để link đẹp khi share
