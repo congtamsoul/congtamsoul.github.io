@@ -9,11 +9,16 @@ chuyển đổi số và phát triển bản thân. Bài viết viết bằng Ma
 ├── _config.yml             # Cấu hình Jekyll (url, permalink /posts/:title/, plugin)
 ├── _layouts/
 │   ├── default.html        # <head>, SEO/OG/JSON-LD, header, footer, script
-│   └── post.html           # Bố cục bài viết: tag, byline, TOC, share, author box
+│   ├── post.html           # Bố cục bài viết: tag, byline, TOC, share, author box, bài trước/sau
+│   └── topic.html          # Trang liệt kê bài theo chủ đề
 ├── _includes/
 │   ├── header.html
 │   ├── footer.html
+│   ├── post-card.html      # Card bài viết (trang chủ + trang chủ đề)
+│   ├── post-nav.html       # Link bài cũ hơn / mới hơn cuối bài
 │   └── post-date.html      # Định dạng ngày "03 Th10, 2026"
+├── _data/topics.yml        # Danh sách 6 chủ đề (key, tên, icon, mô tả)
+├── topics/<key>.html       # Mỗi chủ đề một trang: /topics/<key>/
 ├── _posts/
 │   └── YYYY-MM-DD-slug.md  # Mỗi bài một file Markdown
 ├── assets/
@@ -60,6 +65,8 @@ seo_title: "..."              # tuỳ chọn: <title>/og:title khác với tiêu
 
   Class: `callout`, `callout warn`, `callout danger`.
 - Bài mới có ngày trong tương lai sẽ không được build.
+- Danh sách bài sắp xếp theo `date` từ mới đến cũ. Nếu có nhiều bài cùng ngày, thêm giờ (`date: 2026-10-03 14:30`) để xác định bài nào mới hơn.
+- Muốn thêm chủ đề mới: thêm vào `_data/topics.yml` và tạo `topics/<key>.html` (copy từ file có sẵn).
 
 ## Chạy thử local
 

@@ -1,0 +1,24 @@
+---
+layout: default
+---
+{%- assign topic = site.data.topics | where: 'key', page.topic | first -%}
+{%- assign topic_posts = site.posts | where: 'topic', page.topic -%}
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>{{ topic.icon }} {{ topic.name | escape }}</h2>
+        <p>{{ topic.description | escape }}</p>
+      </div>
+      <a class="link-more" href="{{ '/#posts' | relative_url }}">← Tất cả bài viết</a>
+    </div>
+
+    <div class="card-grid">
+      {%- for post in topic_posts %}
+      {% include post-card.html post=post %}
+      {%- else %}
+      <p>Chưa có bài viết nào trong chủ đề này.</p>
+      {%- endfor %}
+    </div>
+  </div>
+</section>

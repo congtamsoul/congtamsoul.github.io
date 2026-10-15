@@ -1,0 +1,24 @@
+- key: m365
+  name: Microsoft 365
+  icon: ☁️
+  description: Tenant migration, Exchange Online, Entra ID, licensing và governance.
+- key: windows
+  name: Windows & Server
+  icon: 🖥️
+  description: Autopilot, WSUS, Group Policy, feature update và troubleshooting log.
+- key: macos
+  name: macOS trong doanh nghiệp
+  icon: 🍎
+  description: Intune MDM, DDM, script bash và quản lý update cho Mac fleet.
+- key: security
+  name: Endpoint Security
+  icon: 🛡️
+  description: SentinelOne, Defender, baseline bảo mật và phản ứng sự cố.
+- key: dx
+  name: Chuyển đổi số
+  icon: 🚀
+  description: Enterprise Architecture, tự động hoá quy trình, đo lường giá trị IT.
+- key: career
+  name: Phát triển bản thân
+  icon: 🌱
+  description: Lộ trình nghề nghiệp, chứng chỉ, xây dựng quan hệ và thương hiệu cá nhân.

@@ -1,20 +1,16 @@
-{%- assign is_post = false -%}
-{%- if page.layout == 'post' %}{% assign is_post = true %}{% endif -%}
 <header class="site-header">
   <div class="container nav">
     <a class="brand" href="{{ '/' | relative_url }}">
       <span class="brand-mark">TN</span>
-      {% if is_post %}<span>congtamsoul<span style="color:var(--accent)">.dev</span></span>{% else %}<span>Nguyễn Công <span style="color:var(--accent)">Tâm</span></span>{% endif %}
+      <span>Nguyễn Công <span style="color:var(--accent)">Tâm</span></span>
     </a>
 
     <ul class="nav-links" id="navLinks">
-      <li><a href="{{ '/' | relative_url }}"{% unless is_post %} class="active"{% endunless %}>Trang chủ</a></li>
-      <li><a href="{{ '/#posts' | relative_url }}"{% if is_post %} class="active"{% endif %}>Bài viết</a></li>
-      <li><a href="{{ '/#topics' | relative_url }}">Chủ đề</a></li>
+      <li><a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>Trang chủ</a></li>
+      <li><a href="{{ '/#posts' | relative_url }}"{% if page.layout == 'post' %} class="active"{% endif %}>Bài viết</a></li>
+      <li><a href="{{ '/#topics' | relative_url }}"{% if page.layout == 'topic' %} class="active"{% endif %}>Chủ đề</a></li>
       <li><a href="{{ '/#about' | relative_url }}">Giới thiệu</a></li>
-      {%- unless is_post %}
       <li><a href="{{ '/#newsletter' | relative_url }}">Newsletter</a></li>
-      {%- endunless %}
     </ul>
 
     <div class="nav-actions">

@@ -1,0 +1,33 @@
+{%- assign all_posts = site.posts -%}
+{%- assign idx = -1 -%}
+{%- for p in all_posts -%}
+  {%- if p.url == page.url -%}{%- assign idx = forloop.index0 -%}{%- endif -%}
+{%- endfor -%}
+{%- assign newer = nil -%}
+{%- assign older = nil -%}
+{%- if idx > 0 -%}
+  {%- assign newer_idx = idx | minus: 1 -%}
+  {%- assign newer = all_posts[newer_idx] -%}
+{%- endif -%}
+{%- if idx >= 0 -%}
+  {%- assign older_idx = idx | plus: 1 -%}
+  {%- assign older = all_posts[older_idx] -%}
+{%- endif -%}
+{%- if newer or older %}
+<nav class="post-nav" aria-label="Bài viết khác">
+  {%- if older %}
+  <a class="post-nav-link prev" href="{{ older.url | relative_url }}">
+    <span class="post-nav-label">← Bài cũ hơn</span>
+    <span class="post-nav-title">{{ older.title | escape }}</span>
+  </a>
+  {%- else %}
+  <span></span>
+  {%- endif %}
+  {%- if newer %}
+  <a class="post-nav-link next" href="{{ newer.url | relative_url }}">
+    <span class="post-nav-label">Bài mới hơn →</span>
+    <span class="post-nav-title">{{ newer.title | escape }}</span>
+  </a>
+  {%- endif %}
+</nav>
+{%- endif %}

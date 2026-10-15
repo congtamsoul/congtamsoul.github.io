@@ -1,0 +1,21 @@
+{%- assign post = include.post -%}
+{%- case post.topic %}
+  {%- when 'm365' %}{% assign thumb = 'm365' %}{% assign thumb_default = 'MICROSOFT 365' %}
+  {%- when 'windows' %}{% assign thumb = 'win' %}{% assign thumb_default = 'WINDOWS' %}
+  {%- when 'macos' %}{% assign thumb = 'mac' %}{% assign thumb_default = 'macOS' %}
+  {%- when 'security' %}{% assign thumb = 'sec' %}{% assign thumb_default = 'SECURITY' %}
+  {%- when 'career' %}{% assign thumb = 'growth' %}{% assign thumb_default = 'PHÁT TRIỂN BẢN THÂN' %}
+  {%- when 'dx' %}{% assign thumb = 'dx' %}{% assign thumb_default = 'CHUYỂN ĐỔI SỐ' %}
+  {%- else %}{% assign thumb = '' %}{% assign thumb_default = '' %}
+{%- endcase %}
+{%- assign card_tags = post.card_tags | default: post.tags %}
+
+      <article class="post-card" data-cat="{{ post.topic }}">
+        <div class="post-thumb {{ thumb }}">{{ post.thumb_label | default: thumb_default | escape }}</div>
+        <div class="post-body">
+          <div class="tag-row">{% for tag in card_tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</div>
+          <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
+          <p>{{ post.summary | default: post.description | escape }}</p>
+          <div class="post-meta"><span>{% include post-date.html date=post.date %}</span><span>·</span><span>{{ post.reading_time }} phút đọc</span></div>
+        </div>
+      </article>

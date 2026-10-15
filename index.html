@@ -58,26 +58,7 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
 
     <div class="card-grid" id="postGrid">
       {%- for post in site.posts %}
-      {%- assign card_tags = post.card_tags | default: post.tags %}
-      {%- case post.topic %}
-        {%- when 'm365' %}{% assign thumb = 'm365' %}{% assign thumb_default = 'MICROSOFT 365' %}
-        {%- when 'windows' %}{% assign thumb = 'win' %}{% assign thumb_default = 'WINDOWS' %}
-        {%- when 'macos' %}{% assign thumb = 'mac' %}{% assign thumb_default = 'macOS' %}
-        {%- when 'security' %}{% assign thumb = 'sec' %}{% assign thumb_default = 'SECURITY' %}
-        {%- when 'career' %}{% assign thumb = 'growth' %}{% assign thumb_default = 'PHÁT TRIỂN BẢN THÂN' %}
-        {%- when 'dx' %}{% assign thumb = 'dx' %}{% assign thumb_default = 'CHUYỂN ĐỔI SỐ' %}
-        {%- else %}{% assign thumb = '' %}{% assign thumb_default = '' %}
-      {%- endcase %}
-
-      <article class="post-card" data-cat="{{ post.topic }}">
-        <div class="post-thumb {{ thumb }}">{{ post.thumb_label | default: thumb_default | escape }}</div>
-        <div class="post-body">
-          <div class="tag-row">{% for tag in card_tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</div>
-          <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-          <p>{{ post.summary | default: post.description | escape }}</p>
-          <div class="post-meta"><span>{% include post-date.html date=post.date %}</span><span>·</span><span>{{ post.reading_time }} phút đọc</span></div>
-        </div>
-      </article>
+      {% include post-card.html post=post %}
       {%- endfor %}
 
     </div>
@@ -95,12 +76,9 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
     </div>
 
     <div class="topic-grid">
-      <div class="topic"><div class="ico">☁️</div><h4>Microsoft 365</h4><p>Tenant migration, Exchange Online, Entra ID, licensing và governance.</p></div>
-      <div class="topic"><div class="ico">🖥️</div><h4>Windows &amp; Server</h4><p>Autopilot, WSUS, Group Policy, feature update và troubleshooting log.</p></div>
-      <div class="topic"><div class="ico">🍎</div><h4>macOS trong doanh nghiệp</h4><p>Intune MDM, DDM, script bash và quản lý update cho Mac fleet.</p></div>
-      <div class="topic"><div class="ico">🛡️</div><h4>Endpoint Security</h4><p>SentinelOne, Defender, baseline bảo mật và phản ứng sự cố.</p></div>
-      <div class="topic"><div class="ico">🚀</div><h4>Chuyển đổi số</h4><p>Enterprise Architecture, tự động hoá quy trình, đo lường giá trị IT.</p></div>
-      <div class="topic"><div class="ico">🌱</div><h4>Phát triển bản thân</h4><p>Lộ trình nghề nghiệp, chứng chỉ, xây dựng quan hệ và thương hiệu cá nhân.</p></div>
+      {%- for t in site.data.topics %}
+      <a class="topic" href="{{ '/topics/' | append: t.key | append: '/' | relative_url }}"><div class="ico">{{ t.icon }}</div><h4>{{ t.name | escape }}</h4><p>{{ t.description | escape }}</p></a>
+      {%- endfor %}
     </div>
   </div>
 </section>
