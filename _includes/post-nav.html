@@ -17,16 +17,20 @@
 <nav class="post-nav" aria-label="Bài viết khác">
   {%- if older %}
   <a class="post-nav-link prev" href="{{ older.url | relative_url }}">
-    <span class="post-nav-label">← Bài cũ hơn</span>
-    <span class="post-nav-title">{{ older.title | escape }}</span>
+    <span class="post-nav-arrow" aria-hidden="true">←</span>
+    <span class="post-nav-text">
+      <span class="post-nav-label">Bài cũ hơn</span>
+      <span class="post-nav-title">{{ older.title | escape }}</span>
+    </span>
   </a>
-  {%- else %}
-  <span></span>
   {%- endif %}
   {%- if newer %}
   <a class="post-nav-link next" href="{{ newer.url | relative_url }}">
-    <span class="post-nav-label">Bài mới hơn →</span>
-    <span class="post-nav-title">{{ newer.title | escape }}</span>
+    <span class="post-nav-text">
+      <span class="post-nav-label">Bài mới hơn</span>
+      <span class="post-nav-title">{{ newer.title | escape }}</span>
+    </span>
+    <span class="post-nav-arrow" aria-hidden="true">→</span>
   </a>
   {%- endif %}
 </nav>
