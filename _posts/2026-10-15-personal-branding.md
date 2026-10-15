@@ -15,17 +15,11 @@ tags:
 card_tags:
   - PB
 summary: "Mỗi ngày một giọt nước, mười năm một dòng sông"
-redirect_from:
-  - /posts/bai-viet-mau.html
 ---
-
-Đây là mẫu bài viết. Hãy giữ nguyên cấu trúc bên dưới và thay nội dung — bố cục này đã tối ưu cho việc đọc và cho SEO: mở bài nêu vấn đề, thân bài chia `h2` rõ ràng, có callout, bảng, code block và phần kết luận hành động được.
 
 > **Tóm tắt nhanh:** Mỗi ngày một giọt nước, mười năm một dòng sông.
 
-![Mô tả](/images/personal-branding/3.png)
-{: width="480"}
-![Admin Center](/images/personal-branding/3.png)
+![Admin Center](/images/personal-branding/3.jpg){: width="480"}
 *Hình 1: Who Am I.*
 
 ## Bối cảnh: vì sao mình phải tìm hiểu chuyện này
