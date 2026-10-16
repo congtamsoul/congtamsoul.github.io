@@ -6,14 +6,14 @@ date: 2026-10-03
 author: "Tam Nguyen"
 reading_time: 6
 topic: career
-thumb_label: "DIGITAL LEADERS"
+thumb_label: "TEAM BUILDING"
 tags:
+  - Team Building
   - Digital Leaders
-  - Leadership
   - Career
 card_tags:
-  - Digital Leaders
-  - Leadership
+  - Team Building
+  - Career
 summary: "Về những bài học đầu tiên về Leadership, High Performance Team và Excellence Mindset sau buổi Orientation Day."
 redirect_from:
   - /posts/nhat-ky-digital-leaders-coaching-ss10-orientation-day.html

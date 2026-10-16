@@ -6,14 +6,14 @@ date: 2026-10-03
 author: "Tam Nguyen"
 reading_time: 7
 topic: career
-thumb_label: "DIGITAL LEADERS"
+thumb_label: "TEAM BUILDING"
 tags:
+  - Team Building
   - Digital Leaders
-  - Retreat
   - Career
 card_tags:
-  - Retreat
-  - Leadership
+  - Team Building
+  - Career
 summary: "Hai ngày một đêm để lại cho mình nhiều bài học về thời gian, sự tin tưởng, làm việc nhóm và việc bước qua giới hạn của chính mình."
 redirect_from:
   - /posts/nhat-ky-digital-leaders-coaching-ss10-retreat-day.html

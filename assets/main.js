@@ -100,6 +100,31 @@
     heads.forEach(function (h) { obs.observe(h); });
   }
 
+  /* -------------------------------------------------- Copy post link */
+  var copyLinkBtn = document.getElementById("copyLinkBtn");
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      var url = copyLinkBtn.href;
+      var done = function () {
+        copyLinkBtn.textContent = "Đã copy link ✓";
+        setTimeout(function () { copyLinkBtn.textContent = "Copy link"; }, 1800);
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(done);
+      } else {
+        var ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.cssText = "position:fixed;opacity:0";
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        done();
+      }
+    });
+  }
+
   /* -------------------------------------------------- Copy code btn */
   document.querySelectorAll(".prose pre").forEach(function (pre) {
     var btn = document.createElement("button");

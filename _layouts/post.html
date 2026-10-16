@@ -23,9 +23,9 @@ layout: default
         {{ content }}
 
         <div class="share-row">
-          <a class="btn btn-ghost" href="#">Chia sẻ LinkedIn</a>
-          <a class="btn btn-ghost" href="#">Chia sẻ Facebook</a>
-          <a class="btn btn-ghost" href="#">Copy link</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer">Chia sẻ LinkedIn</a>
+          <a class="btn btn-ghost" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer">Chia sẻ Facebook</a>
+          <a class="btn btn-ghost" href="{{ page.url | absolute_url }}" id="copyLinkBtn">Copy link</a>
         </div>
 
         <div class="author-box">

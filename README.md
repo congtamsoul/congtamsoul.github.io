@@ -82,6 +82,5 @@ Settings → Pages → Source: Deploy from a branch → `main` / (root). GitHub 
 
 ## Cần thay trước khi public
 
-- Link LinkedIn ở `index.html`, `_includes/footer.html` và JSON-LD trong `_layouts/default.html` đang thiếu `https://`
 - Endpoint form newsletter trong `assets/main.js`
 - Thêm `og:image` (1200×630) để link đẹp khi share
