@@ -28,7 +28,7 @@ Sáng thứ Tư sau Patch Tuesday, đường truyền internet quốc tế của
 
 Nếu bạn quản lý vài trăm đến vài nghìn máy Windows, có lẽ bạn đã gặp ít nhất một trong ba vấn đề này: **update làm nghẽn mạng, máy không được vá đúng hạn, và người dùng bị làm phiền.**
 
-Môi trường của mình là Home Credit Vietnam. Máy tính chia thành hai văn phòng chính và nhân viên làm việc ở hiện trường. Riêng văn phòng Phụ Nữ có khoảng 1.000 máy, văn phòng Hà Đô khoảng 800 máy, chưa tính các máy ở hiện trường. Cả hệ thống được quản lý bằng Microsoft Intune.
+Môi trường của mình là công ty Công Tâm. Máy tính chia thành hai văn phòng chính và nhân viên làm việc ở hiện trường. Riêng văn phòng Hà Nội có khoảng 1.000 máy, văn phòng Hồ Chí Minh khoảng 800 máy, chưa tính các máy ở hiện trường. Cả hệ thống được quản lý bằng Microsoft Intune.
 
 Bài này chia sẻ cách mình dùng Windows Update for Business qua Intune để quản lý update theo từng đợt, có kiểm soát và đo được kết quả.
 
@@ -68,10 +68,10 @@ Mình chia máy theo nhóm AD hoặc Entra, mỗi nhóm gắn với một Update
 | Wave | Số máy | Hoãn Quality Update | Ghi chú |
 |---|---|---|---|
 | Wave 0 | 7 | 1 ngày | Máy của IT, là "chuột bạch" của cả hệ thống |
-| Wave 1 | ~500 | 6 ngày | Một nửa văn phòng Phụ Nữ, cộng máy hiện trường |
-| Wave 2 | ~400 | 7 ngày | Một nửa văn phòng Hà Đô |
-| Wave 1-1 | còn lại | 8 ngày | Nửa còn lại của văn phòng Phụ Nữ |
-| Wave 2-2 | còn lại | 9 ngày | Nửa còn lại của văn phòng Hà Đô |
+| Wave 1 | ~500 | 6 ngày | Một nửa văn phòng Hà Nội, cộng máy hiện trường |
+| Wave 2 | ~400 | 7 ngày | Một nửa văn phòng Hồ Chí Minh |
+| Wave 1-1 | còn lại | 8 ngày | Nửa còn lại của văn phòng Hà Nội |
+| Wave 2-2 | còn lại | 9 ngày | Nửa còn lại của văn phòng Hồ Chí Minh |
 
 Tất cả các nhóm đều hoãn Feature Update 30 ngày. Với cách sắp xếp này, mỗi ngày chỉ có một nhóm tải bản cập nhật, và các văn phòng được xen kẽ để không văn phòng nào chịu tải hai ngày liên tiếp.
 
