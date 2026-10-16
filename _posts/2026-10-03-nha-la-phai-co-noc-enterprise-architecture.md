@@ -6,7 +6,7 @@ date: 2026-10-03
 author: "Tam Nguyen"
 reading_time: 7
 topic: dx
-thumb_label: "DIGITAL LEADERS"
+thumb_label: "ENTERPRISE ARCHITECTURE"
 tags:
   - Digital Leaders
   - Enterprise Architecture
