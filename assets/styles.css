@@ -246,9 +246,17 @@ img { max-width: 100%; display: block; }
 .pill { display: inline-block; margin: 0 6px 6px 0; padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; font-weight: 600; }
 
 .skills { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
-.skills h3 { margin: 0 0 16px; font-size: 18px; }
-.skill-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
-.skill-list li { padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-soft); color: var(--text-muted); font-size: 14.5px; }
+.skills-title { margin: 0 0 20px; font-size: 22px; letter-spacing: -0.01em; }
+.skills-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; align-items: start; }
+.skill-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; }
+.skill-card h4 { margin: 0 0 14px; font-size: 12.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.skill-rows { list-style: none; margin: 0; padding: 0; }
+.skill-rows li { padding: 12px 0; border-top: 1px solid var(--border); }
+.skill-rows li:first-child { border-top: 0; padding-top: 0; }
+.skill-rows li:last-child { padding-bottom: 0; }
+.skill-rows b { display: block; font-size: 15px; color: var(--text); }
+.skill-rows span { display: block; margin-top: 2px; font-size: 14px; color: var(--text-muted); }
+@media (max-width: 720px) { .skills-grid { grid-template-columns: 1fr; } }
 
 .cert figcaption { margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
 
