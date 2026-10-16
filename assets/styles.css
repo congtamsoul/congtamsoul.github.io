@@ -211,21 +211,29 @@ img { max-width: 100%; display: block; }
 }
 
 .hero-card .avatar {
+  flex: none;
   width: 68px; height: 68px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   display: grid; place-items: center;
   color: #fff; font-weight: 800; font-size: 22px;
-  margin-bottom: 14px;
 }
 
-.hero-card h3 { margin: 0 0 4px; font-size: 18px; }
-.hero-card .role { color: var(--text-muted); font-size: 14px; margin: 0 0 16px; }
+.profile-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+.hero-card h3 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.01em; }
+.hero-card .role { color: var(--text); font-size: 14px; font-weight: 600; margin: 0; }
+.hero-card .loc { color: var(--text-muted); font-size: 13px; margin: 2px 0 0; }
 
-.stat-row { display: flex; gap: 10px; border-top: 1px solid var(--border); padding-top: 16px; }
-.stat { flex: 1; }
-.stat b { display: block; font-size: 20px; }
-.stat span { font-size: 12.5px; color: var(--text-muted); }
+.stat-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; border-top: 1px solid var(--border); padding-top: 16px; }
+.stat b { display: block; font-size: 20px; letter-spacing: -0.01em; }
+.stat span { display: block; margin-top: 2px; font-size: 12.5px; line-height: 1.4; color: var(--text-muted); }
+
+.cert-block { border-top: 1px solid var(--border); margin-top: 18px; padding-top: 16px; }
+.cert-block h4 { margin: 0 0 12px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+.cert-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.cert { margin: 0; text-align: center; }
+.cert img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px; }
+.cert figcaption { margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
 
 /* --------------------------------------------------------------- Section */
 .section { padding: 72px 0; }
