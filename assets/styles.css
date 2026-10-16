@@ -212,12 +212,14 @@ img { max-width: 100%; display: block; }
 
 .hero-card .avatar {
   flex: none;
-  width: 68px; height: 68px;
+  width: 84px; height: 84px;
   border-radius: 50%;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   display: grid; place-items: center;
   color: #fff; font-weight: 800; font-size: 22px;
 }
+.hero-card .avatar img { width: 100%; height: 100%; object-fit: cover; object-position: 53% 34%; transform: scale(2.2); transform-origin: 53% 34%; }
 
 .profile-head { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
 .hero-card h3 { margin: 0 0 4px; font-size: 19px; letter-spacing: -0.01em; }
@@ -233,6 +235,21 @@ img { max-width: 100%; display: block; }
 .cert-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .cert { margin: 0; text-align: center; }
 .cert img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px; }
+.about-title { font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 16px; }
+.about-text { color: var(--text-muted); font-size: 16.5px; margin: 0 0 16px; }
+.poem { margin: 0 0 18px; padding: 4px 0 4px 16px; border-left: 3px solid var(--accent); color: var(--text); font-style: italic; line-height: 1.8; }
+
+.brand { margin: 0; display: grid; gap: 16px; }
+.brand dt { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+.brand dd { margin: 0; font-size: 15px; line-height: 1.55; color: var(--text); }
+.brand > div + div { border-top: 1px solid var(--border); padding-top: 16px; }
+.pill { display: inline-block; margin: 0 6px 6px 0; padding: 4px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-size: 13.5px; font-weight: 600; }
+
+.skills { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
+.skills h3 { margin: 0 0 16px; font-size: 18px; }
+.skill-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }
+.skill-list li { padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--bg-soft); color: var(--text-muted); font-size: 14.5px; }
+
 .cert figcaption { margin-top: 6px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
 
 /* --------------------------------------------------------------- Section */

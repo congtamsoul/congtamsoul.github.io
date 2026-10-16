@@ -10,11 +10,11 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
   <div class="container hero-grid">
     <div>
       <span class="eyebrow">● Senior System Administrator</span>
-      <h1>Kiến thức <span>Microsoft 365</span> &amp; quản trị endpoint, viết lại từ môi trường thật.</h1>
+      <h1>Vận hành <span>Microsoft 365</span> &amp; endpoint: kinh nghiệm thực chiến, chia sẻ cùng bạn.</h1>
       <p class="lead">
-        Mình là Tâm. Mỗi tuần mình viết lại những gì đã làm, đã hỏng và đã sửa khi vận hành
-        Microsoft 365, Intune, Windows Server, macOS và SentinelOne cho hàng nghìn thiết bị —
-        kèm script, checklist và bài học rút ra.
+        Mình là Tâm, hơn 10 năm quản trị hệ thống cho hàng nghìn thiết bị. Mình ghi lại những gì đã
+        triển khai, đã gặp sự cố và đã khắc phục với Microsoft 365, Intune, Windows Server, macOS và
+        SentinelOne — kèm script, checklist và bài học đúc kết để bạn đi nhanh hơn mình.
       </p>
       <div class="btn-row">
         <a class="btn btn-primary" href="#posts">Đọc bài mới nhất →</a>
@@ -24,7 +24,7 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
 
     <aside class="hero-card">
       <div class="profile-head">
-        <div class="avatar">TN</div>
+        <div class="avatar"><img src="{{ '/images/avatar/avatar.jpg' | relative_url }}" alt="Nguyễn Công Tâm"></div>
         <div>
           <h3>Nguyễn Công Tâm</h3>
           <p class="role">Senior System Administrator</p>
@@ -101,16 +101,20 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
 <section class="section" id="about">
   <div class="container hero-grid">
     <div>
-      <span class="eyebrow">Về mình</span>
-      <h2 style="font-size:30px;letter-spacing:-0.02em;margin:0 0 16px">Mình viết để chính mình 6 tháng sau đọc lại vẫn hiểu.</h2>
-      <p style="color:var(--text-muted);font-size:16.5px">
-        Hơn 10 năm làm system admin, mình nhận ra tài liệu chính thức thường đúng nhưng thiếu ngữ cảnh.
-        Blog này là nơi mình bổ sung phần còn thiếu đó: môi trường thật, ràng buộc thật, và cả những lần
-        rollback lúc 2 giờ sáng.
+      <span class="eyebrow">Who Am I</span>
+      <h2 class="about-title">Hơn 10 năm vận hành hệ thống, nay chia sẻ lại để tiếp sức cho người trẻ.</h2>
+      <p class="about-text">
+        Tài liệu chính thức thường đúng nhưng thiếu ngữ cảnh. Blog này bổ sung phần còn thiếu:
+        môi trường thật, ràng buộc thật và cả những lần rollback lúc 2 giờ sáng.
       </p>
-      <p style="color:var(--text-muted);font-size:16.5px">
-        Nếu bạn đang gặp vấn đề tương tự, hoặc muốn trao đổi về Microsoft 365, Intune và bảo mật endpoint —
-        cứ kết nối với mình.
+      <blockquote class="poem">
+        Tôi là giọt nước trong lành,<br>
+        Kiên trì mài đá, chân thành gửi trao.<br>
+        Hợp dòng muôn giọt hòa vào,<br>
+        Thành sông tri thức dạt dào muôn nơi.
+      </blockquote>
+      <p class="about-text">
+        Cần trao đổi về Microsoft 365, Intune hay bảo mật endpoint — cứ kết nối với mình.
       </p>
       <div class="btn-row">
         <a class="btn btn-primary" href="www.linkedin.com/in/nguyễn-công-tâm-8ab42a18b">LinkedIn</a>
@@ -119,16 +123,26 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
       </div>
     </div>
     <aside class="hero-card">
-      <h3 style="margin-top:0">Kỹ năng chính</h3>
-      <ul style="margin:0;padding-left:18px;color:var(--text-muted);font-size:15px;line-height:2">
-        <li>Microsoft 365 &amp; Entra ID</li>
-        <li>Microsoft Intune / Endpoint Manager</li>
-        <li>Windows Server, WSUS, Active Directory</li>
-        <li>macOS MDM &amp; Declarative Device Management</li>
-        <li>SentinelOne &amp; Microsoft Defender</li>
-        <li>PowerShell · Bash · Automation</li>
-      </ul>
+      <dl class="brand">
+        <div><dt>Lẽ sống</dt><dd>Mỗi ngày một giọt nước, mười năm một dòng sông.</dd></div>
+        <div><dt>Tầm nhìn</dt><dd>Người trẻ có cơ hội tiếp cận tri thức và kinh nghiệm thực tế, tự tin hơn trên hành trình phát triển bản thân và nghề nghiệp.</dd></div>
+        <div><dt>Sứ mệnh</dt><dd>Biến những điều học được thành giá trị hữu ích, tiếp sức cho thế hệ sau bằng sự sẻ chia chân thành và bền bỉ.</dd></div>
+        <div><dt>Giá trị cốt lõi</dt><dd><span class="pill">Công tâm</span><span class="pill">Bền bỉ</span><span class="pill">Chia sẻ giá trị</span></dd></div>
+        <div><dt>Khát vọng</dt><dd>Trở thành người kết nối tri thức, xây dựng cộng đồng tiếp sức cho các thế hệ trẻ.</dd></div>
+      </dl>
     </aside>
+  </div>
+
+  <div class="container skills">
+    <h3>Kỹ năng chính</h3>
+    <ul class="skill-list">
+      <li>Microsoft 365 &amp; Entra ID</li>
+      <li>Microsoft Intune / Endpoint Manager</li>
+      <li>Windows Server, WSUS, Active Directory</li>
+      <li>macOS MDM &amp; Declarative Device Management</li>
+      <li>SentinelOne &amp; Microsoft Defender</li>
+      <li>PowerShell · Bash · Automation</li>
+    </ul>
   </div>
 </section>
 
