@@ -4,8 +4,15 @@ permalink: /search.json
 sitemap: false
 ---
 [
-{%- assign searchable_content = site.posts | concat: site.pages | where_exp: "item", "item.title and item.url != '/search/' and item.url != '/search.json' and item.layout != 'redirect'" -%}
-{%- for item in searchable_content %}
+{%- assign first_search_item = true -%}
+{%- assign searchable_content = site.posts | concat: site.pages -%}
+{%- for item in searchable_content -%}
+{%- if item.title -%}
+{%- unless item.url == '/search/' -%}
+{%- unless item.url == '/search.json' -%}
+{%- unless item.layout == 'redirect' -%}
+{%- unless first_search_item -%},{%- endunless -%}
+{%- assign first_search_item = false -%}
   {
     "title": {{ item.title | strip_html | normalize_whitespace | jsonify }},
     "url": {{ item.url | relative_url | jsonify }},
@@ -13,6 +20,10 @@ sitemap: false
     "summary": {{ item.description | default: item.summary | strip_html | normalize_whitespace | jsonify }},
     "tags": {{ item.tags | join: ' ' | jsonify }},
     "content": {{ item.content | strip_html | normalize_whitespace | jsonify }}
-  }{% unless forloop.last %},{% endunless %}
+  }
+{%- endunless -%}
+{%- endunless -%}
+{%- endunless -%}
+{%- endif -%}
 {%- endfor %}
 ]
