@@ -1,7 +1,7 @@
 ---
 layout: post
-title: "DLC SS10 – Team Building 2 – Hồ Tràm – Ride the Wave"
-seo_title: "DLC SS10 Team Building 2: Ride the Wave"
+title: "Team Building 2 – Hồ Tràm – Ride the Wave"
+seo_title: "Team Building 2: Ride the Wave"
 description: "Hai ngày ở Hồ Tràm giúp các Hạt mùa 10 gắn kết hơn qua hoạt động đồng đội, những cuộc trò chuyện chân thành và hành trình cùng nhau vượt sóng."
 date: 2026-10-22
 author: "Tam Nguyen"
@@ -17,7 +17,7 @@ card_tags:
   - Career
 summary: "Hai ngày ở Hồ Tràm để các Hạt mùa 10 cùng vui chơi, nhìn lại hành trình và thêm tin tưởng nhau trên chặng đường phía trước."
 redirect_from:
-  - /posts/dlc-ss10-team-building-2-ho-tram-ride-the-wave.html
+  - /posts/team-building-2-ho-tram-ride-the-wave.html
 ---
 
 Sau một hành trình cùng học những buổi tối thức khuya, tranh luận để đào sâu kiến thức và chia sẻ về cuộc đời, chúng mình — các Hạt mùa 10 — đã có một sợi dây liên kết. Chuyến **Team Building 2** ở Hồ Tràm là dịp để cùng vui chơi, xây dựng tinh thần đồng đội và nhìn lại chặng đường đã qua.
