@@ -30,6 +30,162 @@
     });
   }
 
+  /* --------------------------------------------------------- Search */
+  var searchToggle = document.getElementById("searchToggle");
+  var siteSearch = document.getElementById("siteSearch");
+  var siteSearchInput = document.getElementById("siteSearchInput");
+  if (searchToggle && siteSearch) {
+    if (siteSearchInput) {
+      siteSearchInput.value = new URLSearchParams(window.location.search).get("q") || "";
+    }
+
+    searchToggle.addEventListener("click", function () {
+      var isOpen = !siteSearch.hidden;
+      siteSearch.hidden = isOpen;
+      searchToggle.setAttribute("aria-expanded", String(!isOpen));
+      searchToggle.setAttribute("aria-label", isOpen ? "Mở tìm kiếm" : "Đóng tìm kiếm");
+      if (!isOpen && siteSearchInput) siteSearchInput.focus();
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !siteSearch.hidden) {
+        siteSearch.hidden = true;
+        searchToggle.setAttribute("aria-expanded", "false");
+        searchToggle.setAttribute("aria-label", "Mở tìm kiếm");
+        searchToggle.focus();
+      }
+    });
+  }
+
+  var searchPageForm = document.getElementById("searchPageForm");
+  var searchResults = document.getElementById("searchResults");
+  var searchStatus = document.getElementById("searchStatus");
+  var searchPageInput = document.getElementById("searchPageInput");
+  if (searchPageForm && searchResults && searchStatus && searchPageInput) {
+    var searchIndexPromise;
+    var searchConfig = window.siteSearchConfig || {};
+
+    function normalizeSearchText(value) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase("vi")
+        .trim();
+    }
+
+    function makeSnippet(item, terms) {
+      var source = item.content || item.summary || "";
+      var normalized = normalizeSearchText(source);
+      var firstMatch = -1;
+      terms.some(function (term) {
+        var position = normalized.indexOf(term);
+        if (position !== -1 && (firstMatch === -1 || position < firstMatch)) {
+          firstMatch = position;
+        }
+        return false;
+      });
+
+      if (firstMatch < 0) return (item.summary || source).slice(0, 220);
+      var start = Math.max(0, firstMatch - 90);
+      var end = Math.min(source.length, firstMatch + 150);
+      return (start > 0 ? "…" : "") + source.slice(start, end) + (end < source.length ? "…" : "");
+    }
+
+    function makeResult(item, snippet) {
+      var link = document.createElement("a");
+      link.className = "search-result";
+      link.href = item.url;
+
+      var type = document.createElement("span");
+      type.className = "search-result-type";
+      type.textContent = item.type === "article" ? "Bài viết" : "Trang";
+
+      var title = document.createElement("h2");
+      title.textContent = item.title;
+
+      var excerpt = document.createElement("p");
+      excerpt.textContent = snippet;
+
+      link.appendChild(type);
+      link.appendChild(title);
+      link.appendChild(excerpt);
+      return link;
+    }
+
+    function searchSite(query) {
+      var normalizedQuery = normalizeSearchText(query);
+      var terms = normalizedQuery.match(/[a-z0-9]+/g) || [];
+      searchResults.replaceChildren();
+
+      if (!terms.length) {
+        searchStatus.textContent = "Nhập từ khóa để tìm trong bài viết và nội dung trang.";
+        return;
+      }
+
+      searchStatus.textContent = "Đang tìm kiếm…";
+      if (!searchIndexPromise) {
+        searchIndexPromise = fetch(searchConfig.indexUrl || "/search.json")
+          .then(function (response) {
+            if (!response.ok) throw new Error("Không tải được chỉ mục tìm kiếm.");
+            return response.json();
+          });
+      }
+
+      searchIndexPromise.then(function (items) {
+        var matches = items.map(function (item) {
+          var title = normalizeSearchText(item.title);
+          var summary = normalizeSearchText(item.summary);
+          var tags = normalizeSearchText(item.tags);
+          var content = normalizeSearchText(item.content);
+          var searchable = title + " " + summary + " " + tags + " " + content;
+          if (!terms.every(function (term) { return searchable.indexOf(term) !== -1; })) {
+            return null;
+          }
+
+          var score = terms.reduce(function (total, term) {
+            return total + (title.indexOf(term) !== -1 ? 10 : 0) +
+              (summary.indexOf(term) !== -1 ? 4 : 0) +
+              (content.indexOf(term) !== -1 ? 1 : 0);
+          }, 0);
+          if (title.indexOf(normalizedQuery) !== -1) score += 20;
+          return { item: item, score: score };
+        }).filter(Boolean).sort(function (a, b) {
+          return b.score - a.score || a.item.title.localeCompare(b.item.title, "vi");
+        });
+
+        if (!matches.length) {
+          searchStatus.textContent = "Không tìm thấy kết quả phù hợp. Thử từ khóa khác nhé.";
+          return;
+        }
+
+        searchStatus.textContent = "Tìm thấy " + matches.length +
+          (matches.length === 1 ? " kết quả." : " kết quả.");
+        matches.forEach(function (match) {
+          searchResults.appendChild(
+            makeResult(match.item, makeSnippet(match.item, terms))
+          );
+        });
+      }).catch(function () {
+        searchIndexPromise = null;
+        searchStatus.textContent = "Chưa tải được dữ liệu tìm kiếm. Vui lòng thử lại.";
+      });
+    }
+
+    var queryFromUrl = new URLSearchParams(window.location.search).get("q") || "";
+    searchPageInput.value = queryFromUrl;
+    if (queryFromUrl) searchSite(queryFromUrl);
+
+    searchPageForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var query = searchPageInput.value.trim();
+      var url = new URL(window.location.href);
+      if (query) url.searchParams.set("q", query);
+      else url.searchParams.delete("q");
+      window.history.replaceState({}, "", url);
+      searchSite(query);
+    });
+  }
+
   /* --------------------------------------------------- Post filter */
   var filterRow = document.getElementById("filterRow");
   var grid = document.getElementById("postGrid");

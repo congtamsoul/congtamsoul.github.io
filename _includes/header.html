@@ -14,8 +14,19 @@
     </ul>
 
     <div class="nav-actions">
+      <button class="icon-btn search-toggle" id="searchToggle" type="button"
+              aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="siteSearch">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
+      </button>
       <button class="icon-btn" id="themeToggle" title="Đổi giao diện sáng/tối" aria-label="Đổi theme">◐</button>
       <button class="icon-btn nav-toggle" id="navToggle" aria-label="Menu">☰</button>
     </div>
+  </div>
+  <div class="site-search" id="siteSearch" hidden>
+    <form class="site-search-form" action="{{ '/search/' | relative_url }}" method="get" role="search">
+      <label class="visually-hidden" for="siteSearchInput">Tìm trong bài viết và nội dung trang</label>
+      <input id="siteSearchInput" name="q" type="search" placeholder="Tìm bài viết, chủ đề, nội dung..." autocomplete="off">
+      <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+    </form>
   </div>
 </header>
