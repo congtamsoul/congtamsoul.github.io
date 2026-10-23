@@ -10,7 +10,7 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
   <div class="container hero-grid">
     <div>
       <span class="eyebrow">● Senior System Administrator</span>
-      <h1>Vận hành <span>Microsoft 365</span> &amp; endpoint bằng kinh nghiệm thực chiến.</h1>
+      <h1>Vận hành <span>Microsoft 365</span> &amp; endpoint bằng kinh&nbsp;nghiệm thực chiến.</h1>
       <p class="lead">
         Mình là Tâm, hơn 10 năm quản trị hệ thống cho hàng nghìn thiết bị. Mình ghi lại những gì đã
         triển khai, đã gặp sự cố và đã khắc phục với Microsoft 365, Intune, Windows Server, macOS và
@@ -49,6 +49,20 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
   </div>
 </section>
 
+{% if site.goatcounter.domain != "" %}
+<section class="section section-alt popular-section" id="popularPosts" data-view-counter="https://{{ site.goatcounter.domain | escape }}" hidden>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Bài đọc nhiều nhất</h2>
+        <p>Những bài viết được bạn đọc quan tâm.</p>
+      </div>
+    </div>
+    <ol class="popular-list" id="popularList"></ol>
+  </div>
+</section>
+{% endif %}
+
 <!-- ============================================================= POSTS -->
 <section class="section" id="posts">
   <div class="container">
@@ -78,6 +92,27 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
     </div>
   </div>
 </section>
+
+{% if site.data.testimonials.size > 0 %}
+<section class="section section-alt" id="testimonials">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Người đọc nói gì</h2>
+        <p>Lời chia sẻ từ đồng nghiệp và những người mình có dịp đồng hành.</p>
+      </div>
+    </div>
+    <div class="testimonials-grid">
+      {% for testimonial in site.data.testimonials limit:3 %}
+      <blockquote class="testimonial">
+        <p>“{{ testimonial.quote | escape }}”</p>
+        <footer><strong>{{ testimonial.name | escape }}</strong>{% if testimonial.role %}<span>{{ testimonial.role | escape }}</span>{% endif %}</footer>
+      </blockquote>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <!-- ============================================================ TOPICS -->
 <section class="section section-alt" id="topics">
@@ -167,10 +202,10 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
 <section class="section section-alt" id="newsletter">
   <div class="container">
     <div class="cta">
-      <h2>Nhận bài viết mới mỗi tuần</h2>
-      <p>Một email mỗi tuần: bài mới, script hữu ích và tin tức đáng chú ý từ hệ sinh thái Microsoft. Không spam, huỷ bất cứ lúc nào.</p>
+      <h2>Nhận bài viết mới khi có bài mới</h2>
+      <p>Nhận thông báo khi có bài viết mới, script hữu ích và tin tức đáng chú ý từ hệ sinh thái Microsoft. Không spam, huỷ bất cứ lúc nào.</p>
       <form class="subscribe" id="subscribeForm">
-        <input type="email" placeholder="email@congty.com" required aria-label="Email">
+        <input type="email" placeholder="Email của bạn" required aria-label="Email">
         <button class="btn btn-primary" type="submit">Đăng ký</button>
       </form>
       <p id="subscribeMsg" style="margin-top:14px;font-size:14px;color:var(--accent);display:none">Cảm ơn bạn! Hãy kiểm tra hộp thư để xác nhận.</p>

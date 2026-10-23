@@ -15,7 +15,89 @@
       var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
+      var giscusFrame = document.querySelector(".giscus iframe");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage({
+          giscus: { setConfig: { theme: next } }
+        }, "https://giscus.app");
+      }
     });
+  }
+
+  /* ----------------------------------------------- View counts */
+  var goatCounterScript = document.querySelector("script[data-goatcounter]");
+  if (goatCounterScript) {
+    var counterBase = goatCounterScript.dataset.goatcounter.replace(/\/count\/?$/, "");
+    var viewElements = Array.prototype.slice.call(
+      document.querySelectorAll(".post-view-count[data-view-path]")
+    );
+
+    function loadViewCount(path) {
+      var encodedPath = encodeURIComponent(path);
+      return fetch(counterBase + "/counter/" + encodedPath + ".json")
+        .then(function (response) {
+          if (!response.ok) throw new Error("Không tải được lượt xem cho " + path);
+          return response.json();
+        })
+        .then(function (result) {
+          var countText = String(result && result.count != null ? result.count : "")
+            .replace(/[^\d]/g, "");
+          if (!countText) throw new Error("Dữ liệu lượt xem không hợp lệ cho " + path);
+          var count = Number(countText);
+          if (!Number.isSafeInteger(count)) throw new Error("Dữ liệu lượt xem không hợp lệ cho " + path);
+          return count;
+        });
+    }
+
+    var countRequests = {};
+    viewElements.forEach(function (element) {
+      var path = element.dataset.viewPath;
+      if (!countRequests[path]) countRequests[path] = loadViewCount(path);
+      countRequests[path].then(function (count) {
+        element.textContent = "· " + count.toLocaleString("vi-VN") + " lượt xem";
+        element.hidden = false;
+      }).catch(function (error) {
+        console.error(error);
+      });
+    });
+
+    var popularSection = document.getElementById("popularPosts");
+    var popularList = document.getElementById("popularList");
+    var postGrid = document.getElementById("postGrid");
+    if (popularSection && popularList && postGrid) {
+      var popularRequests = Array.prototype.map.call(
+        postGrid.querySelectorAll(".post-card[data-post-path]"),
+        function (card) {
+          var path = card.dataset.postPath;
+          return countRequests[path].then(function (count) {
+            return { card: card, count: count };
+          }).catch(function (error) {
+            console.error("Không thể lấy lượt xem của bài viết " + path + ".", error);
+            return null;
+          });
+        }
+      );
+
+      Promise.all(popularRequests).then(function (posts) {
+        posts = posts.filter(Boolean).sort(function (a, b) { return b.count - a.count; });
+        posts.slice(0, 3).filter(function (post) { return post.count > 0; })
+          .forEach(function (post) {
+            var item = document.createElement("li");
+            var link = document.createElement("a");
+            var title = post.card.querySelector(".post-card h3 a");
+            var views = document.createElement("span");
+            link.href = title.href;
+            link.textContent = title.textContent;
+            views.textContent = post.count.toLocaleString("vi-VN") + " lượt xem";
+            item.appendChild(link);
+            item.appendChild(views);
+            popularList.appendChild(item);
+          });
+        if (popularList.children.length) popularSection.hidden = false;
+      }).catch(function (error) {
+        console.error("Không thể tải danh sách bài đọc nhiều nhất.", error);
+      });
+    }
   }
 
   /* ----------------------------------------------------- Mobile nav */

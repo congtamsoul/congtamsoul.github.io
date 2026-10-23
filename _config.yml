@@ -7,6 +7,15 @@ author: "Nguyễn Công Tâm"
 
 permalink: /posts/:title/
 
+giscus:
+  repo: "congtamsoul/congtamsoul.github.io"
+  repo_id: ""
+  category: "Announcements"
+  category_id: ""
+
+goatcounter:
+  domain: ""
+
 markdown: kramdown
 plugins:
   - jekyll-redirect-from

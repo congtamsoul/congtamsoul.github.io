@@ -322,7 +322,7 @@ img { max-width: 100%; display: block; }
 .about-text { color: var(--text-muted); font-size: 16.5px; margin: 0 0 16px; }
 .poem { margin: 0 0 18px; padding: 4px 0 4px 16px; border-left: 3px solid var(--accent); color: var(--text); font-style: italic; line-height: 1.8; }
 
-.brand { margin: 0; display: grid; gap: 16px; }
+.brand { margin: 0; }
 .brand dt { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
 .brand dd { margin: 0; font-size: 15px; line-height: 1.55; color: var(--text); }
 .brand > div + div { border-top: 1px solid var(--border); padding-top: 16px; }
@@ -432,6 +432,7 @@ img { max-width: 100%; display: block; }
   padding-top: 12px;
   border-top: 1px solid var(--border);
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
   font-size: 13px;
   color: var(--text-muted);
@@ -470,6 +471,28 @@ img { max-width: 100%; display: block; }
 .topic .ico { font-size: 24px; margin-bottom: 12px; }
 .topic h4 { margin: 0 0 6px; font-size: 16px; }
 .topic p { margin: 0; color: var(--text-muted); font-size: 14px; }
+
+/* ---------------------------------------------------------- Popular posts */
+.popular-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.popular-list li {
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  padding: 18px 20px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.popular-list a { font-weight: 600; }
+.popular-list a:hover { color: var(--accent); }
+.popular-list span { color: var(--text-muted); font-size: 14px; white-space: nowrap; }
+.post-view-count { white-space: nowrap; }
+
+/* ------------------------------------------------------------ Testimonials */
+.testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
+.testimonial {
+  margin: 0; padding: 22px; background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.testimonial p { margin: 0 0 18px; color: var(--text); }
+.testimonial footer { display: grid; gap: 2px; font-size: 14px; }
+.testimonial footer span { color: var(--text-muted); }
 
 /* -------------------------------------------------------------- Newsletter */
 .cta {
@@ -552,6 +575,9 @@ img { max-width: 100%; display: block; }
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
   display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 14px;
 }
+.article-head .byline .post-view-count { white-space: nowrap; }
+.comments-section { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
+.comments-section h2 { margin: 0 0 20px; font-size: 24px; }
 
 .prose { font-size: 17px; line-height: 1.8; }
 .prose h2 { font-size: 26px; margin: 44px 0 14px; letter-spacing: -0.02em; scroll-margin-top: 90px; }

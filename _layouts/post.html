@@ -16,6 +16,7 @@ layout: default
         <div class="byline">
           <span class="avatar-sm">TN</span>
           <span><b style="color:var(--text)">{{ page.author | default: site.author }}</b> · {% include post-date.html date=page.date %} · {{ page.reading_time }} phút đọc</span>
+          <span class="post-view-count" data-view-path="{{ page.url | relative_url | escape }}" hidden></span>
         </div>
       </div>
 
@@ -38,6 +39,27 @@ layout: default
       </div>
 
       {% include post-nav.html %}
+
+      {% if site.giscus.repo_id != "" and site.giscus.category_id != "" %}
+      <section class="comments-section" aria-labelledby="commentsTitle">
+        <h2 id="commentsTitle">Bình luận</h2>
+        <div class="giscus"></div>
+        <script src="https://giscus.app/client.js"
+                data-repo="{{ site.giscus.repo | escape }}"
+                data-repo-id="{{ site.giscus.repo_id | escape }}"
+                data-category="{{ site.giscus.category | escape }}"
+                data-category-id="{{ site.giscus.category_id | escape }}"
+                data-mapping="pathname"
+                data-strict="1"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="top"
+                data-theme="dark"
+                data-lang="vi"
+                crossorigin="anonymous"
+                async></script>
+      </section>
+      {% endif %}
     </article>
 
     <aside class="toc">

@@ -80,6 +80,18 @@ jekyll serve
 
 Settings → Pages → Source: Deploy from a branch → `main` / (root). GitHub Pages tự build Jekyll khi push.
 
+## Bình luận, lượt xem và feedback
+
+- Bình luận dùng Giscus. Bật Discussions cho repository, cài ứng dụng Giscus, sau đó điền `repo_id` và `category_id` trong `_config.yml`. Mục bình luận chỉ hiện ở bài viết khi cả hai giá trị đã được cấu hình.
+- Lượt xem dùng GoatCounter. Tạo site tại GoatCounter rồi đặt `domain` trong `_config.yml` (chỉ tên miền, ví dụ `ten-site.goatcounter.com`). GoatCounter sẽ ghi nhận lượt xem; lượt xem từng bài và danh sách 3 bài đọc nhiều nhất trang chủ lấy từ bộ đếm công khai.
+- Thêm feedback thật vào `_data/testimonials.yml` theo mẫu dưới đây. Mục “Người đọc nói gì” chỉ hiển thị khi có nội dung và tối đa 3 lời chia sẻ.
+
+```yaml
+- quote: "Nội dung nhận xét đã được người gửi đồng ý công khai."
+  name: "Tên người gửi"
+  role: "Vai trò hoặc mối quan hệ"
+```
+
 ## Cần thay trước khi public
 
 - Endpoint form newsletter trong `assets/main.js`
