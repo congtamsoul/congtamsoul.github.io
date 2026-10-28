@@ -1,11 +1,11 @@
-- quote: "Mình làm theo bài hướng dẫn đóng gói app Win32 lên Intune, đặc biệt là phần detection rule. Trước đó app cứ báo Failed dù đã cài xong, đọc xong mới biết mình viết sai logic detection. Sửa lại một lần là chạy ổn."
+- quote: "Mình làm theo bài hướng dẫn đóng gói app Win32 lên Intune, đặc biệt là phần detection rule. Trước đó app cứ báo Failed dù đã cài xong, đọc xong mới biết nguyên nhân là vì file cấu hình chưa được quét đúng. Bài viết giúp mình tiết kiệm rất nhiều thời gian debug."
   name: "Huỳnh Hoàng Phúc"
   role: "System Administrator"
-<br>
-- quote: "Điều mình thích là các bài không chỉ nói lý thuyết mà còn có log, lỗi thật và cách xử lý từng bước. Bài về nâng cấp Windows 11 25H2 giúp team mình tiết kiệm khá nhiều thời gian khi gặp máy upgrade bị fail."
+
+- quote: "Điều mình thích là các bài không chỉ nói lý thuyết mà còn có log, lỗi thật và cách xử lý từng bước. Bài về nâng cấp Windows 11 25H2 giúp team mình chuẩn bị đúng hướng và tránh được nhiều rủi ro khi rollout."
   name: "Tống Trí Kiên"
   role: "IT Support"
-<br>
-- quote: "Hiếm khi thấy blog tiếng Việt viết sâu về Platform SSO trên macOS như vậy. Phần giải thích nguyên nhân lỗi keychain sau khi reset mật khẩu rất dễ hiểu, mình đã lưu lại để gửi cho team helpdesk."
+
+- quote: "Hiếm khi thấy blog tiếng Việt viết sâu về Platform SSO trên macOS như vậy. Phần giải thích nguyên nhân lỗi keychain sau khi reset mật khẩu rất dễ hiểu, rất thực tế và có tính ứng dụng cao."
   name: "Bùi Việt Hùng"
   role: "Cloud Administrator"
