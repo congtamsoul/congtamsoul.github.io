@@ -14,7 +14,7 @@ giscus:
   category_id: "DIC_kwDOUgVRm84DJz2M"
 
 goatcounter:
-  domain: ""
+  domain: "congtamsoul.goatcounter.com"
 
 markdown: kramdown
 plugins:
