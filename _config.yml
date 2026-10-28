@@ -9,9 +9,9 @@ permalink: /posts/:title/
 
 giscus:
   repo: "congtamsoul/congtamsoul.github.io"
-  repo_id: ""
+  repo_id: "R_kgDOUgVRmw"
   category: "Announcements"
-  category_id: ""
+  category_id: "DIC_kwDOUgVRm84DJz2M"
 
 goatcounter:
   domain: ""
