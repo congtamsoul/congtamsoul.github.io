@@ -1,138 +1,3 @@
----
-layout: default
-title: "Nguyễn Công Tâm — Microsoft 365, Windows & Endpoint Management"
-description: "Blog cá nhân của Nguyễn Công Tâm — Senior System Administrator. Chia sẻ kinh nghiệm thực chiến về Microsoft 365, Intune, Windows Server, macOS, SentinelOne, chuyển đổi số và bảo mật endpoint."
-og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Windows, macOS và bảo mật endpoint."
----
-
-<!-- ============================================================== HERO -->
-<section class="hero">
-  <div class="container hero-grid">
-    <div>
-      <span class="eyebrow">● Senior System Administrator</span>
-      <h1>Vận hành <span>Microsoft 365</span> &amp; endpoint bằng kinh&nbsp;nghiệm thực chiến.</h1>
-      <p class="lead">
-        Mình là Tâm, hơn 10 năm quản trị hệ thống cho hàng nghìn thiết bị. Mình ghi lại những gì đã
-        triển khai, đã gặp sự cố và đã khắc phục với Microsoft 365, Intune, Windows Server, macOS và
-        SentinelOne — kèm script, checklist và bài học đúc kết để bạn đi nhanh hơn mình.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="#posts">Đọc bài mới nhất →</a>
-        <a class="btn btn-ghost" href="#newsletter">Nhận bài qua email</a>
-      </div>
-    </div>
-
-    <aside class="hero-card">
-      <div class="profile-head">
-        <div class="avatar"><img src="{{ '/images/avatar/avatar.jpg' | relative_url }}" alt="Nguyễn Công Tâm"></div>
-        <div>
-          <h3>Nguyễn Công Tâm</h3>
-          <p class="role">Senior System Administrator</p>
-          <p class="loc">TP. Hồ Chí Minh, Việt Nam</p>
-        </div>
-      </div>
-      <div class="stat-row">
-        <div class="stat"><b>10+</b><span>Năm kinh nghiệm</span></div>
-        <div class="stat"><b>2.500+</b><span>Endpoint quản trị</span></div>
-        <div class="stat"><b>M365</b><span>Intune · Security</span></div>
-      </div>
-      <div class="cert-block">
-        <h4>Chứng chỉ</h4>
-        <div class="cert-row">
-          <figure class="cert"><img src="{{ '/images/certificate/AZ-104.png' | relative_url }}" alt="Chứng chỉ AZ-104" loading="lazy"><figcaption>AZ-104</figcaption></figure>
-          <figure class="cert"><img src="{{ '/images/certificate/ITILv4.jpg' | relative_url }}" alt="Chứng chỉ ITILv4" loading="lazy"><figcaption>ITILv4</figcaption></figure>
-          <figure class="cert"><img src="{{ '/images/certificate/MCT.png' | relative_url }}" alt="Chứng chỉ MCT" loading="lazy"><figcaption>MCT</figcaption></figure>
-          <figure class="cert"><img src="{{ '/images/certificate/MS-700.png' | relative_url }}" alt="Chứng chỉ MS-700" loading="lazy"><figcaption>MS-700</figcaption></figure>
-        </div>
-      </div>
-    </aside>
-  </div>
-</section>
-
-{% if site.goatcounter.domain != "" %}
-<section class="section section-alt popular-section" id="popularPosts" data-view-counter="https://{{ site.goatcounter.domain | escape }}" hidden>
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <h2>Bài đọc nhiều nhất</h2>
-        <p>Những bài viết được bạn đọc quan tâm.</p>
-      </div>
-    </div>
-    <ol class="popular-list" id="popularList"></ol>
-  </div>
-</section>
-{% endif %}
-
-<!-- ============================================================= POSTS -->
-<section class="section" id="posts">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <h2>Bài viết mới nhất</h2>
-        <p>Hướng dẫn từng bước, troubleshooting thực tế và ghi chú vận hành.</p>
-      </div>
-      <a class="link-more" href="#posts">Xem tất cả →</a>
-    </div>
-
-    <div class="filter-row" id="filterRow">
-      <button class="chip active" data-filter="all">Tất cả</button>
-      <button class="chip" data-filter="m365">Microsoft 365</button>
-      <button class="chip" data-filter="windows">Windows</button>
-      <button class="chip" data-filter="macos">macOS</button>
-      <button class="chip" data-filter="security">Security</button>
-      <button class="chip" data-filter="career">Phát triển bản thân</button>
-      <button class="chip" data-filter="dx">Chuyển đổi số</button>
-    </div>
-
-    <div class="card-grid" id="postGrid">
-      {%- for post in site.posts %}
-      {% include post-card.html post=post %}
-      {%- endfor %}
-
-    </div>
-  </div>
-</section>
-
-{% if site.data.testimonials.size > 0 %}
-<section class="section section-alt" id="testimonials">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <h2>Người đọc nói gì</h2>
-        <p>Lời chia sẻ từ đồng nghiệp và những người mình có dịp đồng hành.</p>
-      </div>
-    </div>
-    <div class="testimonials-grid">
-      {% for testimonial in site.data.testimonials limit:3 %}
-      <blockquote class="testimonial">
-        <p>“{{ testimonial.quote | escape }}”</p>
-        <footer><strong>{{ testimonial.name | escape }}</strong>{% if testimonial.role %}<span>{{ testimonial.role | escape }}</span>{% endif %}</footer>
-      </blockquote>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-{% endif %}
-
-<!-- ============================================================ TOPICS -->
-<section class="section section-alt" id="topics">
-  <div class="container">
-    <div class="section-head">
-      <div>
-        <h2>Chủ đề mình viết</h2>
-        <p>Sáu mảng chính, tất cả đều xuất phát từ công việc hằng ngày.</p>
-      </div>
-    </div>
-
-    <div class="topic-grid">
-      {%- for t in site.data.topics %}
-      <a class="topic" href="{{ '/topics/' | append: t.key | append: '/' | relative_url }}"><div class="ico">{{ t.icon }}</div><h4>{{ t.name | escape }}</h4><p>{{ t.description | escape }}</p></a>
-      {%- endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- ============================================================= ABOUT -->
 <section class="section" id="about">
   <div class="container about-shell">
     <div class="about-intro">
@@ -148,15 +13,6 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
         Hợp dòng muôn giọt hòa vào,<br>
         Thành sông tri thức dạt dào muôn nơi.
       </blockquote>
-      <p class="about-text">
-        Cần trao đổi về Microsoft 365, Intune hay bảo mật endpoint — cứ kết nối với mình.
-      </p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="https://www.linkedin.com/in/nguy%E1%BB%85n-c%C3%B4ng-t%C3%A2m-8ab42a18b/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn btn-ghost" href="https://www.facebook.com/congtam.nguyen.758/" target="_blank" rel="noopener">Facebook</a>
-        <a class="btn btn-ghost" href="https://congtamsoul.github.io/">GitHub</a>
-        <a class="btn btn-ghost" href="mailto:congtamsoul@gmail.com">Email</a>
-      </div>
     </div>
   </div>
 
@@ -196,6 +52,18 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
         <p>Trở thành người kết nối tri thức, xây dựng cộng đồng tiếp sức cho các thế hệ trẻ.</p>
       </article>
     </div>
+
+    <div class="connect-block">
+      <p class="about-text">
+        Cần trao đổi về Microsoft 365, Intune hay bảo mật endpoint — cứ kết nối với mình.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://www.linkedin.com/in/nguy%E1%BB%85n-c%C3%B4ng-t%C3%A2m-8ab42a18b/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://www.facebook.com/congtam.nguyen.758/" target="_blank" rel="noopener">Facebook</a>
+        <a class="btn btn-ghost" href="https://congtamsoul.github.io/">GitHub</a>
+        <a class="btn btn-ghost" href="mailto:congtamsoul@gmail.com">Email</a>
+      </div>
+    </div>
   </div>
 
   <div class="container skills">
@@ -223,21 +91,6 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
           <li><b>Service Excellence &amp; User Experience</b></li>
         </ul>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ======================================================== NEWSLETTER -->
-<section class="section section-alt" id="newsletter">
-  <div class="container">
-    <div class="cta">
-      <h2>Nhận bài viết mới khi có bài mới</h2>
-      <p>Nhận thông báo khi có bài viết mới, script hữu ích và tin tức đáng chú ý từ hệ sinh thái Microsoft. Không spam, huỷ bất cứ lúc nào.</p>
-      <form class="subscribe" id="subscribeForm">
-        <input type="email" placeholder="Email của bạn" required aria-label="Email">
-        <button class="btn btn-primary" type="submit">Đăng ký</button>
-      </form>
-      <p id="subscribeMsg" style="margin-top:14px;font-size:14px;color:var(--accent);display:none">Cảm ơn bạn! Hãy kiểm tra hộp thư để xác nhận.</p>
     </div>
   </div>
 </section>
