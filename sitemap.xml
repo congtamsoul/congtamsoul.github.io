@@ -1,0 +1,40 @@
+---
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>{{ site.url | append: '/' }}</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  {%- for page in site.pages -%}
+    {%- if page.url and page.url != '/sitemap.xml' and page.url != '/robots.txt' and page.sitemap != false -%}
+  <url>
+    <loc>{{ site.url | append: page.url }}</loc>
+    {%- if page.layout == 'topic' %}
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    {%- elsif page.layout == 'post' %}
+    <lastmod>{{ page.date | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    {%- else %}
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    {%- endif %}
+  </url>
+    {%- endif -%}
+  {%- endfor -%}
+  {%- for post in site.posts -%}
+    {%- unless post.sitemap == false or post.url contains 'mau-bai-viet-chuan' -%}
+  <url>
+    <loc>{{ site.url | append: post.url }}</loc>
+    <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+    {%- endunless -%}
+  {%- endfor -%}
+</urlset>
