@@ -351,6 +351,10 @@ body > div[id^="goog-"] { display: none !important; height: 0 !important; }
 .cert-block h4 { margin: 0 0 12px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
 .cert-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
 .cert { margin: 0; text-align: center; }
+.cert-link { display: block; border-radius: var(--radius-sm); }
+.cert-link img { transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+.cert-link:hover img, .cert-link:focus-visible img { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 8px 20px rgba(59, 130, 246, 0.18); }
+.cert-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .cert img { display: block; width: 100%; aspect-ratio: 1 / 1; object-fit: contain; background: #fff; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px; }
 .about-title { font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 16px; }
 .about-text { color: var(--text-muted); font-size: 16.5px; margin: 0 0 16px; }
