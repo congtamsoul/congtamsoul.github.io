@@ -24,9 +24,9 @@ layout: default
         {{ content }}
 
         <div class="share-row">
-          <a class="btn btn-ghost" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer">Chia sẻ LinkedIn</a>
-          <a class="btn btn-ghost" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer">Chia sẻ Facebook</a>
-          <a class="btn btn-ghost" href="{{ page.url | absolute_url }}" id="copyLinkBtn">Copy link</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer" data-i18n="share_linkedin">Chia sẻ LinkedIn</a>
+          <a class="btn btn-ghost" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer" data-i18n="share_facebook">Chia sẻ Facebook</a>
+          <a class="btn btn-ghost" href="{{ page.url | absolute_url }}" id="copyLinkBtn" data-i18n="copy_link">Copy link</a>
         </div>
 
         <div class="author-box">
@@ -42,7 +42,7 @@ layout: default
 
       {% if site.giscus.repo_id != "" and site.giscus.category_id != "" %}
       <section class="comments-section" aria-labelledby="commentsTitle">
-        <h2 id="commentsTitle">Bình luận</h2>
+        <h2 id="commentsTitle" data-i18n="comments">Bình luận</h2>
         <div class="giscus"></div>
         <script src="https://giscus.app/client.js"
                 data-repo="{{ site.giscus.repo | escape }}"
@@ -63,7 +63,7 @@ layout: default
     </article>
 
     <aside class="toc">
-      <h5>Mục lục</h5>
+      <h5 data-i18n="table_of_contents">Mục lục</h5>
       <ul id="tocList"></ul>
     </aside>
 

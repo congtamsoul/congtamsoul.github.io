@@ -51,6 +51,13 @@ a { color: inherit; text-decoration: none; }
 
 img { max-width: 100%; display: block; }
 
+/* Translate widget and Google banner are driven by the custom language button. */
+.google-translate-host,
+.goog-te-banner-frame,
+.goog-te-balloon-frame { display: none !important; }
+body { top: 0 !important; }
+.goog-tooltip { display: none !important; }
+
 .container {
   width: 100%;
   max-width: var(--maxw);
@@ -119,6 +126,21 @@ img { max-width: 100%; display: block; }
 .nav-links a.active { color: var(--text); background: var(--accent-soft); }
 
 .nav-actions { display: flex; align-items: center; gap: 8px; }
+.language-toggle {
+  height: 36px;
+  min-width: 48px;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: 0.18s;
+}
+.language-toggle:hover { border-color: var(--accent); color: var(--accent); }
 
 .icon-btn {
   width: 36px; height: 36px;
@@ -152,9 +174,11 @@ img { max-width: 100%; display: block; }
   background: var(--bg-card);
   border-bottom: 1px solid var(--border);
   box-shadow: var(--shadow);
+  z-index: 100;
 }
 
-.site-search[hidden] { display: none; }
+.site-search[hidden] { display: none !important; }
+.site-search:not([hidden]) { display: block; }
 
 .site-search-form,
 .search-page-form {
@@ -321,6 +345,29 @@ img { max-width: 100%; display: block; }
 .about-title { font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; margin: 0 0 16px; }
 .about-text { color: var(--text-muted); font-size: 16.5px; margin: 0 0 16px; }
 .poem { margin: 0 0 18px; padding: 4px 0 4px 16px; border-left: 3px solid var(--accent); color: var(--text); font-style: italic; line-height: 1.8; }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(420px, 1.6fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.about-intro { position: sticky; top: 96px; }
+.about-values { min-width: 0; }
+.about-contact-panel {
+  margin-top: 24px;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.about-contact {
+  margin: 0 0 14px;
+  color: var(--text-muted);
+  font-size: 15px;
+}
+.about-contact-actions { margin-top: 0; }
 
 .brand { margin: 0; }
 .brand dt { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
@@ -557,31 +604,6 @@ img { max-width: 100%; display: block; }
 .testimonial footer { display: grid; gap: 2px; font-size: 14px; }
 .testimonial footer span { color: var(--text-muted); }
 
-/* -------------------------------------------------------------- Newsletter */
-.cta {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 44px;
-  text-align: center;
-  box-shadow: var(--shadow);
-}
-.cta h2 { margin: 0 0 10px; font-size: 26px; letter-spacing: -0.02em; }
-.cta p { margin: 0 auto 24px; color: var(--text-muted); max-width: 52ch; }
-
-.subscribe { display: flex; gap: 10px; max-width: 460px; margin: 0 auto; }
-.subscribe input {
-  flex: 1;
-  padding: 12px 15px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-soft);
-  color: var(--text);
-  font-family: inherit;
-  font-size: 15px;
-}
-.subscribe input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
-
 /* ---------------------------------------------------------------- Footer */
 .site-footer {
   border-top: 1px solid var(--border);
@@ -776,6 +798,7 @@ img { max-width: 100%; display: block; }
 @media (max-width: 720px) {
   .nav-toggle { display: grid; }
   .nav-actions { gap: 6px; }
+  .language-toggle { min-width: 42px; height: 34px; padding-inline: 8px; }
   .site-search { padding: 12px 16px; }
   .site-search-form,
   .search-page-form { flex-direction: column; }
@@ -792,12 +815,15 @@ img { max-width: 100%; display: block; }
   .hero { padding: 56px 0 44px; }
   .section { padding: 52px 0; }
   .section-head { flex-direction: column; align-items: flex-start; }
+  .about-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .about-intro { position: static; }
   .value-list {
     grid-template-columns: 1fr;
     gap: 10px;
   }
   .value-item--wide { grid-column: auto; }
-  .cta { padding: 30px 22px; }
-  .subscribe { flex-direction: column; }
   .footer-grid { grid-template-columns: 1fr; }
 }

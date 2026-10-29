@@ -4,6 +4,39 @@
 (function () {
   "use strict";
 
+  /* ------------------------------------------------------- Language */
+  var languageToggle = document.getElementById("languageToggle");
+  var languageLabel = document.getElementById("languageLabel");
+
+  function readLanguage() {
+    var cookie = String(document.cookie || "");
+    var match = cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
+    if (match && decodeURIComponent(match[1]).toLowerCase().indexOf("/en") !== -1) return "en";
+    return localStorage.getItem("language") === "en" ? "en" : "vi";
+  }
+
+  function setLanguage(language) {
+    var value = language === "en" ? "/vi/en" : "/vi/vi";
+    document.cookie = "googtrans=" + value + "; path=/; SameSite=Lax";
+    localStorage.setItem("language", language);
+    document.documentElement.lang = language;
+    if (languageLabel) languageLabel.textContent = language === "en" ? "EN" : "VI";
+    if (languageToggle) {
+      languageToggle.setAttribute("aria-label", language === "en" ? "Switch to Vietnamese" : "Switch to English");
+      languageToggle.title = language === "en" ? "Switch to Vietnamese" : "Switch to English";
+    }
+  }
+
+  var currentLanguage = readLanguage();
+  setLanguage(currentLanguage);
+  if (languageToggle) {
+    languageToggle.addEventListener("click", function () {
+      var nextLanguage = readLanguage() === "en" ? "vi" : "en";
+      setLanguage(nextLanguage);
+      window.location.reload();
+    });
+  }
+
   /* ---------------------------------------------------------- Theme */
   var root = document.documentElement;
   var saved = localStorage.getItem("theme");
@@ -54,7 +87,7 @@
       var path = element.dataset.viewPath;
       if (!countRequests[path]) countRequests[path] = loadViewCount(path);
       countRequests[path].then(function (count) {
-        element.textContent = "· " + count.toLocaleString("vi-VN") + " lượt xem";
+        element.textContent = "· " + count.toLocaleString("vi-VN") + (document.documentElement.lang === "en" ? " views" : " lượt xem");
         element.hidden = false;
       }).catch(function (error) {
         console.error(error);
@@ -88,7 +121,7 @@
             var views = document.createElement("span");
             link.href = title.href;
             link.textContent = title.textContent;
-            views.textContent = post.count.toLocaleString("vi-VN") + " lượt xem";
+            views.textContent = post.count.toLocaleString("vi-VN") + (document.documentElement.lang === "en" ? " views" : " lượt xem");
             item.appendChild(link);
             item.appendChild(views);
             popularList.appendChild(item);
@@ -289,17 +322,6 @@
     });
   }
 
-  /* ------------------------------------------------ Subscribe form */
-  var form = document.getElementById("subscribeForm");
-  if (form) {
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      // TODO: đổi thành endpoint thật (Buttondown, Substack, Mailchimp, Formspree...)
-      document.getElementById("subscribeMsg").style.display = "block";
-      form.reset();
-    });
-  }
-
   /* ------------------------------------------- Reading progress bar */
   var bar = document.getElementById("progressBar");
   if (bar) {
@@ -345,8 +367,10 @@
       e.preventDefault();
       var url = copyLinkBtn.href;
       var done = function () {
-        copyLinkBtn.textContent = "Đã copy link ✓";
-        setTimeout(function () { copyLinkBtn.textContent = "Copy link"; }, 1800);
+        copyLinkBtn.textContent = document.documentElement.lang === "en" ? "Link copied ✓" : "Đã copy link ✓";
+        setTimeout(function () {
+          copyLinkBtn.textContent = document.documentElement.lang === "en" ? "Copy link" : "Copy link";
+        }, 1800);
       };
       if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(url).then(done);
@@ -367,7 +391,7 @@
   document.querySelectorAll(".prose pre").forEach(function (pre) {
     var btn = document.createElement("button");
     btn.className = "chip";
-    btn.textContent = "Copy";
+    btn.textContent = document.documentElement.lang === "en" ? "Copy" : "Copy";
     btn.style.cssText = "position:absolute;top:10px;right:10px;font-size:12px;padding:4px 10px";
     pre.style.position = "relative";
     btn.addEventListener("click", function () {

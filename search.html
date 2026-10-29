@@ -10,18 +10,18 @@ sitemap: false
 <main class="section search-page">
   <div class="container">
     <div class="search-page-head">
-      <span class="eyebrow">Thư viện nội dung</span>
-      <h1>Tìm kiếm</h1>
-      <p>Tìm trong bài viết, hướng dẫn và các nội dung trên website.</p>
+      <span class="eyebrow" data-i18n="search_library">Thư viện nội dung</span>
+      <h1 data-i18n="search_title">Tìm kiếm</h1>
+      <p data-i18n="search_desc">Tìm trong bài viết, hướng dẫn và các nội dung trên website.</p>
     </div>
 
     <form class="search-page-form" id="searchPageForm" action="{{ '/search/' | relative_url }}" method="get" role="search">
-      <label class="visually-hidden" for="searchPageInput">Nhập nội dung cần tìm</label>
-      <input id="searchPageInput" name="q" type="search" placeholder="Ví dụ: Exchange Online, Intune, Autopilot..." autocomplete="off">
-      <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+      <label class="visually-hidden" for="searchPageInput" data-i18n="search_label">Nhập nội dung cần tìm</label>
+      <input id="searchPageInput" name="q" type="search" placeholder="Ví dụ: Exchange Online, Intune, Autopilot..." autocomplete="off" data-i18n-placeholder="search_example">
+      <button class="btn btn-primary" type="submit" data-i18n="search_button">Tìm kiếm</button>
     </form>
 
-    <p class="search-status" id="searchStatus" role="status" aria-live="polite">Nhập từ khóa để bắt đầu tìm kiếm.</p>
+    <p class="search-status" id="searchStatus" role="status" aria-live="polite" data-i18n="search_start">Nhập từ khóa để bắt đầu tìm kiếm.</p>
     <div class="search-results" id="searchResults"></div>
   </div>
 </main>

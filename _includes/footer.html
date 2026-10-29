@@ -2,7 +2,7 @@
 <footer class="site-footer">
   <div class="container footer-bottom" style="border:0;padding-top:0">
     <span>© 2026 {{ page.author | default: site.author }}</span>
-    <span><a href="{{ '/' | relative_url }}" style="color:var(--accent)">← Về trang chủ</a></span>
+    <span><a href="{{ '/' | relative_url }}" style="color:var(--accent)" data-i18n="back_home">← Về trang chủ</a></span>
   </div>
 </footer>
 {%- else -%}
@@ -11,10 +11,10 @@
     <div class="footer-grid">
       <div class="footer-about">
         <a class="brand" href="{{ '/' | relative_url }}"><span class="brand-mark">TN</span><span>Nguyễn Công Tâm</span></a>
-        <p>Blog cá nhân về Microsoft 365, Windows, macOS và bảo mật endpoint — viết từ môi trường doanh nghiệp thật tại Việt Nam.</p>
+        <p data-i18n="footer_about">Blog cá nhân về Microsoft 365, Windows, macOS và bảo mật endpoint — viết từ môi trường doanh nghiệp thật tại Việt Nam.</p>
       </div>
       <div>
-        <h5>Chủ đề</h5>
+        <h5 data-i18n="footer_topics">Chủ đề</h5>
         <ul>
           <li><a href="{{ '/topics/m365/' | relative_url }}">Microsoft 365</a></li>
           <li><a href="{{ '/topics/windows/' | relative_url }}">Windows &amp; Server</a></li>
@@ -23,16 +23,15 @@
         </ul>
       </div>
       <div>
-        <h5>Trang</h5>
+        <h5 data-i18n="footer_pages">Trang</h5>
         <ul>
-          <li><a href="{{ '/#posts' | relative_url }}">Bài viết</a></li>
-          <li><a href="{{ '/#about' | relative_url }}">Giới thiệu</a></li>
-          <li><a href="{{ '/#newsletter' | relative_url }}">Newsletter</a></li>
-          <li><a href="mailto:congtamsoul@gmail.com">Liên hệ</a></li>
+          <li><a href="{{ '/#posts' | relative_url }}" data-i18n="nav_posts">Bài viết</a></li>
+          <li><a href="{{ '/#about' | relative_url }}" data-i18n="nav_about">Giới thiệu</a></li>
+          <li><a href="mailto:congtamsoul@gmail.com" data-i18n="footer_contact">Liên hệ</a></li>
         </ul>
       </div>
       <div>
-        <h5>Kết nối</h5>
+        <h5 data-i18n="footer_connect">Kết nối</h5>
         <ul>
           <li><a href="https://www.linkedin.com/in/nguy%E1%BB%85n-c%C3%B4ng-t%C3%A2m-8ab42a18b/" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="https://congtamsoul.github.io/">GitHub</a></li>
@@ -41,7 +40,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Nguyễn Công Tâm. Nội dung chia sẻ với mục đích học tập.</span>
+      <span data-i18n="footer_copyright">© 2026 Nguyễn Công Tâm. Nội dung chia sẻ với mục đích học tập.</span>
       <span>Built with HTML · CSS · JavaScript</span>
     </div>
   </div>

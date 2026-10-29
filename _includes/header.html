@@ -6,14 +6,14 @@
     </a>
 
     <ul class="nav-links" id="navLinks">
-      <li><a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %}>Trang chủ</a></li>
-      <li><a href="{{ '/#posts' | relative_url }}"{% if page.layout == 'post' %} class="active"{% endif %}>Bài viết</a></li>
-      <li><a href="{{ '/#topics' | relative_url }}"{% if page.layout == 'topic' %} class="active"{% endif %}>Chủ đề</a></li>
-      <li><a href="{{ '/#about' | relative_url }}">Giới thiệu</a></li>
-      <li><a href="{{ '/#newsletter' | relative_url }}">Newsletter</a></li>
+      <li><a href="{{ '/' | relative_url }}"{% if page.url == '/' %} class="active"{% endif %} data-i18n="nav_home">Trang chủ</a></li>
+      <li><a href="{{ '/#posts' | relative_url }}"{% if page.layout == 'post' %} class="active"{% endif %} data-i18n="nav_posts">Bài viết</a></li>
+      <li><a href="{{ '/#topics' | relative_url }}"{% if page.layout == 'topic' %} class="active"{% endif %} data-i18n="nav_topics">Chủ đề</a></li>
+      <li><a href="{{ '/#about' | relative_url }}" data-i18n="nav_about">Giới thiệu</a></li>
     </ul>
 
     <div class="nav-actions">
+      <button class="language-toggle" id="languageToggle" type="button" aria-label="Chuyển sang tiếng Anh" title="Chuyển ngôn ngữ"><span id="languageLabel">VI</span></button>
       <button class="icon-btn search-toggle" id="searchToggle" type="button"
               aria-label="Mở tìm kiếm" aria-expanded="false" aria-controls="siteSearch">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg>
@@ -24,9 +24,9 @@
   </div>
   <div class="site-search" id="siteSearch" hidden>
     <form class="site-search-form" action="{{ '/search/' | relative_url }}" method="get" role="search">
-      <label class="visually-hidden" for="siteSearchInput">Tìm trong bài viết và nội dung trang</label>
-      <input id="siteSearchInput" name="q" type="search" placeholder="Tìm bài viết, chủ đề, nội dung..." autocomplete="off">
-      <button class="btn btn-primary" type="submit">Tìm kiếm</button>
+      <label class="visually-hidden" for="siteSearchInput" data-i18n="search_label">Tìm trong bài viết và nội dung trang</label>
+      <input id="siteSearchInput" name="q" type="search" placeholder="Tìm bài viết, chủ đề, nội dung..." autocomplete="off" data-i18n-placeholder="search_placeholder">
+      <button class="btn btn-primary" type="submit" data-i18n="search_button">Tìm kiếm</button>
     </form>
   </div>
 </header>

@@ -94,5 +94,4 @@ Settings → Pages → Source: Deploy from a branch → `main` / (root). GitHub 
 
 ## Cần thay trước khi public
 
-- Endpoint form newsletter trong `assets/main.js`
 - Thêm `og:image` (1200×630) để link đẹp khi share
