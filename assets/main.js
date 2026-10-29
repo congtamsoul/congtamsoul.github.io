@@ -37,10 +37,47 @@
     });
   }
 
+  function hideGoogleTranslateBar() {
+    document.documentElement.style.marginTop = "0";
+    document.body.style.top = "0";
+    document.body.style.marginTop = "0";
+
+    var selectors = ".goog-te-banner-frame, .goog-te-balloon-frame, body > .skiptranslate";
+    Array.prototype.forEach.call(document.querySelectorAll(selectors), function (element) {
+      element.style.setProperty("display", "none", "important");
+      element.style.setProperty("height", "0", "important");
+    });
+  }
+
+  hideGoogleTranslateBar();
+  var translateBarObserver = new MutationObserver(hideGoogleTranslateBar);
+  translateBarObserver.observe(document.documentElement, { childList: true, subtree: true });
+
   /* ---------------------------------------------------------- Theme */
   var root = document.documentElement;
   var saved = localStorage.getItem("theme");
   if (saved) root.setAttribute("data-theme", saved);
+
+  function giscusThemeUrl(theme) {
+    return theme === "light"
+      ? "https://congtamsoul.github.io/assets/giscus-light.css"
+      : "https://congtamsoul.github.io/assets/giscus-dark.css";
+  }
+
+  function applyGiscusTheme(theme) {
+    var giscusFrame = document.querySelector(".giscus iframe");
+    if (giscusFrame) {
+      giscusFrame.contentWindow.postMessage({
+        giscus: { setConfig: { theme: giscusThemeUrl(theme) } }
+      }, "https://giscus.app");
+    }
+  }
+
+  applyGiscusTheme(root.getAttribute("data-theme") || "dark");
+  var giscusObserver = new MutationObserver(function () {
+    applyGiscusTheme(root.getAttribute("data-theme") || "dark");
+  });
+  giscusObserver.observe(document.body, { childList: true, subtree: true });
 
   var themeBtn = document.getElementById("themeToggle");
   if (themeBtn) {
@@ -48,12 +85,7 @@
       var next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
       root.setAttribute("data-theme", next);
       localStorage.setItem("theme", next);
-      var giscusFrame = document.querySelector(".giscus iframe");
-      if (giscusFrame) {
-        giscusFrame.contentWindow.postMessage({
-          giscus: { setConfig: { theme: next } }
-        }, "https://giscus.app");
-      }
+      applyGiscusTheme(next);
     });
   }
 

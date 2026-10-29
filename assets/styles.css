@@ -52,11 +52,21 @@ a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
 
 /* Translate widget and Google banner are driven by the custom language button. */
+html,
+body { top: 0 !important; margin-top: 0 !important; }
 .google-translate-host,
 .goog-te-banner-frame,
-.goog-te-balloon-frame { display: none !important; }
-body { top: 0 !important; }
-.goog-tooltip { display: none !important; }
+.goog-te-banner-frame.skiptranslate,
+.goog-te-balloon-frame,
+.goog-te-menu-frame,
+.goog-te-gadget,
+.goog-tooltip,
+#goog-gt-tt,
+#google_translate_element { display: none !important; height: 0 !important; }
+body > .skiptranslate,
+body > iframe.skiptranslate,
+body > div[id^="goog-"] { display: none !important; height: 0 !important; }
+.goog-text-highlight { background: transparent !important; box-shadow: none !important; }
 
 .container {
   width: 100%;
@@ -663,6 +673,29 @@ body { top: 0 !important; }
 .article-head .byline .post-view-count { white-space: nowrap; }
 .comments-section { margin-top: 48px; padding-top: 28px; border-top: 1px solid var(--border); }
 .comments-section h2 { margin: 0 0 20px; font-size: 24px; }
+.comments-section .giscus,
+.comments-section .giscus-frame {
+  width: 100%;
+  border-radius: var(--radius);
+}
+html[data-theme="dark"] .comments-section .giscus { background: var(--bg-card); }
+html[data-theme="light"] .comments-section .giscus { background: var(--bg-card); }
+.comments-section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  padding: 28px;
+}
+.comments-section .giscus,
+.comments-section iframe.giscus-frame {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+.comments-section iframe.giscus-frame {
+  min-height: 180px;
+}
 
 .prose { font-size: 17px; line-height: 1.8; }
 .prose h2 { font-size: 26px; margin: 44px 0 14px; letter-spacing: -0.02em; scroll-margin-top: 90px; }
@@ -813,6 +846,8 @@ body { top: 0 !important; }
   }
   .nav-links.open { display: flex; }
   .hero { padding: 56px 0 44px; }
+  .comments-section { margin-top: 36px; padding: 16px; }
+  .comments-section h2 { font-size: 21px; }
   .section { padding: 52px 0; }
   .section-head { flex-direction: column; align-items: flex-start; }
   .about-grid {
