@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Quản lý MacBook bằng Intune: mở rộng cấu hình với iMazing Profile Editor"
 seo_title: "Intune quản lý macOS với iMazing Profile Editor"

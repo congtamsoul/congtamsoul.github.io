@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Hardening Windows và MacBook với Qualys: từ báo cáo CIS Benchmark đến cấu hình Intune và đo kết quả"
 seo_title: "Hardening Windows, MacBook với Qualys và Intune"

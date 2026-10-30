@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Bộ lệnh Terminal cơ bản khi quản lý MacBook bằng Intune: sync, log, profile, app, quyền admin"
 seo_title: "Lệnh Terminal quản lý MacBook bằng Intune"

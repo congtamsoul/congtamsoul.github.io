@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Tự động vá máy Windows bị tụt patch: Power BI phân loại, Power Automate gom group, Intune cài update"
 seo_title: "Tự động vá máy Windows outdated bằng Intune"

@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Tự động gỡ phần mềm ngoài Software Catalog: từ SentinelOne, Power BI, Power Automate đến Intune và AppLocker"
 seo_title: "Tự động gỡ app ngoài Software Catalog bằng Intune"

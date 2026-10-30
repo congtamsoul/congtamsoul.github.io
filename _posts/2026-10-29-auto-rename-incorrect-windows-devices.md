@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Tự động phát hiện và sửa tên máy Windows sai location bằng Power BI, Graph API và Autopilot Group Tag"
 seo_title: "Tự động sửa tên máy Windows sai location"

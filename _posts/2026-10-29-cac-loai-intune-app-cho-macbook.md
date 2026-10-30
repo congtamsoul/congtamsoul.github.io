@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Các cách tạo Intune app cho MacBook: đóng gói script thành PKG, chuyển DMG sang PKG và nơi app được cài"
 seo_title: "Các loại Intune app cho MacBook: PKG, DMG, script"

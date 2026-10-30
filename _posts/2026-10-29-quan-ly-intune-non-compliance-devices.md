@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Quản lý thiết bị Non-Compliance trên Intune: phân loại nguyên nhân, tự động xử lý và chặn truy cập"
 seo_title: "Tự động xử lý Intune Non-Compliance devices"

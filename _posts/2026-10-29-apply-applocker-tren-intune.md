@@ -1,3 +1,4 @@
+---
 layout: post
 title: "Apply AppLocker trên Intune bằng Custom OMA-URI: chuyển GPO on-premises sang thiết bị cloud"
 seo_title: "Apply AppLocker trên Intune bằng OMA-URI"
