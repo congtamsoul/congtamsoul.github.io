@@ -51,8 +51,6 @@ Mục tiêu là một quy trình mà IT chỉ cần **duyệt**, còn lại đ�
 | 10 | **AppLocker** | Thêm Deny rule cho app vừa gỡ | User không cài lại được |
 | 11 | **Power BI** | Theo dõi tỷ lệ gỡ thành công | Dashboard |
 
-<!-- ===== CHÈN ẢNH SƠ ĐỒ FLOW VÀO ĐÂY ===== -->
-![Sơ đồ quy trình tự động gỡ phần mềm ngoài Software Catalog](/images/tu-dong-go-app-ngoai-software-catalog/flow.png){: width="720"}
 *Hình 1: luồng end-to-end từ SentinelOne đến AppLocker.*
 
 ## Bước 1-3: Lấy dữ liệu app từ SentinelOne qua Power BI
@@ -109,11 +107,10 @@ Lưu ý: dữ liệu trả về từ Power BI có tên cột dạng `[App Name]`
 
 ### Script / flow của mình
 
-<!-- ===== DÁN EXPRESSION / CẤU HÌNH FLOW SO SÁNH VÀO ĐÂY ===== -->
 
 ```text
 # Power Automate - Compare Inventory vs Software Catalog
-# >>> Dán expression / Peek code của flow vào đây <<<
+
 ```
 
 ## Bước 6-7: License Team duyệt và gửi mail cho user
@@ -145,7 +142,6 @@ Trân trọng,
 IT Team
 ```
 
-<!-- ===== DÁN FLOW GỬI MAIL / TEMPLATE EMAIL CỦA BẠN VÀO ĐÂY ===== -->
 
 ## Bước 8-9: Script uninstall dùng chung và deploy qua Intune
 
@@ -162,7 +158,6 @@ Lúc đầu mình phải khai báo `ProcessMap` và `ServiceMap` cho từng app.
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT UNINSTALL VÀO ĐÂY ===== -->
 
 ```powershell
 ###################################################################
@@ -171,7 +166,6 @@ Lúc đầu mình phải khai báo `ProcessMap` và `ServiceMap` cho từng app.
 # Run as SYSTEM, 64-bit PowerShell
 ###################################################################
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Power Automate đưa tên app vào script
@@ -204,12 +198,10 @@ Cấu hình Win32 app:
 | Detection | Script kiểm tra không còn app nào trong `$AppNameList` trong registry Uninstall |
 | Assignment | Required, cho nhóm thiết bị cần gỡ |
 
-<!-- ===== DÁN DETECTION SCRIPT VÀO ĐÂY ===== -->
 
 ```powershell
 # Detection script - exit 0 + STDOUT khi không còn app nào trong danh sách
 
-# >>> Dán script vào đây <<<
 ```
 
 Nếu muốn tự động luôn bước upload, có thể dùng module cộng đồng `IntuneWin32App` (`Add-IntuneWin32App`) hoặc Microsoft Graph. Mình vẫn để bước upload là **thao tác có người duyệt**, vì đây là điểm cuối cùng trước khi script chạy trên máy thật.
@@ -247,19 +239,16 @@ Get-AppLockerFileInformation -Path "C:\Path\To\App.exe" | Select-Object -ExpandP
 
 ### Pipeline của mình
 
-<!-- ===== DÁN .gitlab-ci.yml VÀ SCRIPT APPLY APPLOCKER VÀO ĐÂY ===== -->
 
 ```yaml
 # .gitlab-ci.yml - AppLocker rule automation (validate -> dry-run -> apply)
 
-# >>> Dán pipeline vào đây <<<
 ```
 
 ```powershell
 # Apply-AppLockerRules.ps1
 # Đọc Excel -> validate -> backup policy -> add/update rule -> verify
 
-# >>> Dán script vào đây <<<
 ```
 
 Khi ghi vào GPO, mình đọc toàn bộ policy hiện tại, sửa đúng các rule cần thay đổi rồi ghi lại bằng `Set-AppLockerPolicy -Ldap`. Pipeline luôn **backup policy trước khi ghi** và không xóa các rule không nằm trong file input.

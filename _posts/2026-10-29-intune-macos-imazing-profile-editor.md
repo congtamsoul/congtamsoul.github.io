@@ -61,11 +61,8 @@ So với Jamf hay Kandji, điểm yếu của Intune là **độ phủ setting**
    - **Desktop**: đặt hình nền.
 4. **File → Save As** để lưu thành file `.mobileconfig`.
 
-<!-- ===== CHÈN ẢNH CHỤP MÀN HÌNH iMAZING PROFILE EDITOR VÀO ĐÂY ===== -->
-![Tab General trong iMazing Profile Editor](/images/intune-macos-imazing-profile-editor/imazing-general.png){: width="640"}
 *Hình 1: điền Payload Name, Scope và Target trong mục General.*
 
-![Chọn payload cần cấu hình](/images/intune-macos-imazing-profile-editor/imazing-payload.png){: width="640"}
 *Hình 2: thêm payload và điền giá trị.*
 
 <div class="callout warn">
@@ -75,14 +72,13 @@ So với Jamf hay Kandji, điểm yếu của Intune là **độ phủ setting**
 
 ### Nội dung file mobileconfig của mình
 
-<!-- ===== DÁN NỘI DUNG FILE .MOBILECONFIG VÀO ĐÂY ===== -->
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <!-- >>> Dán nội dung profile vào đây <<< -->
+
 </dict>
 </plist>
 ```
@@ -100,8 +96,6 @@ So với Jamf hay Kandji, điểm yếu của Intune là **độ phủ setting**
 6. **Scope tags**: chọn nếu tenant có phân quyền theo vùng.
 7. **Review + create**.
 
-<!-- ===== CHÈN ẢNH CHỤP MÀN HÌNH PROFILE TRÊN INTUNE VÀO ĐÂY ===== -->
-![Custom configuration profile cho macOS trên Intune](/images/intune-macos-imazing-profile-editor/intune-custom-profile.png){: width="640"}
 *Hình 3: Custom profile đã assign cho group MacBook, phần Configuration settings hiển thị nội dung file mobileconfig.*
 
 <div class="callout">

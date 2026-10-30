@@ -145,13 +145,11 @@ sudo profiles remove -identifier <profile-identifier>
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT KIỂM TRA ENROLLMENT / PROFILE CỦA BẠN VÀO ĐÂY ===== -->
 
 ```bash
 #!/bin/zsh
 # Check_Enrollment.sh
 
-# >>> Dán script vào đây <<<
 ```
 
 ## 4. Xóa MDM profile bằng Recovery Mode (bước cuối cùng)
@@ -276,13 +274,11 @@ Thay `<it-admin-account>` bằng tên tài khoản admin cục bộ của IT. **
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT QUẢN LÝ QUYỀN ADMIN CỦA BẠN VÀO ĐÂY ===== -->
 
 ```bash
 #!/bin/sh
 # Remove_Local_Admin.sh
 
-# >>> Dán script vào đây <<<
 ```
 
 ## 7. Mở file share trên MacBook

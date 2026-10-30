@@ -46,8 +46,6 @@ Nguyên nhân gốc thường nằm ở **Autopilot Group Tag**: tag được g�
 | 6 | **Graph API** | Cập nhật Group Tag của máy trong Autopilot |
 | 7 | **Script đặt tên** | Khi setup, đọc Group Tag và đặt tên `<Tag>-<Serial>` |
 
-<!-- ===== CHÈN ẢNH SƠ ĐỒ FLOW VÀO ĐÂY ===== -->
-![Sơ đồ quy trình tự động sửa tên máy Windows](/images/auto-rename-incorrect-windows-devices/flow.png){: width="720"}
 *Hình 1: luồng xử lý từ Power BI đến Autopilot.*
 
 ## Bước 1-3: Chuẩn bị bảng mapping Location → Prefix
@@ -130,12 +128,10 @@ Vài điểm cần chú ý:
 
 ### DAX của mình
 
-<!-- ===== DÁN DAX CODE CỦA BẠN VÀO ĐÂY ===== -->
 
 ```dax
 -- WrongNameIntune (bản đang chạy thực tế)
 
--- >>> Dán DAX vào đây <<<
 ```
 
 ## Bước 5-6: Cập nhật Group Tag bằng Graph API
@@ -195,13 +191,11 @@ foreach ($d in $Devices) {
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT GRAPH API CẬP NHẬT GROUP TAG VÀO ĐÂY ===== -->
 
 ```powershell
 # Update_Autopilot_GroupTag.ps1
 # Read CSV -> find Autopilot identity by serial -> update groupTag -> log
 
-# >>> Dán script vào đây <<<
 ```
 
 <div class="callout warn">
@@ -221,13 +215,11 @@ Lưu ý khi viết script này:
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT ĐẶT TÊN MÁY THEO GROUP TAG VÀO ĐÂY ===== -->
 
 ```powershell
 # Rename_By_GroupTag.ps1
 # Read Autopilot Group Tag -> build "<Tag>-<Serial>" -> Rename-Computer
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Với máy đang dùng: đổi tên mà không cần setup lại

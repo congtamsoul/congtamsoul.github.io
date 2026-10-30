@@ -48,8 +48,6 @@ Báo cáo mặc định của Intune chỉ cho biết OS version, không cho bi�
 | 6 | **Intune Win32 app** | Assign cho group, chạy script `Install-WindowsUpdate` |
 | 7 | **Power BI** | Theo dõi máy ra khỏi danh sách sau mỗi chu kỳ |
 
-<!-- ===== CHÈN ẢNH SƠ ĐỒ FLOW VÀO ĐÂY ===== -->
-![Sơ đồ quy trình tự động vá máy Windows outdated](/images/auto-fix-windows-outdated-os-version/flow.png){: width="720"}
 *Hình 1: luồng xử lý từ Power BI đến Intune.*
 
 ## Bước 1: Hiểu cấu trúc OS version
@@ -165,12 +163,10 @@ Cần tách riêng hai nhóm cuối vì:
 
 ### DAX của mình
 
-<!-- ===== DÁN DAX CODE CỦA BẠN VÀO ĐÂY ===== -->
 
 ```dax
 -- WindowsPatchStatus (bản đang chạy thực tế)
 
--- >>> Dán DAX vào đây <<<
 ```
 
 ## Bước 4-5: Power Automate đưa máy outdated vào group
@@ -221,11 +217,10 @@ Gọi Graph từ Power Automate bằng action **HTTP with Microsoft Entra ID** h
 
 ### Flow của mình
 
-<!-- ===== DÁN FLOW / PEEK CODE POWER AUTOMATE VÀO ĐÂY ===== -->
 
 ```text
 # Power Automate - Outdated Windows -> Add to Group
-# >>> Dán Peek code / expression vào đây <<<
+
 ```
 
 ## Bước 6: Intune app chạy Install-WindowsUpdate
@@ -247,7 +242,6 @@ Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install -IgnoreReboot -NotCategor
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT INSTALL-WINDOWSUPDATE VÀO ĐÂY ===== -->
 
 ```powershell
 ###################################################################
@@ -256,20 +250,17 @@ Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install -IgnoreReboot -NotCategor
 # Pending reboot check -> PSWindowsUpdate -> verify result -> exit code
 ###################################################################
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Detection script
 
 Detection nên kiểm tra **UBR của máy đã đạt mức tối thiểu** của tháng patch hiện tại. Không nên dựa vào file log hay registry do chính script tạo ra, vì chạy xong chưa chắc đã cài thành công.
 
-<!-- ===== DÁN DETECTION SCRIPT VÀO ĐÂY ===== -->
 
 ```powershell
 # Detection - exit 0 + STDOUT khi UBR >= mức tối thiểu
 # $MinUBR cập nhật mỗi tháng theo Patch Catalog
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Cấu hình Win32 app

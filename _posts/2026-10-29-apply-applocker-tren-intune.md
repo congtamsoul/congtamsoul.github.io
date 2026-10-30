@@ -85,13 +85,11 @@ foreach ($rc in $xml.AppLockerPolicy.RuleCollection) {
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT EXPORT / TÁCH XML CỦA BẠN VÀO ĐÂY ===== -->
 
 ```powershell
 # Export-AppLockerForIntune.ps1
 # Export GPO -> tách theo RuleCollection -> sẵn sàng dán vào OMA-URI
 
-# >>> Dán script vào đây <<<
 ```
 
 ## Bước 2: Tạo Custom Configuration Profile trên Intune
@@ -131,8 +129,6 @@ Phần `apps` trong đường dẫn là tên nhóm (*Grouping*) do mình tự đ
 </RuleCollection>
 ```
 
-<!-- ===== CHÈN ẢNH CẤU HÌNH OMA-URI VÀO ĐÂY ===== -->
-![Cấu hình một dòng OMA-URI cho AppLocker EXE trên Intune](/images/apply-applocker-tren-intune/oma-uri-edit-row.png){: width="560"}
 *Hình 1: dòng OMA-URI Block EXE, kiểu String, Value là khối RuleCollection.*
 
 Mô hình mình dùng là **Allow all + Deny từng app**: một rule `Allow` cho `Path="*"`, sau đó thêm các rule `Deny` cho app cần chặn. Vì Deny luôn được ưu tiên hơn Allow, app nằm trong rule Deny sẽ bị chặn, còn các app khác vẫn chạy bình thường.
@@ -144,26 +140,25 @@ Mô hình mình dùng là **Allow all + Deny từng app**: một rule `Allow` ch
 
 ### Script của mình
 
-<!-- ===== DÁN XML / VALUE CỦA TỪNG RULE COLLECTION VÀO ĐÂY ===== -->
 
 ```xml
 <!-- Block EXE - Value -->
-<!-- >>> Dán khối RuleCollection Type="Exe" vào đây <<< -->
+
 ```
 
 ```xml
 <!-- Block MSI - Value -->
-<!-- >>> Dán khối RuleCollection Type="Msi" vào đây <<< -->
+
 ```
 
 ```xml
 <!-- Block Appx - Value -->
-<!-- >>> Dán khối RuleCollection Type="Appx" vào đây <<< -->
+
 ```
 
 ```xml
 <!-- Block Script - Value -->
-<!-- >>> Dán khối RuleCollection Type="Script" vào đây <<< -->
+
 ```
 
 ## Bước 3: Assign profile cho group
@@ -172,8 +167,6 @@ Mô hình mình dùng là **Allow all + Deny từng app**: một rule `Allow` ch
 2. Thêm **Scope tag** nếu môi trường có nhiều quốc gia hoặc nhiều đội quản trị.
 3. **Review + create**.
 
-<!-- ===== CHÈN ẢNH PROFILE ĐÃ ASSIGN VÀO ĐÂY ===== -->
-![Profile AppLocker trên Intune với 4 dòng OMA-URI và group được assign](/images/apply-applocker-tren-intune/profile-overview.png){: width="720"}
 *Hình 2: profile Custom với 4 dòng Block EXE, MSI, Appx, Script.*
 
 Nên rollout theo vòng: **nhóm IT pilot → một phòng ban nhỏ → toàn công ty**. Mỗi vòng chờ vài ngày để phát hiện app bị chặn nhầm.

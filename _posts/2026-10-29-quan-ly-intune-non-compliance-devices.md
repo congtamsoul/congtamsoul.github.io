@@ -54,8 +54,6 @@ Vì vậy mình bổ sung thêm ba nguồn dữ liệu để có bức tranh đ�
 | 6 | **Intune** | Group đã được assign sẵn cho app/policy thực thi chặn truy cập |
 | 7 | **Power Automate (Flow 3)** | Gửi email cho user, hướng dẫn cách khắc phục |
 
-<!-- ===== CHÈN ẢNH SƠ ĐỒ FLOW VÀO ĐÂY ===== -->
-![Sơ đồ quy trình xử lý thiết bị Non-Compliance](/images/quan-ly-intune-non-compliance-devices/flow.png){: width="720"}
 *Hình 1: luồng xử lý từ Power BI đến Intune.*
 
 ## Bảng phân loại Reason và Action Require
@@ -183,12 +181,10 @@ RETURN
 
 ### DAX của mình
 
-<!-- ===== DÁN DAX CODE CỦA BẠN VÀO ĐÂY ===== -->
 
 ```dax
 -- NonCompliance table (bản đang chạy thực tế)
 
--- >>> Dán DAX vào đây <<<
 ```
 
 Khi viết DAX cho bài toán này, chú ý:
@@ -241,13 +237,11 @@ foreach ($d in $Devices) {
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT GRAPH API (DELETE / WIPE / BACKUP) VÀO ĐÂY ===== -->
 
 ```powershell
 # NonCompliance_Cleanup.ps1
 # Read CSV -> validate -> backup (if needed) -> delete / wipe -> log result
 
-# >>> Dán script vào đây <<<
 ```
 
 <div class="callout danger">
@@ -281,12 +275,10 @@ Lưu ý: `{entra-device-object-id}` là **Object ID** của device trong Entra I
 
 Group này được assign sẵn cho một Intune app/policy thực thi việc chặn truy cập, ví dụ gỡ chứng chỉ dùng cho Wi-Fi/VPN nội bộ, nên máy không kết nối được vào mạng công ty. Khi máy ra khỏi group, chứng chỉ được cấp lại.
 
-<!-- ===== DÁN SCRIPT / CẤU HÌNH APP CHẶN TRUY CẬP VÀO ĐÂY ===== -->
 
 ```powershell
 # Block_Access.ps1 - Intune app assigned to Non-Compliance group
 
-# >>> Dán script vào đây <<<
 ```
 
 <div class="callout warn">
@@ -323,7 +315,6 @@ Trân trọng,
 IT Team
 ```
 
-<!-- ===== DÁN FLOW GỬI MAIL / TEMPLATE EMAIL CỦA BẠN VÀO ĐÂY ===== -->
 
 ## Các lệnh kiểm tra trên thiết bị
 

@@ -121,12 +121,10 @@ Phần Remediation của Qualys đã có OMA-URI, nhưng mình ưu tiên dùng c
 
 ### Cấu hình của mình
 
-<!-- ===== DÁN BẢNG MAPPING / EXPORT POLICY INTUNE (JSON) VÀO ĐÂY ===== -->
 
 ```json
 // Export cấu hình Hardening Control từ Intune (Graph: deviceManagement/configurationPolicies)
 
-// >>> Dán JSON vào đây <<<
 ```
 
 <div class="callout warn">
@@ -222,13 +220,11 @@ sudo profiles show -type configuration | grep -i -E "name|identifier"
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT KIỂM TRA / REMEDIATION CỦA BẠN VÀO ĐÂY ===== -->
 
 ```powershell
 # Hardening_Check.ps1
 # Kiểm tra nhanh các control ưu tiên sau khi áp policy Intune
 
-# >>> Dán script vào đây <<<
 ```
 
 ## Bước 5: Scan lại và chứng minh kết quả
@@ -243,7 +239,6 @@ Với báo cáo trước khi hardening: 72 / 290 = **24.83%**.
 
 ### Bảng kết quả
 
-<!-- ===== ĐIỀN SỐ LIỆU SAU KHI SCAN LẠI ===== -->
 
 | Thời điểm | Passed | Failed | Error | Compliance | Mức tăng |
 |---|---|---|---|---|---|
@@ -256,8 +251,6 @@ Nên trình bày thêm hai góc nhìn:
 - **Theo mức độ:** số control Urgent và Critical còn Failed trước và sau. Lãnh đạo quan tâm "rủi ro lớn đã đóng chưa" hơn là tổng điểm.
 - **Theo thiết bị:** tỷ lệ máy đạt ngưỡng compliance mục tiêu, để thấy hardening đã phủ toàn bộ fleet chứ không chỉ vài máy mẫu.
 
-<!-- ===== CHÈN ẢNH SO SÁNH TRƯỚC / SAU VÀO ĐÂY ===== -->
-![So sánh điểm Qualys trước và sau hardening](/images/hardening-windows-macbook-voi-qualys/before-after.png){: width="720"}
 *Hình 1: tỷ lệ control Passed trước và sau khi triển khai Hardening Control.*
 
 <div class="callout">

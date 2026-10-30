@@ -39,7 +39,6 @@ Trong **Intune admin center → Apps → macOS → Add**, bạn sẽ thấy nhi�
 
 Ngoài ra còn **Shell script** (*Devices → macOS → Scripts*). Script không hiển thị trong Company Portal và không có detection rule như app. Nếu muốn user tự bấm cài từ Company Portal, hoặc muốn theo dõi trạng thái như một app, hãy đóng gói script thành PKG như phần dưới.
 
-<!-- ===== CHÈN ẢNH MÀN HÌNH CÁC LOẠI APP TRÊN INTUNE VÀO ĐÂY (TÙY CHỌN) ===== -->
 
 ## Cách 1: Đóng gói shell script thành PKG bằng pkgbuild
 
@@ -57,7 +56,6 @@ Tạo một thư mục cha, bên trong có hai thư mục con:
 - `Content` chứa file script chính, ví dụ `Uninstall_Docker.sh`.
 - `Scripts` chứa file `postinstall`.
 
-![Cấu trúc thư mục khi đóng gói script thành PKG](/images/cac-loai-intune-app-cho-macbook/cau-truc-thu-muc-pkgbuild.png){: width="640"}
 *Hình 1: thư mục Content chứa script chính, Scripts chứa postinstall, và file PKG được tạo ra.*
 
 <div class="callout warn">
@@ -77,14 +75,12 @@ exit 0
 
 ### Bước 3: Script chính
 
-<!-- ===== DÁN SCRIPT CỦA BẠN VÀO ĐÂY (ví dụ Uninstall_Docker.sh) ===== -->
 
 ```bash
 #!/bin/bash
 # Uninstall_Docker.sh
 # Chạy với quyền root thông qua postinstall
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Bước 4: Cấp quyền thực thi
@@ -178,13 +174,11 @@ Version trong detection rule phải khớp version thực tế sau khi cài. N�
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT PRE/POST-INSTALL CHO APP DMG/PKG CỦA BẠN VÀO ĐÂY ===== -->
 
 ```bash
 #!/bin/bash
 # Pre-install / Post-install script cho Intune macOS app (PKG)
 
-# >>> Dán script vào đây <<<
 ```
 
 ## Những nơi app được cài trên macOS

@@ -96,7 +96,6 @@ Get-WURebootStatus -Silent
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT PSWINDOWSUPDATE CỦA BẠN VÀO ĐÂY ===== -->
 
 ```powershell
 # ==========================================================
@@ -104,7 +103,6 @@ Get-WURebootStatus -Silent
 # Deploy via Intune Win32 app - SYSTEM context, 64-bit
 # ==========================================================
 
-# >>> Dán script vào đây <<<
 ```
 
 Khi viết script loại này, nhớ ba điểm:
@@ -142,32 +140,26 @@ Upgrade cần **khoảng 6 tiếng máy bật liên tục và có mạng**. Nế
 
 ### Script của mình
 
-<!-- ===== DÁN SCRIPT TẠO SCHEDULED TASK VÀO ĐÂY ===== -->
 
 ```powershell
 # TaskScheduler_Upgrade_Win11.ps1
 # Intune Win32 app - Install command (Install behavior: System)
 # Copy payload + register Scheduled Task (At startup + repeat)
 
-# >>> Dán script vào đây <<<
 ```
 
-<!-- ===== DÁN SCRIPT CHẠY ASSISTANT VÀO ĐÂY ===== -->
 
 ```powershell
 # Upgrade_Windows_11_Assistant.ps1
 # Run by Scheduled Task as SYSTEM
 # Build >= 26200 -> remove task | Setup running -> skip | Else -> launch Assistant
 
-# >>> Dán script vào đây <<<
 ```
 
-<!-- ===== DÁN DETECTION SCRIPT CHO INTUNE VÀO ĐÂY ===== -->
 
 ```powershell
 # Detection script cho Intune Win32 app
 
-# >>> Dán script vào đây <<<
 ```
 
 ### Theo dõi tiến độ Setup
