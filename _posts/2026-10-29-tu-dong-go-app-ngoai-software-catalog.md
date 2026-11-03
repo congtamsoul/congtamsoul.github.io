@@ -1567,7 +1567,7 @@ Lúc đầu mình phải khai báo `ProcessMap` và `ServiceMap` cho từng app.
 5. Dọn thư mục còn sót, nhưng chỉ khi qua được hàm kiểm tra an toàn.
 6. Verify lại registry và thư mục, trả exit code cho Intune.
 
-### Script của mình
+### Script Uninstall apps của mình
 
 
 ```powershell
@@ -2010,6 +2010,8 @@ Cấu hình Win32 app:
 | Detection | Script kiểm tra không còn app nào trong `$AppNameList` trong registry Uninstall |
 | Assignment | Required, cho nhóm thiết bị cần gỡ |
 
+
+### Script Detection rule của mình
 
 ```powershell
 # Detection script - exit 0 + STDOUT khi không còn app nào trong danh sách
