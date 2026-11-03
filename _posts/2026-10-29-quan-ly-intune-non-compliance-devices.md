@@ -99,93 +99,175 @@ RETURN
 
 ### Bảng NonCompliance hoàn chỉnh
 
-Dưới đây là khung DAX mình dùng. Tên bảng và cột là ví dụ, bạn đổi theo dataset thật:
+Dưới đây là khung DAX mình dùng tạo bảng mơi trên Power BI. Tên bảng và cột là ví dụ, bạn đổi theo dataset thật:
 
 ```dax
-NonCompliance =
-VAR _Base =
-    FILTER ( Intune, Intune[complianceState] = "noncompliant" )
-VAR _Enriched =
-    ADDCOLUMNS (
-        _Base,
-        "LastActivity",
-            VAR _S1 = LOOKUPVALUE ( S1[Last Active Date], S1[Serial Number], Intune[serialNumber] )
-            RETURN IF ( ISBLANK ( _S1 ) || Intune[lastSyncDateTime] >= _S1, Intune[lastSyncDateTime], _S1 ),
-        "JiraStatus",
-            LOOKUPVALUE ( Jira[Status], Jira[Serial Number], Intune[serialNumber] ),
-        "UserEnabled",
-            LOOKUPVALUE ( UsersAD[Enabled], UsersAD[UserPrincipalName], Intune[userPrincipalName] ),
-        "IsDuplicateOlder",
-            VAR _Serial = Intune[serialNumber]
-            VAR _Newest =
-                CALCULATE ( MAX ( Intune[lastSyncDateTime] ), ALL ( Intune ), Intune[serialNumber] = _Serial )
-            RETURN NOT ISBLANK ( _Serial ) && Intune[lastSyncDateTime] < _Newest,
-        "UserHasNewDevice",
-            VAR _UPN = Intune[userPrincipalName]
-            VAR _Me  = Intune[lastSyncDateTime]
-            RETURN
-                NOT ISBLANK ( _UPN )
-                    && CALCULATE ( COUNTROWS ( Intune ), ALL ( Intune ), Intune[userPrincipalName] = _UPN, Intune[lastSyncDateTime] > _Me ) > 0
-    )
-VAR _Classified =
-    ADDCOLUMNS (
-        _Enriched,
-        "InactiveDays", DATEDIFF ( [LastActivity], TODAY (), DAY ),
-        "Reason",
-            VAR _Days = DATEDIFF ( [LastActivity], TODAY (), DAY )
-            RETURN
-                SWITCH (
-                    TRUE (),
-                    [IsDuplicateOlder], "Duplicate serial number (older check-in)",
-                    [JiraStatus] = "Liquidation", "Liquidation",
-                    Intune[managementState] IN { "wipePending", "wipeIssued" }, "Device already in wipe state",
-                    [JiraStatus] = "In Stock" && [UserHasNewDevice], "In Stock and Primary User has a new device",
-                    [JiraStatus] = "In Use" && _Days > 90, "In use and inactive for over 90 days",
-                    [JiraStatus] = "In Stock" && _Days > 30, "In stock and inactive for over 30 days",
-                    ISBLANK ( Intune[serialNumber] ), "No Serial Number",
-                    ISBLANK ( Intune[userPrincipalName] ), "No Primary User",
-                    [UserEnabled] = FALSE (), "Primary user account disabled",
-                    [JiraStatus] = "In Use" && _Days > 30, "In use and inactive for over 30 days",
-                    "Other reasons"
-                )
-    )
-RETURN
-    SELECTCOLUMNS (
-        _Classified,
-        "Device Name",     Intune[deviceName],
-        "Intune ID",       Intune[deviceId],
-        "Entra Device ID", Intune[azureADDeviceId],
-        "Serial Number",   Intune[serialNumber],
-        "OS",              Intune[operatingSystem],
-        "Primary User",    Intune[userPrincipalName],
-        "Jira Status",     [JiraStatus],
-        "Last Activity",   [LastActivity],
-        "Inactive Days",   [InactiveDays],
-        "Reason",          [Reason],
-        "Action Require",
-            SWITCH (
-                [Reason],
-                "Duplicate serial number (older check-in)", "Delete",
-                "Liquidation", "Delete",
-                "Device already in wipe state", "Delete",
-                "In Stock and Primary User has a new device", "Delete",
-                "In use and inactive for over 90 days", "Backup&Delete",
-                "In stock and inactive for over 30 days", "Wipe",
-                "No Serial Number", "Re-check",
-                "No Primary User", "Re-enroll",
-                "Primary user account disabled", "Re-enroll",
-                "In use and inactive for over 30 days", "Contact User",
-                "Other"
-            )
-    )
-```
-
-### DAX của mình
-
-
-```dax
--- NonCompliance table (bản đang chạy thực tế)
-
+Non-Compliance =  
+VAR ExtendedIntune = 
+    ADDCOLUMNS ( 
+        FILTER ( 
+            Intune, 
+            Intune[isDeleted] = FALSE && 
+            Intune[operatingSystem] = "Windows" && 
+            LEFT(Intune[deviceName], 3) = "VN-" && 
+            NOT ISBLANK(Intune[azureADRegistered]) && 
+            (Intune[deviceRegistrationStateKey] = 5172 || Intune[deviceRegistrationStateKey] = 5226) 
+        ), 
+        "ComplianceStatus", LOOKUPVALUE ( 
+            State[complianceStatus], 
+            State[complianceStateKey], Intune[complianceStateKey] 
+        ), 
+        "JiraStatus", CALCULATE ( 
+            MAX ( Jira[Status] ), 
+            FILTER ( Jira, Jira[Serial Number] = Intune[serialNumber] ) 
+        ), 
+        "JiraStock", CALCULATE ( 
+            MAX ( Jira[Stock] ), 
+            FILTER ( Jira, Jira[Serial Number] = Intune[serialNumber] ) 
+        ), 
+        "OfficeLocation", CALCULATE ( 
+            MAX ( UsersAD[physicalDeliveryOfficeName] ), 
+            FILTER ( UsersAD, UsersAD[employeeNumber] = Intune[primaryUser] ) 
+        ), 
+        "UserAccountControl", CALCULATE ( 
+            MAX ( UsersAD[userAccountControl] ), 
+            FILTER ( UsersAD, UsersAD[employeeNumber] = Intune[primaryUser] ) 
+        ), 
+        "DeviceAccountControl", CALCULATE ( 
+            MAX ( DevicesAD[userAccountControl] ), 
+            FILTER ( DevicesAD, DevicesAD[serialNumber] = Intune[serialNumber] ) 
+        ), 
+        "LastActiveDate", CALCULATE ( 
+            MAX ( Agents[lastActiveDt] ), 
+            FILTER ( Agents, Agents[serialNumber] = Intune[serialNumber] ) 
+        ), 
+        "LastRebootDate", CALCULATE ( 
+            MAX ( Agents[lastRebootDt] ), 
+            FILTER ( Agents, Agents[serialNumber] = Intune[serialNumber] ) 
+        ), 
+        "WipeState", CALCULATE ( 
+            MAX ( Wipe[managementStateName] ), 
+            FILTER ( Wipe, Wipe[managementStateKey] = Intune[managementStateKey] ) 
+        ), 
+        "DuplicateSerialMaxCheckin", CALCULATE ( 
+            MAX ( Intune[lastSyncDateTime] ), 
+            ALLEXCEPT ( Intune, Intune[serialNumber] ) 
+        ), 
+        "DuplicateSerialCount", CALCULATE ( 
+            COUNTROWS ( Intune ), 
+            ALLEXCEPT ( Intune, Intune[serialNumber] ) 
+        ), 
+        "PrimaryUserDeviceCount", CALCULATE ( 
+            COUNTROWS ( Intune ), 
+            FILTER ( Intune, Intune[primaryUser] = EARLIER(Intune[primaryUser]) ) 
+        ) 
+    ) 
+VAR FilteredIntune = 
+    FILTER ( 
+        ExtendedIntune, 
+        [ComplianceStatus] = "Noncompliant" 
+    ) 
+VAR FinalIntune = 
+    ADDCOLUMNS ( 
+        FilteredIntune, 
+        "Reason", SWITCH ( 
+            TRUE(), 
+            TRIM(Intune[serialNumber]) = "", "No Serial Number", 
+            ISBLANK([JiraStatus]) || ISBLANK([JiraStock]), "Liquidation", 
+            [DuplicateSerialCount] > 1 && Intune[lastSyncDateTime] < [DuplicateSerialMaxCheckin], "Duplicate serial number (older check-in)", 
+            [WipeState] IN { "RetirePending", "WipeFailed", "WipePending", "RetireIssued", "WipeIssued" }, "Device already in wipe state", 
+            [JiraStatus] = "IN STOCK" && 
+            Intune[primaryUser] <> "00000000-0000-0000-0000-000000000000" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30) && 
+            [PrimaryUserDeviceCount] > 1, "In Stock and Primary User has a new device", 
+            [JiraStatus] = "IN STOCK" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30), "In stock and inactive for over 30 days", 
+            [JiraStatus] = "IN USE" && 
+            (Intune[primaryUser] = "00000000-0000-0000-0000-000000000000" || 
+            CALCULATE ( 
+                COUNTROWS ( 
+                    FILTER ( 
+                        User, 
+                        User[userId] = SELECTEDVALUE(Intune[primaryUser]) && 
+                        (User[isDeleted] = TRUE || ISBLANK(User[userEmail])) 
+                    ) 
+                ) 
+            ) > 0), "No Primary User", 
+            [JiraStatus] = "IN USE" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            Intune[primaryUser] <> "00000000-0000-0000-0000-000000000000" && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30), "In use and inactive for over 30 days", 
+            CALCULATE ( 
+                COUNTROWS ( 
+                    FILTER ( 
+                        User, 
+                        User[userId] = SELECTEDVALUE(Intune[primaryUser]) && 
+                        (User[intuneLicensed] = FALSE) 
+                    ) 
+                ) 
+            ) > 0, "Primary User account Disabled", 
+            "Other reasons" 
+        ), 
+        "ActionRequire", SWITCH ( 
+            TRUE(), 
+            TRIM(Intune[serialNumber]) = "", "Re-check", 
+            ISBLANK([JiraStatus]) || ISBLANK([JiraStock]), "Delete", 
+            [DuplicateSerialCount] > 1 && Intune[lastSyncDateTime] < [DuplicateSerialMaxCheckin], "Delete", 
+            [WipeState] IN { "RetirePending", "WipeFailed", "WipePending", "RetireIssued", "WipeIssued" }, "Delete", 
+            [JiraStatus] = "IN STOCK" && 
+            Intune[primaryUser] <> "00000000-0000-0000-0000-000000000000" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30) && 
+            [PrimaryUserDeviceCount] > 1, "Delete", 
+            [JiraStatus] = "IN STOCK" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30), "Wipe", 
+            [JiraStatus] = "IN USE" && 
+            (Intune[primaryUser] = "00000000-0000-0000-0000-000000000000" || 
+            CALCULATE ( 
+                COUNTROWS ( 
+                    FILTER ( 
+                        User, 
+                        User[userId] = SELECTEDVALUE(Intune[primaryUser]) && 
+                        (User[isDeleted] = TRUE || ISBLANK(User[userEmail])) 
+                    ) 
+                ) 
+            ) > 0), "Re-enroll", 
+            [JiraStatus] = "IN USE" && 
+            Intune[primaryUser] <> "00000000-0000-0000-0000-000000000000" && 
+            Intune[lastSyncDateTime] < TODAY() - 30 && 
+            (ISBLANK([LastActiveDate]) || [LastActiveDate] < TODAY() - 30), "Contact User", 
+            CALCULATE ( 
+                COUNTROWS ( 
+                    FILTER ( 
+                        User, 
+                        User[userId] = SELECTEDVALUE(Intune[primaryUser]) && 
+                        (User[intuneLicensed] = FALSE) 
+                    ) 
+                ) 
+            ) > 0, "Re-enroll", 
+            "Other" 
+        ) 
+    ) 
+RETURN 
+SELECTCOLUMNS ( 
+    FinalIntune, 
+    "Reason", [Reason], 
+    "Action Require", [ActionRequire], 
+    "Device ID", Intune[deviceId], 
+    "Device Name", Intune[deviceName], 
+    "Last Check-in", Intune[lastSyncDateTime], 
+    "Last Reboot", [LastRebootDate], 
+    "AD State", [DeviceAccountControl], 
+    "Device State", [ComplianceStatus], 
+    "Serial Number", Intune[serialNumber], 
+    "Primary User UPN", Intune[primaryUser], 
+    "Office Location", [OfficeLocation], 
+    "Jira Status", [JiraStatus], 
+    "Jira Stock", [JiraStock] 
+) 
 ```
 
 Khi viết DAX cho bài toán này, chú ý:
@@ -223,27 +305,167 @@ Một PowerShell script (chạy trên server hoặc Azure Automation bằng App 
 
 ```powershell
 # Ví dụ khung xử lý - đọc CSV và gọi Graph theo Action
-Connect-MgGraph -ClientId $ClientId -TenantId $TenantId -CertificateThumbprint $Thumbprint
 
-$Devices = Import-Csv "C:\NonCompliance\Action_$(Get-Date -Format yyyyMMdd).csv"
-foreach ($d in $Devices) {
-    $id = $d.'Intune ID'
-    switch ($d.'Action Require') {
-        'Delete'        { Invoke-MgGraphRequest -Method DELETE -Uri "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/$id" }
-        'Wipe'          { Invoke-MgGraphRequest -Method POST   -Uri "https://graph.microsoft.com/v1.0/deviceManagement/managedDevices/$id/wipe" -Body @{} }
-        'Backup&Delete' { <# 1. Backup BitLocker + LAPS  2. Verify backup  3. DELETE #> }
-    }
+#Delete devices
+
+$GetDevices = Import-csv "C:\Temp\DevicesToRemove.csv" #Intune ID
+$serverUrl = "https://graph.microsoft.com"
+$userToken = Get-Content -Path 'C:\Temp\IntuneToken.txt'
+$apiRequest = '/beta/deviceManagement/managedDevices/executeAction'   ## Change to Desired Get Method API Call
+
+
+Start-Transcript "C:\Temp\IntuneCleanup.txt" -Force
+foreach($Device in $GetDevices){
+    $BodyJSON         = @{
+        "actionName"            = "delete"
+        "deviceIds"             = @(
+            "$($Device."DeviceID")"
+        )
+    } | ConvertTo-JSON -Depth 20
+    Write-Host "Deleting Tired devices($($Device."Device Name") - User: $($Device."Primary user UPN"))" -ForegroundColor Yellow
+    $Params = @{ Uri = ($serverUrl + $apiRequest)
+        Headers = @{'Authorization' = "Bearer $($userToken)"}
+        Method = 'POST'
+        BODY  = $BodyJSON
+        ContentType = "application/json" }
+    Invoke-RestMethod @Params
 }
+Stop-Transcript
+
+#Backup LAPS, Bitlocker trước
+# ============ INPUT ============
+$CsvInput   = "C:\Temp\DevicesToRemove.csv" #Entra ID
+$TokenFile  = "C:\Temp\IntuneToken.txt" #Get from Intune Web
+$CsvOutput  = "C:\Temp\LAPS_BitLocker_$(Get-Date -Format 'yyyyMMdd_HHmm').csv"
+# ============ GRAPH ============
+$GraphBeta = "https://graph.microsoft.com/beta"
+$GraphV1   = "https://graph.microsoft.com/v1.0"
+# ============ AUTH ============
+$Token = (Get-Content -Path $TokenFile -Raw) -replace '\s',''
+$Headers = @{
+    Authorization  = "Bearer $Token"
+    "Content-Type" = "application/json"
+}
+# ============ HELPERS ============
+function Invoke-Graph {
+    param($Uri)
+    return Invoke-RestMethod -Uri $Uri -Headers $Headers -Method GET -ErrorAction Stop
+}
+function Invoke-GraphRetry {
+    param($Uri)
+    for ($i=1; $i -le 3; $i++) {
+        try {
+            return Invoke-Graph $Uri
+        }
+        catch {
+            Start-Sleep -Seconds (2 * $i)
+        }
+    }
+    throw
+}
+# ============ MAIN ============
+$Devices = Import-Csv $CsvInput
+$Report  = @()
+$i = 0
+$total = $Devices.Count
+foreach ($row in $Devices) {
+    $i++
+    $DeviceId = ($row.DeviceID -replace '\s','')
+    Write-Host "`n[$i/$total] Processing $DeviceId" -ForegroundColor Cyan
+    # ================= DEVICE NAME =================
+    $DeviceName = ""
+    $AzureAdDeviceId = ""
+    try {
+        $dev = Invoke-GraphRetry "$GraphV1/devices/$DeviceId`?`$select=id,deviceId,displayName"
+        $DeviceName = $dev.displayName
+        $AzureAdDeviceId = $dev.deviceId
+        Write-Host "   🖥️ $DeviceName" -ForegroundColor Green
+    }
+    catch {
+        Write-Host "   ⚠️ Device lookup failed" -ForegroundColor Yellow
+    }
+    # ================= LAPS =================
+    $AccountName=""
+    $Password=""
+    $BackupDateTime=""
+    $LAPSStatus=""
+    try {
+        $lapsUri = "$GraphBeta/directory/deviceLocalCredentials/$DeviceId`?`$select=credentials"
+        $res = Invoke-GraphRetry $lapsUri
+        if ($res.credentials) {
+            $latest = $res.credentials |
+                Sort-Object {[datetime]$_.backupDateTime} -Descending |
+                Select-Object -First 1
+            $Password = [Text.Encoding]::UTF8.GetString(
+                [Convert]::FromBase64String($latest.passwordBase64)
+            )
+            $AccountName = $latest.accountName
+            $BackupDateTime = ([datetime]$latest.backupDateTime).ToString("yyyy-MM-dd HH:mm:ss")
+            $LAPSStatus = "OK"
+            Write-Host "   ✅ LAPS OK" -ForegroundColor Green
+        }
+        else {
+            $LAPSStatus = "No LAPS"
+        }
+    }
+    catch {
+        $LAPSStatus = "ERROR"
+    }
+    Start-Sleep -Milliseconds 200
+    # ================= BITLOCKER =================
+    $BitLockerKeyId=""
+    $BitLockerKey=""
+    $BitLockerDate=""
+    $BitLockerStatus=""
+    $candidateIds = @($DeviceId)
+    if ($AzureAdDeviceId) { $candidateIds += $AzureAdDeviceId }
+    foreach ($cid in $candidateIds) {
+        try {
+            Write-Host "   🔎 Try BitLocker deviceId: $cid" -ForegroundColor DarkCyan
+            $filter = [uri]::EscapeDataString("deviceId eq '$cid'")
+            $uri = "$GraphV1/informationProtection/bitlocker/recoveryKeys?`$filter=$filter"
+            $list = Invoke-GraphRetry $uri
+            if (-not $list.value) { continue }
+            $latest = $list.value |
+                Sort-Object {[datetime]$_.createdDateTime} -Descending |
+                Select-Object -First 1
+            $keyUri = "$GraphV1/informationProtection/bitlocker/recoveryKeys/$($latest.id)`?`$select=key"
+            $keyRes = Invoke-GraphRetry $keyUri
+            $BitLockerKeyId = $latest.id
+            $BitLockerKey   = $keyRes.key
+            $BitLockerDate  = ([datetime]$latest.createdDateTime).ToString("yyyy-MM-dd HH:mm:ss")
+            $BitLockerStatus = "OK"
+            Write-Host "   ✅ BitLocker OK" -ForegroundColor Green
+            break
+        }
+        catch {
+            continue
+        }
+    }
+    if (-not $BitLockerStatus) {
+        $BitLockerStatus = "No BitLocker"
+        Write-Host "   ⚠️ No BitLocker" -ForegroundColor Yellow
+    }
+    # ================= OUTPUT =================
+    $Report += [PSCustomObject]@{
+        DeviceId                 = $DeviceId
+        DeviceName               = $DeviceName
+        AccountName              = $AccountName
+        Password                 = $Password
+        BackupDateTime           = $BackupDateTime
+        BitLockerKeyId           = $BitLockerKeyId
+        BitLockerRecoveryKey     = $BitLockerKey
+        BitLockerCreatedDateTime = $BitLockerDate
+        LAPSStatus               = $LAPSStatus
+        BitLockerStatus          = $BitLockerStatus
+    }
+    Start-Sleep -Milliseconds 200
+}
+# ============ EXPORT ============
+$Report | Export-Csv $CsvOutput -NoTypeInformation -Encoding UTF8
+Write-Host "`n✅ DONE → $CsvOutput" -ForegroundColor Green
 ```
 
-### Script của mình
-
-
-```powershell
-# NonCompliance_Cleanup.ps1
-# Read CSV -> validate -> backup (if needed) -> delete / wipe -> log result
-
-```
 
 <div class="callout danger">
   <span>⛔</span>
