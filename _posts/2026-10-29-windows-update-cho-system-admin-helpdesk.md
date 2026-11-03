@@ -102,6 +102,151 @@ Get-WURebootStatus -Silent
 # Windows Update Remediation (PSWindowsUpdate)
 # Deploy via Intune Win32 app - SYSTEM context, 64-bit
 # ==========================================================
+# ==========================================================
+# Fix Patching Windows Update
+# Deploy via Intune (SYSTEM context, 64-bit host)
+# ==========================================================
+
+$LogPath = "C:\Temp\Fix_Patching_Windows.log"
+
+if (-not (Test-Path "C:\Temp")) {
+    New-Item -Path "C:\Temp" -ItemType Directory -Force | Out-Null
+}
+
+$ErrorActionPreference = "Stop"
+
+Start-Transcript -Path $LogPath -Append -Force
+
+try {
+
+    Write-Host ""
+    Write-Host "========================================="
+    Write-Host "Windows Update Remediation Started"
+    Write-Host "Computer: $env:COMPUTERNAME"
+    Write-Host "User: $(whoami)"
+    Write-Host "Time: $(Get-Date)"
+    Write-Host "========================================="
+
+    Write-Host ""
+    Write-Host "[STEP 1] Enabling TLS 1.2..."
+
+    [Net.ServicePointManager]::SecurityProtocol = `
+        [Net.ServicePointManager]::SecurityProtocol -bor `
+        [Net.SecurityProtocolType]::Tls12
+
+    Write-Host "[STEP 1] TLS configuration completed."
+    Write-Host "SecurityProtocol: $([Net.ServicePointManager]::SecurityProtocol)"
+
+    Write-Host ""
+    Write-Host "[STEP 2] Checking NuGet provider..."
+
+    $NuGet = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue
+
+    if (-not $NuGet) {
+        Write-Host "[STEP 2] NuGet provider not found."
+        Write-Host "[STEP 2] Installing NuGet provider..."
+
+        Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -ForceBootstrap -ErrorAction Stop | Out-Null
+
+        Write-Host "[STEP 2] NuGet installation command completed."
+
+        $NuGet = Get-PackageProvider -Name NuGet -ListAvailable -ErrorAction SilentlyContinue
+
+        if (-not $NuGet) {
+            throw "NuGet provider installation completed but NuGet cannot be detected."
+        }
+        Write-Host "[STEP 2] NuGet provider installed successfully."
+    }
+    else {
+        Write-Host "[STEP 2] NuGet provider already installed."
+    }
+    Write-Host "[STEP 2] NuGet version: $($NuGet.Version)"
+
+    Write-Host ""
+    Write-Host "[STEP 3] Checking PSGallery..."
+
+    $PSGallery = Get-PSRepository -Name PSGallery -ErrorAction Stop
+    Write-Host "[STEP 3] PSGallery current policy: $($PSGallery.InstallationPolicy)"
+
+    if ($PSGallery.InstallationPolicy -ne "Trusted") {
+        Write-Host "[STEP 3] Setting PSGallery to Trusted..."
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction Stop
+
+        $PSGallery = Get-PSRepository -Name PSGallery -ErrorAction Stop
+        if ($PSGallery.InstallationPolicy -ne "Trusted") {
+            throw "Failed to set PSGallery to Trusted."
+        }
+        Write-Host "[STEP 3] PSGallery successfully set to Trusted."
+    }
+    else {
+        Write-Host "[STEP 3] PSGallery already Trusted."
+    }
+
+    Write-Host ""
+    Write-Host "[STEP 4] Checking PSWindowsUpdate module..."
+
+    $PSWU = Get-Module -ListAvailable -Name PSWindowsUpdate | Sort-Object Version -Descending | Select-Object -First 1
+
+    if (-not $PSWU) {
+        Write-Host "[STEP 4] PSWindowsUpdate not found."
+        Write-Host "[STEP 4] Installing PSWindowsUpdate..."
+
+        Install-Module -Name PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -AllowClobber -Confirm:$false -ErrorAction Stop
+
+        Write-Host "[STEP 4] PSWindowsUpdate installation command completed."
+
+        $PSWU = Get-Module -ListAvailable -Name PSWindowsUpdate | Sort-Object Version -Descending | Select-Object -First 1
+
+        if (-not $PSWU) {
+            throw "PSWindowsUpdate installation completed but module cannot be detected."
+        }
+        Write-Host "[STEP 4] PSWindowsUpdate installed successfully."
+    }
+    else {
+        Write-Host "[STEP 4] PSWindowsUpdate already installed."
+    }
+    Write-Host "[STEP 4] PSWindowsUpdate version: $($PSWU.Version)"
+
+    Write-Host ""
+    Write-Host "[STEP 5] Importing PSWindowsUpdate..."
+
+    Import-Module PSWindowsUpdate -Force -ErrorAction Stop
+
+    if (-not (Get-Command Get-WindowsUpdate -ErrorAction SilentlyContinue)) {
+        throw "Get-WindowsUpdate cmdlet not found after importing PSWindowsUpdate."
+    }
+    Write-Host "[STEP 5] PSWindowsUpdate imported successfully."
+    Write-Host "[STEP 5] Get-WindowsUpdate command verified."
+
+    Write-Host ""
+    Write-Host "[STEP 6] Searching and installing available updates..."
+    Write-Host "[STEP 6] Excluded KBs: KB5120994, KB5121003, KB5124008"
+
+    Get-WindowsUpdate -MicrosoftUpdate -AcceptAll -Install -IgnoreReboot -NotCategory "Upgrades" -NotTitle 'Security Update \(Hotpatch capable\)' -Verbose -ErrorAction Stop
+    Get-WindowsUpdate -AcceptAll -Install -IgnoreReboot -Verbose -ErrorAction Stop
+    Write-Host ""
+    Write-Host "========================================="
+    Write-Host "Windows Update completed successfully."
+    Write-Host "Time: $(Get-Date)"
+    Write-Host "========================================="
+
+    Stop-Transcript
+    exit 0
+}
+catch {
+    Write-Host ""
+    Write-Host "============== ERROR =============="
+    Write-Host "Message : $($_.Exception.Message)"
+    Write-Host "Type    : $($_.Exception.GetType().FullName)"
+    Write-Host "Line    : $($_.InvocationInfo.ScriptLineNumber)"
+    Write-Host "Command : $($_.InvocationInfo.Line)"
+    Write-Host "Time    : $(Get-Date)"
+    Write-Host "==================================="
+
+    try { Stop-Transcript } catch {}
+    exit 1
+}
+
 
 ```
 
@@ -145,7 +290,102 @@ Upgrade cần **khoảng 6 tiếng máy bật liên tục và có mạng**. Nế
 # TaskScheduler_Upgrade_Win11.ps1
 # Intune Win32 app - Install command (Install behavior: System)
 # Copy payload + register Scheduled Task (At startup + repeat)
+<#
+    TaskScheduler_Upgrade_Win11.ps1
+    Intune Win32 app - Install command (Install behavior: System):
+        powershell.exe -ExecutionPolicy Bypass -NoProfile -File .\TaskScheduler_Upgrade_Win11.ps1
+    - Copy payload to C:\ProgramData\Win11Upgrade
+    - Register task 'Upgrade-Win11-25H2' (At startup + every 1 hour, SYSTEM)
+    - Task re-runs until build >= 26200, then the run script removes the task itself
+#>
 
+# ---------- FORCE 64-BIT POWERSHELL ----------
+if ([Environment]::Is64BitOperatingSystem -and -not [Environment]::Is64BitProcess) {
+    $p = Start-Process "$env:WINDIR\SysNative\WindowsPowerShell\v1.0\powershell.exe" `
+        -ArgumentList "-ExecutionPolicy Bypass -NoProfile -File `"$PSCommandPath`"" -Wait -PassThru -WindowStyle Hidden
+    exit $p.ExitCode
+}
+
+# ---------- DECLARATIONS ----------
+$TaskName    = 'Upgrade_Windows_25H2_New'               # must match Upgrade_Windows_11_Assistant.ps1
+$OldTaskName = 'Upgrade_Windows_25H2'             # old task (one-time 11:00 AM)
+$WorkDir     = 'C:\Temp'      # must match Upgrade_Windows_11_Assistant.ps1
+$RunScript   = Join-Path $WorkDir 'Upgrade_Windows_11_Assistant.ps1'
+$SrcDir      = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+$LogFile     = 'C:\Temp\Win11Upgrade_TaskSetup.log'
+$TargetBuild = 26200
+
+Start-Transcript -Path $LogFile -Append -Force | Out-Null
+
+try {
+    # ---------- 1. Already 25H2+ -> nothing to do ----------
+    [int]$Build = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuild
+    Write-Host "Current build: $Build"
+    if ($Build -ge $TargetBuild) {
+        Write-Host "Already 25H2 or later. Exit."
+        exit 0
+    }
+
+    # ---------- 2. Cleanup old task + old files in C:\Temp ----------
+    foreach ($t in @($OldTaskName, $TaskName)) {
+        if (Get-ScheduledTask -TaskName $t -ErrorAction SilentlyContinue) {
+            Unregister-ScheduledTask -TaskName $t -Confirm:$false
+            Write-Host "Existing task '$t' deleted."
+        }
+    }
+    Remove-Item 'C:\Temp\Upgrade_Windows_11_Assistant.ps1', 'C:\Temp\Windows11InstallationAssistant.exe' `
+        -Force -ErrorAction SilentlyContinue
+
+    # ---------- 3. Create folder + lock down ACL (users read-only) ----------
+    New-Item -Path $WorkDir -ItemType Directory -Force | Out-Null
+    icacls $WorkDir /inheritance:r /grant:r 'SYSTEM:(OI)(CI)F' 'Administrators:(OI)(CI)F' 'Users:(OI)(CI)RX' | Out-Null
+
+    # ---------- 4. Copy payload (from Intune package folder) ----------
+    Copy-Item -Path "Upgrade_Windows_11_Assistant.ps1" -Destination "C:\Temp" -Recurse -Force -ErrorAction SilentlyContinue
+    Copy-Item -Path "Windows11InstallationAssistant.exe" -Destination "C:\Temp" -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "Copied: Upgrade_Windows_11_Assistant.ps1"
+    Write-Host "Copied: Windows11InstallationAssistant.exe"
+    Sleep 2
+
+    # ---------- 5. Define task ----------
+    $Action = New-ScheduledTaskAction -Execute "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe" `
+        -Argument "-NoProfile -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -File `"$RunScript`""
+
+    # Trigger 1: at startup (delay 5 min for network)
+    $TrgStartup = New-ScheduledTaskTrigger -AtStartup
+    $TrgStartup.Delay = 'PT5M'
+
+    # Trigger 2: every 1 hour, starting in 2 minutes (indefinitely)
+    $TrgHourly = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(2) `
+        -RepetitionInterval (New-TimeSpan -Hours 2)
+
+    $Settings = New-ScheduledTaskSettingsSet `
+        -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries `
+        -StartWhenAvailable `
+        -RunOnlyIfNetworkAvailable `
+        -MultipleInstances IgnoreNew `
+        -ExecutionTimeLimit (New-TimeSpan -Minutes 30) `
+        -Priority 7
+
+    $Principal = New-ScheduledTaskPrincipal -UserId 'SYSTEM' -LogonType ServiceAccount -RunLevel Highest
+
+    # ---------- 6. Register + start now ----------
+    Register-ScheduledTask -TaskName $TaskName -Action $Action -Trigger $TrgStartup, $TrgHourly `
+        -Settings $Settings -Principal $Principal -Force | Out-Null
+    Write-Host "New task '$TaskName' created."
+    sleep 2
+
+    Start-ScheduledTask -TaskName $TaskName
+    Write-Host "Task '$TaskName' started."
+    exit 0
+}
+catch {
+    Write-Host "ERROR: $($_.Exception.Message)"
+    exit 1
+}
+finally {
+    Stop-Transcript | Out-Null
+}
 ```
 
 
@@ -153,12 +393,125 @@ Upgrade cần **khoảng 6 tiếng máy bật liên tục và có mạng**. Nế
 # Upgrade_Windows_11_Assistant.ps1
 # Run by Scheduled Task as SYSTEM
 # Build >= 26200 -> remove task | Setup running -> skip | Else -> launch Assistant
+<#
+    Upgrade_Windows_11_Assistant.ps1
+    Run by Scheduled Task 'Upgrade-Win11-25H2' as SYSTEM (At startup + every 1 hour)
+    - Build >= 26200 (25H2)      -> remove task + cleanup, exit
+    - Assistant/Setup running    -> skip
+    - Already launched this boot -> skip (waiting for restart)
+    - Otherwise                  -> launch Windows 11 Installation Assistant
+#>
 
+# ---------- DECLARATIONS ----------
+[string]$TaskName      = 'Upgrade_Windows_25H2_New'
+[string]$WorkDir       = 'C:\Temp'          # must match Install.ps1
+[string]$LogDir        = 'C:\Temp'
+[string]$LogFilePath   = Join-Path $LogDir "Win11Upgrade_$($env:COMPUTERNAME).log"
+[string]$AssistantLogs = Join-Path $WorkDir 'AssistantLogs'
+[string]$UpdaterBinary = Join-Path $WorkDir 'Windows11InstallationAssistant.exe'
+[string]$Marker        = Join-Path $WorkDir 'LastLaunch.txt'
+[string]$UpdaterArguments = "/QuietInstall /SkipEULA /CopyLogs `"$AssistantLogs`""
+[int]$TargetBuild      = 26200
+[int]$MinFreeGB        = 20
+
+# ---------- FUNCTIONS ----------
+function Write-Log {
+    [CmdletBinding()]
+    param ([Parameter(Mandatory)][string]$Message)
+    try {
+        $dir = [System.IO.Path]::GetDirectoryName($LogFilePath)
+        if (!(Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        $DateTime = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+        Add-Content -Value "$DateTime - $Message" -Path $LogFilePath
+    }
+    catch { Write-Error $_.Exception.Message }
+}
+
+function CheckIfElevated {
+    $principal = [Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()
+    if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        Write-Log "ERROR: Insufficient permissions. Run as Administrator/SYSTEM."
+        return $false
+    }
+    return $true
+}
+
+# ---------- MAIN ----------
+try {
+    [int]$Build = (Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').CurrentBuild
+    $FreeGB     = [math]::Round((Get-PSDrive C).Free / 1GB, 1)
+
+    Write-Log "================================================="
+    Write-Log "Info: Script init - User: $env:USERNAME | Machine: $env:COMPUTERNAME"
+    Write-Log "Info: Current build: $Build | Free C: $FreeGB GB"
+
+    if (-not (CheckIfElevated)) { Write-Log "ERROR: Will terminate!"; exit 1 }
+
+    # 1. Already 25H2 or later -> cleanup and remove task
+    if ($Build -ge $TargetBuild) {
+        Write-Log "Info: OS is up to date (build $Build). Removing task '$TaskName' and installer."
+        Unregister-ScheduledTask -TaskName $TaskName -Confirm:$false -ErrorAction SilentlyContinue
+        Remove-Item $UpdaterBinary, $Marker -Force -ErrorAction SilentlyContinue
+        exit 0
+    }
+
+    # 2. Installer binary present?
+    if (-not (Test-Path $UpdaterBinary)) {
+        Write-Log "ERROR: File $UpdaterBinary does not exist!"
+        exit 1
+    }
+
+    # 3. Upgrade already in progress -> skip
+    $Running = Get-Process -Name Windows10UpgraderApp, SetupHost, setupprep -ErrorAction SilentlyContinue
+    if ($Running) {
+        Write-Log "Info: Upgrade in progress ($(($Running.Name | Select-Object -Unique) -join ', ')). Skip."
+        exit 0
+    }
+
+    # 4. Already launched in this boot (maybe pending restart) -> skip
+    $LastBoot = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+    if (Test-Path $Marker) {
+        $LastLaunch = [datetime]::Parse((Get-Content $Marker -Raw).Trim())
+        if ($LastLaunch -gt $LastBoot) {
+            Write-Log "Info: Already launched at $LastLaunch in this boot (last boot $LastBoot). Skip - waiting for restart."
+            exit 0
+        }
+    }
+
+    # 5. Disk space warning
+    if ($FreeGB -lt $MinFreeGB) { Write-Log "WARNING: Only $FreeGB GB free on C: (recommended >= $MinFreeGB GB)." }
+
+    # 6. Launch Installation Assistant (no -Wait: Assistant runs on its own, task finishes quickly)
+    if (!(Test-Path $AssistantLogs)) { New-Item -ItemType Directory -Path $AssistantLogs -Force | Out-Null }
+    (Get-Date).ToString('o') | Out-File $Marker -Force
+    Write-Log "Info: Installation in progress - launching: $UpdaterBinary $UpdaterArguments"
+    Start-Process -FilePath $UpdaterBinary -ArgumentList $UpdaterArguments -WindowStyle Hidden
+    exit 0
+}
+catch {
+    Write-Log -Message "ERROR: $($_.Exception.Message)"
+    exit 1
+}
 ```
 
 
 ```powershell
 # Detection script cho Intune Win32 app
+# Check task scheduler
+$taskName = "Upgrade_Windows_25H2_New"
+
+try {
+    # Attempt to get the scheduled task
+    $taskExists = Get-ScheduledTask -TaskName $taskName -ErrorAction Stop
+
+    if ($taskExists) {
+        Write-Host "Install success."
+        exit 0
+    }
+} catch {
+    Write-Host "Task '$taskName' does not exist or an error occurred."
+    exit 1
+}
 
 ```
 
