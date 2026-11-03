@@ -166,7 +166,408 @@ Lúc đầu mình phải khai báo `ProcessMap` và `ServiceMap` cho từng app.
 # Chi can them ten app vao $AppNameList
 # Run as SYSTEM, 64-bit PowerShell
 ###################################################################
+# ================= SAFETY SWITCHES =================
+$DryRun        = $false    # TRUE = log only, DO NOT delete. Set to $false after testing OK.
+$MinNameLength = 4        # App name (with '*' stripped) must be >= 4 chars -> prevents accidental deletion.
 
+# DryRun suffix (PS 5.1 - do not use ternary operator)
+$DryTag = ''
+if ($DryRun) { $DryTag = ' (DRYRUN)' }
+
+# ================= INPUT: EDIT ONLY HERE =================
+$AppNameList = @(
+    "*Anki*",
+    "*DeskRest*",
+    "*FileZilla*",
+    "*Adobe Creative Cloud*"
+)
+# ============================================================
+
+# ================= LOG SETUP =================
+$TimeStamp = (Get-Date).ToString("yyyy-MM-dd_HH-mm-ss")
+$LogDir    = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs"
+if (-not (Test-Path $LogDir)) { New-Item -ItemType Directory -Path $LogDir -Force | Out-Null }
+$LogFile   = Join-Path $LogDir "App_Cleanup_AutoDiscover_$TimeStamp.log"
+Start-Transcript -Path $LogFile -Force
+
+Write-Host "===== App Cleanup (AUTO-DISCOVER v2) Started ====="
+Write-Host "Timestamp : $(Get-Date)"
+Write-Host "Host      : $env:COMPUTERNAME"
+Write-Host "RunAsUser : $([System.Security.Principal.WindowsIdentity]::GetCurrent().Name)"
+Write-Host "PS Ver    : $($PSVersionTable.PSVersion)"
+Write-Host "Is64bit   : $([Environment]::Is64BitProcess)   (MUST BE True)"
+Write-Host "DryRun    : $DryRun"
+Write-Host "=================================================="
+
+if (-not [Environment]::Is64BitProcess -and [Environment]::Is64BitOperatingSystem) {
+    Write-Host "[FATAL] Running 32-bit on a 64-bit OS -> registry is redirected, 64-bit apps will be MISSED."
+    Write-Host "        Re-run using the sysnative host (see README at end of file). STOPPING."
+    Stop-Transcript
+    exit 1
+}
+
+# ================= STATIC CONFIG =================
+$ProgramPaths = @("C:\Program Files","C:\Program Files (x86)","C:\ProgramData")
+
+$RegistryUninstallPaths = @(
+    "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKCU:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+    "HKLM:\SOFTWARE\Classes\Installer",
+    "HKLM:\SOFTWARE"
+)
+
+# Folders that must NEVER be treated as an "app folder"
+$ProtectedPaths = @(
+    "$env:SystemRoot",
+    "$env:SystemRoot\System32",
+    "$env:SystemRoot\SysWOW64",
+    "$env:ProgramData\Microsoft",
+    "$env:ProgramData\Packages",
+    "$env:ProgramData\USOShared",
+    "${env:ProgramFiles}\Common Files",
+    "${env:ProgramFiles(x86)}\Common Files",
+    "${env:ProgramFiles}\WindowsApps",
+    "${env:ProgramFiles}\Windows Defender",
+    "$env:SystemDrive\Users\Default",
+    "$env:SystemDrive\Users\Public\Desktop",
+    "$env:SystemDrive\Recovery"
+) | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('\') }
+
+# "Root" folders that must not be returned as an InstallLocation (too broad)
+$RootBlacklist = @(
+    "C:\", "C:\Program Files", "C:\Program Files (x86)",
+    "C:\ProgramData", "C:\Windows", "C:\Users"
+) | ForEach-Object { $_.TrimEnd('\') }
+
+# ================= HELPERS =================
+
+function Test-SafeToDelete {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return $false }
+    $full = $Path
+    try { $full = (Resolve-Path -LiteralPath $Path -ErrorAction Stop).Path } catch {}
+    $full = $full.TrimEnd('\')
+    if ($full -match '^[A-Za-z]:\\?$') { Write-Host "[GUARD] ROOT: $full"; return $false }
+    $depth = ($full -split '\\').Where({ $_ -ne '' }).Count
+    if ($depth -lt 3) { Write-Host "[GUARD] Path too shallow: $full"; return $false }
+    foreach ($pp in $ProtectedPaths) {
+        if ($full -ieq $pp -or $full -like "$pp\*") { Write-Host "[GUARD] PROTECTED: $full"; return $false }
+    }
+    return $true
+}
+
+function Test-ValidAppFolder {
+    param([string]$Path)
+    if ([string]::IsNullOrWhiteSpace($Path)) { return $false }
+    $p = $Path.TrimEnd('\')
+    if ($RootBlacklist -contains $p) { return $false }
+    if (-not (Test-SafeToDelete -Path $p)) { return $false }
+    return $true
+}
+
+function Remove-ItemSafe {
+    param([string]$Path, [string]$Tag = "")
+    if (-not (Test-Path -LiteralPath $Path)) { return $false }
+    if (-not (Test-SafeToDelete -Path $Path)) { return $false }
+    if ($DryRun) { Write-Host "[DRYRUN]$Tag Would remove: $Path"; return $true }
+    try { Remove-Item -LiteralPath $Path -Recurse -Force -ErrorAction Stop; Write-Host "[REMOVED]$Tag $Path"; return $true }
+    catch { Write-Host "[WARN]$Tag Cannot remove $Path : $_"; return $false }
+}
+
+function Remove-RegKeySafe {
+    param([string]$PSPath, [string]$Tag = "")
+    if ($DryRun) { Write-Host "[DRYRUN]$Tag Would remove REG: $PSPath"; return }
+    Remove-Item -LiteralPath $PSPath -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "[REMOVED]$Tag $PSPath"
+}
+
+# HKU setup
+if (-not (Get-PSDrive -Name HKU -ErrorAction SilentlyContinue)) {
+    New-PSDrive -PSProvider Registry -Name HKU -Root HKEY_USERS -ErrorAction SilentlyContinue | Out-Null
+}
+$DirectoryUsers = Get-ChildItem "C:\Users" -Directory -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -notmatch "^(Public|Default|Default User|All Users)$" } |
+    Select-Object -ExpandProperty Name
+
+# Load offline hives
+$LoadedHives = @()
+foreach ($User in $DirectoryUsers) {
+    $NtUser = "C:\Users\$User\NTUSER.DAT"
+    if ((Test-Path $NtUser) -and -not (Test-Path "HKU:\TMP_$User")) {
+        $null = reg load "HKU\TMP_$User" $NtUser 2>$null
+        if ($LASTEXITCODE -eq 0) { $LoadedHives += "TMP_$User"; Write-Host "[HIVE] Loaded: $User" }
+    }
+}
+$HKUsers = Get-ChildItem "HKU:\" -ErrorAction SilentlyContinue |
+    ForEach-Object { $_.PSChildName } |
+    Where-Object { $_ -match "^S-1-5-21-" -or $_ -match "^TMP_" }
+
+# ---- CORE function: app name -> list of real install folders ----
+function Get-AppInstallFolders {
+    param([string]$AppName)
+    $folders = New-Object System.Collections.Generic.HashSet[string] ([StringComparer]::OrdinalIgnoreCase)
+
+    $roots = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    foreach ($SID in $HKUsers) {
+        $roots += "HKU:\$SID\Software\Microsoft\Windows\CurrentVersion\Uninstall"
+        $roots += "HKU:\$SID\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    }
+
+    foreach ($root in $roots) {
+        Get-ChildItem $root -ErrorAction SilentlyContinue | ForEach-Object {
+            $p = Get-ItemProperty $_.PSPath -ErrorAction SilentlyContinue
+            if ($p.DisplayName -like $AppName) {
+                if ($p.InstallLocation -and (Test-Path $p.InstallLocation)) {
+                    [void]$folders.Add($p.InstallLocation.TrimEnd('\'))
+                }
+                if ($p.DisplayIcon) {
+                    $icon = ($p.DisplayIcon -split ',')[0].Trim('"')
+                    if ($icon -match '\.exe$' -and (Test-Path $icon)) {
+                        [void]$folders.Add((Split-Path $icon -Parent).TrimEnd('\'))
+                    }
+                }
+                foreach ($us in @($p.UninstallString, $p.QuietUninstallString)) {
+                    if ($us) {
+                        $exe = [regex]::Match($us, '["]?([A-Za-z]:\\[^"]+?\.exe)').Groups[1].Value
+                        if ($exe -and (Test-Path $exe) -and $exe -notmatch 'msiexec') {
+                            [void]$folders.Add((Split-Path $exe -Parent).TrimEnd('\'))
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    $result = @()
+    foreach ($f in $folders) { if (Test-ValidAppFolder -Path $f) { $result += $f } }
+    return ($result | Select-Object -Unique)
+}
+
+function Invoke-Uninstaller {
+    param([string]$AppName)
+    $ran = $false
+    $roots = @(
+        "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+        "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    )
+    foreach ($SID in $HKUsers) {
+        $roots += "HKU:\$SID\Software\Microsoft\Windows\CurrentVersion\Uninstall"
+        $roots += "HKU:\$SID\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+    }
+    foreach ($root in $roots) {
+        Get-ChildItem $root -ErrorAction SilentlyContinue | ForEach-Object {
+            $p = Get-ItemProperty $_.PSPath -ErrorAction SilentlyContinue
+            if ($p.DisplayName -like $AppName) {
+                $unqs = $p.QuietUninstallString; $uns = $p.UninstallString
+                if ($DryRun) {
+                    Write-Host "[DRYRUN][UNINSTALL] $($p.DisplayName)"; $ran = $true; return
+                }
+                try {
+                    if ($unqs) { Write-Host "[UNINSTALL] Quiet: $unqs"; cmd.exe /c "$unqs" 2>$null; $ran=$true }
+                    elseif ($uns -match "msiexec") {
+                        $guid = [regex]::Match($uns, "\{[0-9A-Fa-f\-]{36}\}").Value
+                        if ($guid) { Write-Host "[UNINSTALL] MSI: $guid"; Start-Process msiexec.exe -ArgumentList "/x $guid /qn /norestart" -Wait -EA SilentlyContinue; $ran=$true }
+                    }
+                    elseif ($uns -match "unins\d+\.exe") {
+                        $exe = [regex]::Match($uns, '["]?(.+?unins\d+\.exe)["]?').Groups[1].Value
+                        if (Test-Path $exe) { Write-Host "[UNINSTALL] Inno: $exe"; Start-Process $exe -ArgumentList "/VERYSILENT /NORESTART /SUPPRESSMSGBOXES" -Wait -EA SilentlyContinue; $ran=$true }
+                    }
+                    elseif ($uns) { Write-Host "[UNINSTALL] Generic: $uns /S"; cmd.exe /c "$uns /S" 2>$null; $ran=$true }
+                } catch { Write-Host "[WARN] Uninstaller error: $_" }
+            }
+        }
+    }
+    return $ran
+}
+
+function Clear-RecycleMatch {
+    param([string]$AppName)
+    $hit = $false
+    Get-ChildItem "C:\`$Recycle.Bin" -Recurse -Force -EA SilentlyContinue |
+        Where-Object { $_.Name -like $AppName } |
+        ForEach-Object { if (Remove-ItemSafe -Path $_.FullName -Tag "[RECYCLEBIN]") { $hit = $true } }
+    return $hit
+}
+
+# ================= MAIN =================
+foreach ($AppName in $AppNameList) {
+
+    $Clean = ($AppName -replace '\*','').Trim()
+    if ([string]::IsNullOrWhiteSpace($Clean) -or $Clean.Length -lt $MinNameLength) {
+        Write-Host "`n[SKIP][GUARD] '$AppName' -> name too short/empty (must be >= $MinNameLength). Skipping."
+        continue
+    }
+
+    Write-Host "`n>>> Processing: $AppName"
+    Write-Host "---------------------------------------"
+    $Found = $false; $Removed = $false
+
+    # ---------- 0. AUTO-DISCOVER the real install folders ----------
+    $AppFolders = @(Get-AppInstallFolders -AppName $AppName)
+    if ($AppFolders.Count) {
+        Write-Host "[DISCOVER] Install folders:"
+        $AppFolders | ForEach-Object { Write-Host "   - $_" }
+    } else {
+        Write-Host "[DISCOVER] No InstallLocation found (app may be portable / partially uninstalled)."
+    }
+
+    # ---------- 1. KILL PROCESS ----------
+    # 1a. Prefer matching by .Path inside the app folder (accurate)
+    $killedByPath = $false
+    if ($AppFolders.Count) {
+        Get-Process -EA SilentlyContinue | ForEach-Object {
+            $proc = $_
+            $pPath = $null
+            try { $pPath = $proc.Path } catch { $pPath = $null }  # protected process -> skip
+            if ($pPath) {
+                foreach ($f in $AppFolders) {
+                    if ($pPath -like "$f\*") {
+                        Write-Host "[KILL] $($proc.Name) (PID $($proc.Id)) -> $pPath"
+                        if (-not $DryRun) { Stop-Process -Id $proc.Id -Force -EA SilentlyContinue }
+                        $Found = $true; $killedByPath = $true; break
+                    }
+                }
+            }
+        }
+    }
+    # 1b. Fallback by name ONLY when no folder was discovered (avoids false matches)
+    if (-not $AppFolders.Count) {
+        Get-Process -EA SilentlyContinue | Where-Object { $_.Name -like "$Clean*" } | ForEach-Object {
+            Write-Host "[KILL][NAME] $($_.Name)"
+            if (-not $DryRun) { Stop-Process -Id $_.Id -Force -EA SilentlyContinue }
+            $Found = $true
+        }
+    }
+
+    # ---------- 2. STOP + DELETE SERVICE ----------
+    Get-CimInstance Win32_Service -EA SilentlyContinue | ForEach-Object {
+        $svc = $_; $match = $false
+        if ($svc.PathName) {
+            # Extract the first exe path from PathName, then prefix-compare with the app folder
+            $svcExe = [regex]::Match($svc.PathName, '["]?([A-Za-z]:\\[^"]+?\.exe)').Groups[1].Value
+            foreach ($f in $AppFolders) {
+                if ($svcExe -and ($svcExe -like "$f\*")) { $match = $true; break }
+            }
+        }
+        if (-not $match -and $svc.DisplayName -like $AppName) { $match = $true }
+        if ($match) {
+            Write-Host "[SERVICE] $($svc.Name) -> $($svc.PathName)"
+            if (-not $DryRun) {
+                Stop-Service $svc.Name -Force -EA SilentlyContinue
+                sc.exe delete $svc.Name | Out-Null
+            }
+            $Found = $true; $Removed = $true
+        }
+    }
+
+    # ---------- 3. RUN THE ACTUAL UNINSTALLER ----------
+    if (Invoke-Uninstaller -AppName $AppName) { $Found = $true; $Removed = $true }
+
+    # ---------- 4. DELETE INSTALL FOLDER (auto-discovered) ----------
+    foreach ($f in $AppFolders) {
+        if (Test-Path $f) { if (Remove-ItemSafe -Path $f -Tag "[APPDIR]") { $Found=$true; $Removed=$true } }
+    }
+
+    # ---------- 5. DELETE FILES: USER APPDATA ----------
+    foreach ($User in $DirectoryUsers) {
+        $UserPaths = @(
+            "C:\Users\$User\AppData\Local\$Clean",
+            "C:\Users\$User\AppData\LocalLow\$Clean",
+            "C:\Users\$User\AppData\Roaming\$Clean",
+            "C:\Users\$User\AppData\Local\Programs\$Clean"
+        )
+        foreach ($Path in $UserPaths) {
+            if (Test-Path $Path) { if (Remove-ItemSafe -Path $Path -Tag "[USER:$User]") { $Found=$true; $Removed=$true } }
+        }
+        Get-ChildItem "C:\Users\$User\AppData\Roaming\Microsoft\Windows\Recent",`
+                      "C:\Users\$User\Desktop" -Filter *.lnk -Recurse -Force -EA SilentlyContinue |
+            Where-Object { $_.Name -like $AppName } |
+            ForEach-Object { if (Remove-ItemSafe -Path $_.FullName -Tag "[LNK:$User]") { $Found=$true; $Removed=$true } }
+    }
+
+    # ---------- 6. DELETE FILES: SYSTEM PATHS (by name, guarded) ----------
+    foreach ($Base in $ProgramPaths) {
+        Get-ChildItem $Base -Directory -Force -EA SilentlyContinue |
+            Where-Object { $_.Name -like $AppName } |
+            ForEach-Object { if (Remove-ItemSafe -Path $_.FullName -Tag "[SYSTEM]") { $Found=$true; $Removed=$true } }
+    }
+    Get-ChildItem "C:\ProgramData\Microsoft\Windows\Start Menu\Programs",`
+                  "C:\Users\Public\Desktop" -Filter *.lnk -Recurse -Force -EA SilentlyContinue |
+        Where-Object { $_.Name -like $AppName } |
+        ForEach-Object { if (Remove-ItemSafe -Path $_.FullName -Tag "[LNK][PUBLIC]") { $Found=$true; $Removed=$true } }
+
+    # ---------- 7. REGISTRY UNINSTALL (HKLM/HKCU) by DisplayName ----------
+    foreach ($Reg in $RegistryUninstallPaths) {
+        Get-ChildItem $Reg -EA SilentlyContinue | ForEach-Object {
+            $p = Get-ItemProperty $_.PSPath -EA SilentlyContinue
+            if ($p.DisplayName -like $AppName) {
+                Write-Host "[FOUND][REG] $($p.DisplayName)"
+                Remove-RegKeySafe -PSPath $_.PSPath -Tag "[REG]"; $Found=$true; $Removed=$true
+            }
+        }
+    }
+
+    # ---------- 8. REGISTRY UNINSTALL (HKU + offline hives) ----------
+    foreach ($SID in $HKUsers) {
+        foreach ($sub in @("Software\Microsoft\Windows\CurrentVersion\Uninstall",
+                            "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall")) {
+            Get-ChildItem "HKU:\$SID\$sub" -EA SilentlyContinue | ForEach-Object {
+                $p = Get-ItemProperty $_.PSPath -EA SilentlyContinue
+                if ($p.DisplayName -like $AppName) {
+                    Write-Host "[FOUND][REG][SID:$SID] $($p.DisplayName)"
+                    Remove-RegKeySafe -PSPath $_.PSPath -Tag "[REG][SID:$SID]"; $Found=$true; $Removed=$true
+                }
+            }
+        }
+    }
+
+    # ---------- 9. MSI Installer\Products ----------
+    Get-ChildItem "HKLM:\SOFTWARE\Classes\Installer\Products" -EA SilentlyContinue | ForEach-Object {
+        $p = Get-ItemProperty $_.PSPath -EA SilentlyContinue
+        if ($p.ProductName -like $AppName) {
+            Write-Host "[FOUND][MSI] $($p.ProductName)"
+            Remove-RegKeySafe -PSPath $_.PSPath -Tag "[MSI]"; $Found=$true; $Removed=$true
+        }
+    }
+
+    # ---------- 10. App Paths ----------
+    foreach ($ap in @("HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths",
+                      "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\App Paths")) {
+        Get-ChildItem $ap -EA SilentlyContinue | Where-Object { $_.PSChildName -like $AppName } |
+            ForEach-Object { Write-Host "[FOUND][APPPATH] $($_.PSChildName)"; Remove-RegKeySafe -PSPath $_.PSPath -Tag "[APPPATH]"; $Found=$true; $Removed=$true }
+    }
+
+    # ---------- 11. PREFETCH ----------
+    $pfName = ($AppName -replace '[\*\s]','')
+    Get-ChildItem "C:\Windows\Prefetch" -Filter "*.pf" -EA SilentlyContinue |
+        Where-Object { $_.Name -like "*$pfName*" } |
+        ForEach-Object {
+            if ($DryRun) { Write-Host "[DRYRUN][PREFETCH] $($_.Name)" }
+            else { Remove-Item $_.FullName -Force -EA SilentlyContinue; Write-Host "[REMOVED][PREFETCH] $($_.Name)" }
+        }
+
+    # ---------- RESULT ----------
+    if (-not $Found)  { Write-Host "[RESULT][NOT FOUND] $AppName" }
+    elseif ($Removed) { Write-Host "[RESULT][SUCCESS] $AppName cleaned$DryTag" }
+    else              { Write-Host "[RESULT][PARTIAL] $AppName detected but not fully removed" }
+}
+
+# ================= UNLOAD OFFLINE HIVES =================
+[gc]::Collect(); Start-Sleep -Seconds 2
+foreach ($h in $LoadedHives) { $null = reg unload "HKU\$h" 2>$null; Write-Host "[HIVE] Unloaded $h" }
+
+Write-Host "`n===== Cleanup Completed$DryTag ====="
+Write-Host "Log: $LogFile"
+Start-Sleep -Seconds 3
+Stop-Transcript
+
+# Exit code for Intune (0 = success)
+exit 0
 ```
 
 ### Power Automate đưa tên app vào script
@@ -202,7 +603,128 @@ Cấu hình Win32 app:
 
 ```powershell
 # Detection script - exit 0 + STDOUT khi không còn app nào trong danh sách
+$AppFound = $false
 
+# ---------- APP LIST ----------
+$AppNameList = @(
+    "*Anki*",
+    "*DeskRest*",
+    "*FileZilla*",
+    "*Adobe Creative Cloud*"
+)
+
+# ---------- ENSURE HKU ----------
+if (-not (Get-PSDrive -Name HKU -ErrorAction SilentlyContinue)) {
+    New-PSDrive -PSProvider Registry -Name HKU -Root HKEY_USERS | Out-Null
+}
+
+# ==== USERS ====
+$DirectoryUsers = Get-ChildItem "C:\Users" -ErrorAction SilentlyContinue |
+    Where-Object { $_.Name -notmatch "^(Public|Default|Default User|All Users)$" } |
+    Select-Object -ExpandProperty Name
+
+# ==== LOGGING ====
+$SaveDate = (Get-Date).ToString("dd.MM.yyyy-HH.mm.ss")
+$LogPath  = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\Detect_Apps_T9-2026_$SaveDate.txt"
+
+try {
+    Start-Transcript -Path $LogPath -Force
+
+    foreach ($AppName in $AppNameList) {
+
+        Write-Host "---------------------------------------"
+        Write-Host "Checking application: $AppName"
+        Write-Host "---------------------------------------"
+
+        $UseWildcard = $AppName -like "*`*"
+
+        # ==== USER PATH CHECK ====
+        foreach ($User in $DirectoryUsers) {
+
+            $UserPaths = @(
+                "C:\Users\$User\AppData\Local\$AppName",
+                "C:\Users\$User\AppData\LocalLow\$AppName",
+                "C:\Users\$User\AppData\Roaming\$AppName",
+                "C:\Users\$User\AppData\Local\Programs\$AppName",
+                "C:\Users\$User\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\$AppName",
+                "C:\Users\Public\Desktop\$AppName"
+            )
+
+            foreach ($Path in $UserPaths) {
+                if (Test-Path $Path) {
+                    Write-Host "Detected: $AppName at $Path"
+                    $AppFound = $true
+                    break
+                }
+            }
+
+            if ($AppFound) { break }
+        }
+
+        if ($AppFound) { break }
+
+        # ==== REGISTRY CHECK ====
+        $RegistryPaths = @(
+            "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+            "HKCU:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+        )
+
+        foreach ($RegPath in $RegistryPaths) {
+
+            Get-ItemProperty "$RegPath\*" -ErrorAction SilentlyContinue |
+                Where-Object {
+                    if ($UseWildcard) {
+                        $_.DisplayName -and $_.DisplayName -like $AppName
+                    } else {
+                        $_.DisplayName -eq $AppName
+                    }
+                } |
+                ForEach-Object {
+                    Write-Host "Detected: $AppName in registry at $($_.PSPath)"
+                    $AppFound = $true
+                }
+
+            if ($AppFound) { break }
+        }
+
+        if ($AppFound) { break }
+
+        # ==== SYSTEM PATH CHECK ====
+        $SystemPaths = @(
+            "C:\Program Files\$AppName",
+            "C:\Program Files (x86)\$AppName",
+            "C:\ProgramData\$AppName",
+            "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\$AppName"
+        )
+
+        foreach ($SysPath in $SystemPaths) {
+            if (Test-Path $SysPath) {
+                Write-Host "Detected: $AppName at $SysPath"
+                $AppFound = $true
+                break
+            }
+        }
+
+        if ($AppFound) { break }
+    }
+
+}
+finally {
+    
+}
+
+Write-Host "---------------------------------------"
+
+if ($AppFound) {
+    Write-Host "At least one application was detected."
+    exit 1   # Non-compliant
+} else {
+    Write-Host "No applications were detected."
+    exit 0   # Compliant
+}
+Stop-Transcript | Out-Null
 ```
 
 Nếu muốn tự động luôn bước upload, có thể dùng module cộng đồng `IntuneWin32App` (`Add-IntuneWin32App`) hoặc Microsoft Graph. Mình vẫn để bước upload là **thao tác có người duyệt**, vì đây là điểm cuối cùng trước khi script chạy trên máy thật.
