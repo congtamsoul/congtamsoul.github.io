@@ -3,7 +3,7 @@ layout: post
 title: "Đồng bộ hình nền Desktop cho toàn bộ máy Windows trong công ty bằng Intune và PowerShell"
 seo_title: "Đồng bộ wallpaper Windows bằng Intune và PowerShell"
 description: "Đặt một hình nền Desktop thống nhất cho mọi máy Windows trong công ty bằng Intune: tải ảnh từ URL, áp dụng bằng SystemParametersInfo trong phiên user, kèm full script."
-date: 2026-11-06
+date: 2026-11-04
 author: "Tam Nguyen"
 reading_time: 8
 topic: windows

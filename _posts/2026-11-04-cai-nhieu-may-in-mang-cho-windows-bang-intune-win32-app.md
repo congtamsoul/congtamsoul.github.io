@@ -3,7 +3,7 @@ layout: post
 title: "Cài nhiều máy in mạng cho Windows bằng Intune: driver, cổng TCP/IP và in 2 mặt trong một Win32 app"
 seo_title: "Cài máy in mạng cho Windows bằng Intune Win32 app"
 description: "Đóng gói driver và script PowerShell thành Intune Win32 app để cài nhiều máy in mạng cho Windows: pnputil, cổng TCP/IP, bật in 2 mặt, detection rule."
-date: 2026-11-05
+date: 2026-11-04
 author: "Tam Nguyen"
 reading_time: 10
 topic: windows
