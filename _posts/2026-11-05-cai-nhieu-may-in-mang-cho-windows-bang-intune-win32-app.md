@@ -1,5 +1,4 @@
 ---
-published: false
 layout: post
 title: "Cài nhiều máy in mạng cho Windows bằng Intune: driver, cổng TCP/IP và in 2 mặt trong một Win32 app"
 seo_title: "Cài máy in mạng cho Windows bằng Intune Win32 app"
@@ -186,7 +185,7 @@ Lưu thành `Install-Printers.ps1`, đặt cùng thư mục với `Printer.zip` 
 ```powershell
 #Requires -Version 5.1
 #Requires -RunAsAdministrator
-<#+
+<#
 .SYNOPSIS
   Cai driver va nhieu may in mang (TCP/IP) cho Windows, dung lam Win32 app tren Intune.
 .EXAMPLE

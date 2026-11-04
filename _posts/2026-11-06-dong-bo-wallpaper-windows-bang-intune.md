@@ -1,5 +1,4 @@
 ---
-published: false
 layout: post
 title: "Đồng bộ hình nền Desktop cho toàn bộ máy Windows trong công ty bằng Intune và PowerShell"
 seo_title: "Đồng bộ wallpaper Windows bằng Intune và PowerShell"
@@ -154,7 +153,7 @@ Lưu thành `Set-CompanyWallpaper.ps1`. Sửa `$ImageUrl` thành đường dẫn
 
 ```powershell
 #Requires -Version 5.1
-<#+
+<#
 .SYNOPSIS
   Tai anh nen tu URL va dat lam hinh nen Desktop cho user dang dang nhap.
   Phai chay trong phien cua user (Intune: Run this script using the logged on credentials = Yes).
