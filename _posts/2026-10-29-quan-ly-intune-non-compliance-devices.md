@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 12
 topic: security
 thumb_label: "COMPLIANCE"
-image: /images/photo/10.jpg
+image: /images/photo/21.jpg
 tags:
   - Intune
   - Compliance

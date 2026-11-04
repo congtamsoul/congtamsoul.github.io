@@ -7,7 +7,7 @@ author: "Tam Nguyen"
 reading_time: 5
 topic: career
 thumb_label: "PERSONAL BRANDING"
-image: /images/photo/17.jpg
+image: /images/photo/8.jpg
 tags:
   - Personal Branding
   - Leadership

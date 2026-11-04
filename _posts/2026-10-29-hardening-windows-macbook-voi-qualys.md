@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 11
 topic: security
 thumb_label: "HARDENING CONTROL"
-image: /images/photo/23.jpg
+image: /images/photo/18.jpg
 tags:
   - Qualys
   - Hardening

@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 9
 topic: macos
 thumb_label: "MACOS · PLATFORM SSO"
-image: /images/photo/6.jpg
+image: /images/photo/25.jpg
 tags:
   - macOS
   - Intune

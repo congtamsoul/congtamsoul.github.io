@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 9
 topic: windows
 thumb_label: "DEVICE NAMING"
-image: /images/photo/20.jpg
+image: /images/photo/16.jpg
 tags:
   - Intune
   - Autopilot

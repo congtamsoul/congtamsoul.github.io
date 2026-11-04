@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 9
 topic: macos
 thumb_label: "MACOS + INTUNE"
-image: /images/photo/12.jpg
+image: /images/photo/20.jpg
 tags:
   - macOS
   - Intune

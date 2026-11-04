@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 12
 topic: m365
 thumb_label: "MICROSOFT 365 · ONBOARDING"
-image: /images/photo/22.jpg
+image: /images/photo/29.jpg
 tags:
   - Microsoft 365
   - Microsoft Graph

@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 8
 topic: windows
 thumb_label: "WINDOWS · INTUNE"
-image: /images/photo/23.jpg
+image: /images/photo/27.jpg
 tags:
   - Windows
   - Intune

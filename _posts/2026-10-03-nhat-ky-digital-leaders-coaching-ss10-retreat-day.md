@@ -7,7 +7,7 @@ author: "Tam Nguyen"
 reading_time: 6
 topic: career
 thumb_label: "TEAM BUILDING"
-image: /images/photo/22.jpg
+image: /images/photo/5.jpg
 tags:
   - Team Building
   - Digital Leaders

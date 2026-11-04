@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 7
 topic: windows
 thumb_label: "WINDOWS · POWERSHELL"
-image: /images/photo/8.jpg
+image: /images/photo/24.jpg
 tags:
   - Windows
   - PowerShell

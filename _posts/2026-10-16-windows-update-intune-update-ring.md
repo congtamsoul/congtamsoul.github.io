@@ -8,7 +8,7 @@ author: "Tam Nguyen"
 reading_time: 10
 topic: m365
 thumb_label: "MICROSOFT 365"
-image: /images/photo/1.jpg
+image: /images/photo/9.jpg
 tags:
   - Microsoft 365
   - Intune
