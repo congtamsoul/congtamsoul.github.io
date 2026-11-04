@@ -18,6 +18,9 @@ layout: default
           <span><b style="color:var(--text)">{{ page.author | default: site.author }}</b> · {% include post-date.html date=page.date %} · {{ page.reading_time }} phút đọc</span>
           <span class="post-view-count" data-view-path="{{ page.url | relative_url | escape }}" hidden></span>
         </div>
+        {%- if page.image %}
+        <img class="article-cover" src="{{ page.image | relative_url }}" alt="{{ page.title | escape }}">
+        {%- endif %}
       </div>
 
       <div class="prose">

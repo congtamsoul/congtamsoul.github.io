@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 12
 topic: m365
 thumb_label: "EXCHANGE ONLINE"
+image: /images/photo/2.jpg
 tags:
   - Exchange Online
   - PowerShell

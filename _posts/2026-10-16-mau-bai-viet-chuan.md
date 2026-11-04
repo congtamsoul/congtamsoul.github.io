@@ -13,6 +13,7 @@ author: "Tam Nguyen"
 reading_time: 5                    # số phút đọc (khoảng 200 từ / phút)
 topic: m365                        # m365 | windows | macos | security | dx | career  → quyết định mục và màu thumbnail
 thumb_label: "MICROSOFT 365"       # chữ in trên thumbnail của card
+image: /images/photo/8.jpg
 tags:                              # hiện đầu bài
   - Microsoft 365
   - Intune

@@ -7,6 +7,7 @@ author: "Nguyễn Công Tâm"
 reading_time: 6
 topic: career
 thumb_label: "AI"
+image: /images/photo/4.jpg
 tags:
   - Career
   - AI

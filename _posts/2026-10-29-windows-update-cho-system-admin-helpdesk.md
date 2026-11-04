@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 11
 topic: windows
 thumb_label: "WINDOWS UPDATE"
+image: /images/photo/15.jpg
 tags:
   - Windows Update
   - WSUS

@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 13
 topic: career
 thumb_label: "BRM & LEADERSHIP"
+image: /images/photo/14.jpg
 tags:
   - BRM
   - Leadership

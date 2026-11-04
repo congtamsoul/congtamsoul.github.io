@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 9
 topic: security
 thumb_label: "APPLOCKER"
+image: /images/photo/13.jpg
 tags:
   - Intune
   - AppLocker

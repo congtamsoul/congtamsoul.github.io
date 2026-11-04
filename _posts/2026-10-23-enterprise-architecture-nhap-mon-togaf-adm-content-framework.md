@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 10
 topic: dx
 thumb_label: "ENTERPRISE ARCHITECTURE"
+image: /images/photo/24.jpg
 tags:
   - Enterprise Architecture
   - TOGAF

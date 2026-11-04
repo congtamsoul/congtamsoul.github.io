@@ -7,6 +7,7 @@ author: "Tam Nguyen"
 reading_time: 7
 topic: dx
 thumb_label: "DIGITAL & IT STRATEGY"
+image: /images/photo/21.jpg
 tags:
   - DITS
   - Digital Strategy

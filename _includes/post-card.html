@@ -11,7 +11,12 @@
 {%- assign card_tags = post.card_tags | default: post.tags %}
 
       <article class="post-card" data-cat="{{ post.topic }}" data-post-path="{{ post.url | relative_url | escape }}">
-        <div class="post-thumb {{ thumb }}">{{ post.thumb_label | default: thumb_default | escape }}</div>
+        <div class="post-thumb {{ thumb }}">
+          {%- if post.image %}
+          <img src="{{ post.image | relative_url }}" alt="" loading="lazy">
+          {%- endif %}
+          <span>{{ post.thumb_label | default: thumb_default | escape }}</span>
+        </div>
         <div class="post-body">
           <div class="tag-row">{% for tag in card_tags %}<span class="tag">{{ tag | escape }}</span>{% endfor %}</div>
           <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>

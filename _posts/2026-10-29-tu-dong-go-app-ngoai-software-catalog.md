@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 12
 topic: security
 thumb_label: "APP GOVERNANCE"
+image: /images/photo/9.jpg
 tags:
   - Intune
   - Power Automate

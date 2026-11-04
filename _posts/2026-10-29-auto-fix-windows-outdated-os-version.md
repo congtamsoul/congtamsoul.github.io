@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 10
 topic: windows
 thumb_label: "PATCH COMPLIANCE"
+image: /images/photo/11.jpg
 tags:
   - Windows Update
   - Intune

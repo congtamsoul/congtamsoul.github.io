@@ -8,6 +8,7 @@ author: "Tam Nguyen"
 reading_time: 12
 topic: m365
 thumb_label: "MICROSOFT 365 · OFFBOARDING"
+image: /images/photo/11.jpg
 tags:
   - Microsoft 365
   - Microsoft Graph
