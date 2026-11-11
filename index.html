@@ -83,7 +83,7 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
         <h2 data-i18n="new_posts">Bài viết mới nhất</h2>
         <p data-i18n="new_posts_desc">Hướng dẫn từng bước, troubleshooting thực tế và ghi chú vận hành.</p>
       </div>
-      <a class="link-more" href="#posts" data-i18n="view_all">Xem tất cả →</a>
+      <a class="link-more" href="{{ '/all-posts/' | relative_url }}" data-i18n="view_all">Xem tất cả →</a>
     </div>
 
     <div class="filter-row" id="filterRow">
@@ -97,10 +97,27 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
     </div>
 
     <div class="card-grid" id="postGrid">
-      {%- for post in site.posts %}
-      {% include post-card.html post=post %}
+      {%- for topic in site.data.topics %}
+      {%- assign topic_posts = site.posts | where: 'topic', topic.key | sort: 'date' | reverse -%}
+      {%- assign visible_posts = topic_posts | slice: 0, 2 -%}
+      {%- if visible_posts.size > 0 %}
+      <div class="topic-group" data-topic-group="{{ topic.key | escape }}">
+        <div class="section-head compact">
+          <div>
+            <h3>{{ topic.icon | escape }} {{ topic.name | escape }}</h3>
+          </div>
+          {%- if topic_posts.size > 2 %}
+          <a class="link-more" href="{{ '/all-posts/' | relative_url }}">Xem tất cả →</a>
+          {%- endif %}
+        </div>
+        <div class="card-grid" data-topic-grid="{{ topic.key | escape }}">
+          {%- for post in visible_posts %}
+          {% include post-card.html post=post %}
+          {%- endfor %}
+        </div>
+      </div>
+      {%- endif %}
       {%- endfor %}
-
     </div>
   </div>
 </section>

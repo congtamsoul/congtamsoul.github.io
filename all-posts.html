@@ -1,0 +1,24 @@
+---
+layout: default
+title: "Tất cả bài viết — Nguyễn Công Tâm"
+description: "Danh sách đầy đủ bài viết về Microsoft 365, Windows, macOS, Endpoint Security, chuyển đổi số và phát triển bản thân."
+permalink: /all-posts/
+---
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2>Tất cả bài viết</h2>
+        <p>Tổng hợp đầy đủ các bài viết trên blog.</p>
+      </div>
+      <a class="link-more" href="{{ '/' | relative_url }}">← Quay về trang chủ</a>
+    </div>
+
+    <div class="card-grid">
+      {%- for post in site.posts %}
+      {% include post-card.html post=post %}
+      {%- endfor %}
+    </div>
+  </div>
+</section>
