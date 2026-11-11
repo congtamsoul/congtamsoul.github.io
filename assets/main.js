@@ -8,15 +8,31 @@
   var languageToggle = document.getElementById("languageToggle");
   var languageLabel = document.getElementById("languageLabel");
 
+  function getGoogleTransLanguage(value) {
+    var normalized = decodeURIComponent(String(value || "")).trim().replace(/^\/+/, "");
+    var segments = normalized.split("/").filter(Boolean);
+
+    if (segments.length >= 2) {
+      return segments[segments.length - 1].toLowerCase() === "en" ? "en" : "vi";
+    }
+
+    return normalized.toLowerCase().indexOf("en") !== -1 ? "en" : "vi";
+  }
+
   function readLanguage() {
     var cookie = String(document.cookie || "");
     var match = cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
-    if (match && decodeURIComponent(match[1]).toLowerCase().indexOf("/en") !== -1) return "en";
+
+    if (match) {
+      var translatedLanguage = getGoogleTransLanguage(match[1]);
+      if (translatedLanguage === "en" || translatedLanguage === "vi") return translatedLanguage;
+    }
+
     return localStorage.getItem("language") === "en" ? "en" : "vi";
   }
 
   function setLanguage(language) {
-    var value = language === "en" ? "/vi/en" : "/vi/vi";
+    var value = language === "en" ? "/vi/en" : "/en/vi";
     document.cookie = "googtrans=" + value + "; path=/; SameSite=Lax";
     localStorage.setItem("language", language);
     document.documentElement.lang = language;
