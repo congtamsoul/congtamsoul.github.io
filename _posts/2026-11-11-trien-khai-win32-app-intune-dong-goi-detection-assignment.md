@@ -28,7 +28,7 @@ Khi quản lý thiết bị Windows bằng Intune, nhu cầu không chỉ là đ
 
 ## 1. Bối cảnh và điều kiện cần
 
-Win32 app giúp IT triển khai ứng dụng tùy chỉnh cho thiết bị được quản lý, thay vì cài thủ công từng máy. Theo tài liệu triển khai, ứng dụng được phân phối thông qua **Microsoft Intune Management Extension (IME)**; thành phần này được cài tự động khi một PowerShell script hoặc Win32 app được assign cho user hoặc thiết bị qua Intune.
+Win32 app giúp IT triển khai ứng dụng tùy chỉnh cho thiết bị được quản lý, thay vì cài thủ công từng máy. Ứng dụng được phân phối thông qua **Microsoft Intune Management Extension (IME)**; thành phần này được cài tự động khi một PowerShell script hoặc Win32 app được assign cho user hoặc thiết bị qua Intune.
 
 Trước khi bắt đầu, chuẩn bị:
 
@@ -97,8 +97,6 @@ Các trường cần chú ý:
 | Information URL / Privacy URL | Liên kết thông tin và quyền riêng tư, nếu có |
 | Developer / Owner / Notes | Thông tin phục vụ quản lý nội bộ |
 | Logo | Biểu tượng hiển thị cùng app |
-
-Phần mô tả hỗ trợ một số kiểu Markdown theo tài liệu, **không hỗ trợ HTML**. Tài liệu cũng lưu ý rằng nếu hai app trùng tên, chỉ một app xuất hiện trong Company Portal.
 
 ### Install command và Uninstall command
 
@@ -191,7 +189,7 @@ Tài liệu yêu cầu ít nhất một detection rule và đưa ra các lựa c
 
 ### Điều kiện của custom detection script
 
-Theo tài liệu, ứng dụng được phát hiện khi script đồng thời:
+Ứng dụng được phát hiện khi script đồng thời:
 
 1. Trả **exit code `0`**.
 2. Ghi một chuỗi ra **STDOUT**.
@@ -216,7 +214,7 @@ Trong bước `Supersedence`:
 2. Chọn ứng dụng cũ cần được app hiện tại cập nhật hoặc thay thế.
 3. Cấu hình `Uninstall previous version` cho từng app.
 
-| Tình huống | Hướng xử lý theo tài liệu |
+| Tình huống | Hướng xử lý |
 |---|---|
 | Installer mới tự cập nhật app cũ | Không cần gửi lệnh gỡ riêng; tắt `Uninstall previous version` |
 | Cần gỡ app cũ để thay bằng app khác | Bật `Uninstall previous version` nếu thiết kế triển khai yêu cầu |
@@ -229,7 +227,7 @@ Kiểm tra `Scope tags` trước khi hoàn tất. Tài liệu có bước này n
 
 ### Assignments: chọn đúng mục đích
 
-| Loại assignment | Kết quả theo tài liệu |
+| Loại assignment | Kết quả |
 |---|---|
 | Required | Cài ứng dụng trên thiết bị thuộc nhóm được chọn |
 | Available for enrolled devices | User chủ động cài từ Company Portal |

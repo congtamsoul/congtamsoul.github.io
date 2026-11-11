@@ -37,11 +37,7 @@ Theo quy trình nguồn, cần chuẩn bị:
 - Thiết bị Windows Pro x64, đang ở OOBE.
 - Kết nối Internet.
 - Kết nối mạng đến **Active Directory Domain Controller tại chỗ**.
-- **TPM 2.0**.
 - Recovery image để phục vụ khôi phục khi cần.
-- User được gán license có **Microsoft Intune**, ví dụ EMS E3 hoặc Microsoft 365 F3/E3/E5 theo tài liệu nguồn.
-
-Tài liệu gốc liệt kê Windows 10 từ phiên bản 1909 và Windows 11. Đây là thông tin của quy trình nguồn, **không phải khuyến nghị sử dụng phiên bản Windows cũ cho triển khai mới**. Khi áp dụng, hãy đối chiếu phiên bản hệ điều hành được doanh nghiệp phê duyệt và còn được hỗ trợ.
 
 ### Các điểm cần kiểm tra
 
@@ -52,8 +48,6 @@ Tài liệu gốc liệt kê Windows 10 từ phiên bản 1909 và Windows 11. �
 | Group Tag | Đúng nhóm triển khai của thiết bị | Tránh áp dụng nhầm cấu hình |
 | Deployment profile | Đã được gán cho thiết bị | Có cấu hình để tiếp tục OOBE |
 | Recovery image | Đã chuẩn bị | Có phương án khôi phục |
-
-Bài viết không đưa ra số lượng thiết bị triển khai vì tài liệu nguồn không cung cấp quy mô cụ thể.
 
 ## 2. Lấy hardware hash tại OOBE
 
@@ -96,7 +90,7 @@ Group Tag cần được chọn đúng ngay từ đầu vì quy trình nguồn d
 
 ### Lưu ý khi OOBE khởi động lại nhiều lần
 
-Tài liệu nguồn lưu ý rằng OOBE có thể chuyển sang chế độ recovery sau nhiều lần restart. Dấu hiệu là **ngôn ngữ, khu vực và bàn phím xuất hiện cùng một trang**, thay vì từng trang riêng biệt.
+Lưu ý rằng OOBE có thể chuyển sang chế độ recovery sau nhiều lần restart. Dấu hiệu là **ngôn ngữ, khu vực và bàn phím xuất hiện cùng một trang**, thay vì từng trang riêng biệt.
 
 Tài liệu có nhắc đến giá trị theo dõi số lần thử OOBE tại:
 
@@ -110,7 +104,7 @@ Nguồn đề cập đưa giá trị đếm về `1`, nhưng **không nêu rõ t
 
 CSV đúng định dạng giúp tránh lỗi import và giảm thời gian xử lý lại.
 
-| Trường | Yêu cầu theo tài liệu nguồn |
+| Trường | Yêu cầu |
 |---|---|
 | Device Serial Number | Bắt buộc |
 | Windows Product ID | Bắt buộc với partner upload; tùy chọn với admin import trực tiếp |
@@ -124,7 +118,7 @@ Header cần giữ đúng chữ hoa, chữ thường:
 Device Serial Number,Windows Product ID,Hardware Hash,Group Tag,Assigned User
 ```
 
-Theo tài liệu nguồn, một file có thể chứa tối đa **500 dòng thiết bị**. Các yêu cầu khác gồm:
+Một file có thể chứa tối đa **500 dòng thiết bị**. Các yêu cầu khác gồm:
 
 - Không thêm cột ngoài định dạng quy định.
 - Không dùng dấu ngoặc kép.
@@ -196,7 +190,7 @@ Tài liệu nguồn ghi nhận ba giai đoạn:
 
 Các mốc này là **tham khảo của môi trường nguồn**, không phải cam kết thời gian cho mọi tenant. Tương tự, việc Account setup chạy nền là hành vi được ghi nhận trong quy trình này, không nên mặc định áp dụng cho mọi cấu hình ESP.
 
-Theo tài liệu, sau khi đăng nhập lại, user có thể sử dụng máy và truy cập các ứng dụng, website Microsoft 365 trong lúc Account setup tiếp tục chạy nền.
+Sau khi đăng nhập lại, user có thể sử dụng máy và truy cập các ứng dụng, website Microsoft 365 trong lúc Account setup tiếp tục chạy nền.
 
 ### Xác minh tài khoản
 
