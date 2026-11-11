@@ -153,8 +153,6 @@ Bạn đang kiểm soát phần mềm ngoài danh mục trên macOS bằng cách
 ```bash
 #!/bin/bash
 ###############################################################################
-# Reusable Intune macOS application uninstaller
-#
 # Intune: Run script as signed-in user = No (root).
 # Optional runtime controls (no script edit required):
 #   DRY_RUN=1           Audit only; default is 0 for normal Intune execution.

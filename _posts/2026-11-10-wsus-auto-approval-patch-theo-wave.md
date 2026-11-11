@@ -64,7 +64,7 @@ Các mốc này là ví dụ; điều chỉnh theo quy trình kiểm thử, lị
 
 ### Wave 0: approve bằng PoshWSUS
 
-Script kết nối WSUS qua HTTPS port `8531`, lấy Category và Classification mong muốn, lọc update mới chưa approve và gọi `Approve-PSWSUSUpdate -Action Install` cho group `Clients - Wave 0 - Full`.
+Script kết nối WSUS qua HTTPS port `8531`, lấy Category và Classification mong muốn, lọc update mới chưa approve và gọi `Approve-PSWSUSUpdate -Action Install` cho group `Wave 0 - Cong Tam`.
 
 ### Wave tiếp theo: copy approvals
 
@@ -82,7 +82,7 @@ Ngày không trùng các mốc trong script thì không thực hiện thao tác.
 
 ## Chuẩn bị WSUS và GPO
 
-1. Tạo computer group trên WSUS: `Clients - Wave 0 - Full` đến `Clients - Wave 3 - Full`.
+1. Tạo computer group trên WSUS: `Wave 0 - Cong Tam` đến `Wave 3 - Cong Tam`.
 2. Bật client-side targeting tại **Options → Computers → Use Group Policy or registry settings on computers**.
 3. Tạo GPO cho từng wave với **Enable client-side targeting** trỏ đúng tên WSUS group; link vào OU phù hợp hoặc lọc theo AD group.
 4. Cài module PoshWSUS và đặt `Copy_Approval_WSUS_nonMS.ps1` tại `C:\Scripts\`.
@@ -131,10 +131,10 @@ function Get-PatchTuesday {
 $FQDN = "wsus.contoso.local"
 $Port = 8531
 $SecureConnection = $true
-$Wave0Group = "Clients - Wave 0 - Full"
-$Wave1Group = "Clients - Wave 1 - Full"
-$Wave2Group = "Clients - Wave 2 - Full"
-$Wave3Group = "Clients - Wave 3 - Full"
+$Wave0Group = "Wave 0 - Cong Tam"
+$Wave1Group = "Wave 1 - Cong Tam"
+$Wave2Group = "Wave 2 - Cong Tam"
+$Wave3Group = "Wave 3 - Cong Tam"
 $UnassignedGroup = "Unassigned Computers"
 
 $ScriptDirectory = "C:\Scripts"
