@@ -107,7 +107,7 @@ og_description: "Kinh nghiệm thực chiến về Microsoft 365, Intune, Window
             <h3>{{ topic.icon | escape }} {{ topic.name | escape }}</h3>
           </div>
           {%- if topic_posts.size > 2 %}
-          <a class="link-more" href="{{ '/all-posts/' | relative_url }}">Xem tất cả →</a>
+          <a class="link-more" href="{{ '/topics/' | append: topic.key | append: '/' | relative_url }}">Xem tất cả →</a>
           {%- endif %}
         </div>
         <div class="card-grid" data-topic-grid="{{ topic.key | escape }}">
