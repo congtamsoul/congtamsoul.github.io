@@ -13,13 +13,17 @@
     var segments = normalized.split("/").filter(Boolean);
 
     if (segments.length >= 2) {
-      return segments[segments.length - 1].toLowerCase() === "en" ? "en" : "vi";
+      var lastSegment = segments[segments.length - 1].toLowerCase();
+      if (lastSegment === "en" || lastSegment === "vi") return lastSegment;
     }
 
     return normalized.toLowerCase().indexOf("en") !== -1 ? "en" : "vi";
   }
 
   function readLanguage() {
+    var stored = localStorage.getItem("language");
+    if (stored === "en" || stored === "vi") return stored;
+
     var cookie = String(document.cookie || "");
     var match = cookie.match(/(?:^|;\s*)googtrans=([^;]+)/);
 
@@ -28,23 +32,34 @@
       if (translatedLanguage === "en" || translatedLanguage === "vi") return translatedLanguage;
     }
 
-    return localStorage.getItem("language") === "en" ? "en" : "vi";
+    return "vi";
+  }
+
+  function setGoogleTranslateCookie(language) {
+    var value = language === "en" ? "/vi/en" : "/en/vi";
+    document.cookie = "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; SameSite=Lax";
+    document.cookie = "googtrans=" + value + "; path=/; SameSite=Lax";
   }
 
   function setLanguage(language) {
-    var value = language === "en" ? "/vi/en" : "/en/vi";
-    document.cookie = "googtrans=" + value + "; path=/; SameSite=Lax";
-    localStorage.setItem("language", language);
-    document.documentElement.lang = language;
-    if (languageLabel) languageLabel.textContent = language === "en" ? "EN" : "VI";
+    var normalized = language === "en" ? "en" : "vi";
+    localStorage.setItem("language", normalized);
+    document.documentElement.lang = normalized;
+    if (languageLabel) languageLabel.textContent = normalized === "en" ? "EN" : "VI";
     if (languageToggle) {
-      languageToggle.setAttribute("aria-label", language === "en" ? "Switch to Vietnamese" : "Switch to English");
-      languageToggle.title = language === "en" ? "Switch to Vietnamese" : "Switch to English";
+      languageToggle.setAttribute("aria-label", normalized === "en" ? "Switch to Vietnamese" : "Switch to English");
+      languageToggle.title = normalized === "en" ? "Switch to Vietnamese" : "Switch to English";
     }
+    setGoogleTranslateCookie(normalized);
   }
 
   var currentLanguage = readLanguage();
   setLanguage(currentLanguage);
+
+  if (currentLanguage === "en") {
+    loadGoogleTranslate();
+  }
+
   if (languageToggle) {
     languageToggle.addEventListener("click", function () {
       var nextLanguage = readLanguage() === "en" ? "vi" : "en";
@@ -53,21 +68,59 @@
     });
   }
 
-  function hideGoogleTranslateBar() {
-    document.documentElement.style.marginTop = "0";
-    document.body.style.top = "0";
-    document.body.style.marginTop = "0";
+  function loadGoogleTranslate() {
+    if (window.google && window.google.translate) {
+      var element = document.getElementById("google_translate_element");
+      if (!element) {
+        element = document.createElement("div");
+        element.id = "google_translate_element";
+        element.className = "google-translate-host";
+        element.setAttribute("aria-hidden", "true");
+        document.body.appendChild(element);
+      }
+      if (!element.dataset.initialized) {
+        new google.translate.TranslateElement({
+          pageLanguage: "vi",
+          includedLanguages: "vi,en",
+          autoDisplay: false
+        }, "google_translate_element");
+        element.dataset.initialized = "true";
+      }
+      return;
+    }
 
-    var selectors = ".goog-te-banner-frame, .goog-te-balloon-frame, body > .skiptranslate";
-    Array.prototype.forEach.call(document.querySelectorAll(selectors), function (element) {
-      element.style.setProperty("display", "none", "important");
-      element.style.setProperty("height", "0", "important");
-    });
+    if (document.querySelector('script[data-google-translate="true"]')) return;
+
+    var script = document.createElement("script");
+    script.src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    script.dataset.googleTranslate = "true";
+    document.body.appendChild(script);
   }
 
-  hideGoogleTranslateBar();
-  var translateBarObserver = new MutationObserver(hideGoogleTranslateBar);
-  translateBarObserver.observe(document.documentElement, { childList: true, subtree: true });
+  function initGoogleTranslate() {
+    if (!window.google || !window.google.translate) return;
+    var container = document.getElementById("google_translate_element");
+    if (!container) {
+      container = document.createElement("div");
+      container.id = "google_translate_element";
+      container.className = "google-translate-host";
+      container.setAttribute("aria-hidden", "true");
+      document.body.appendChild(container);
+    }
+    if (!container.dataset.initialized) {
+      new google.translate.TranslateElement({
+        pageLanguage: "vi",
+        includedLanguages: "vi,en",
+        autoDisplay: false
+      }, "google_translate_element");
+      container.dataset.initialized = "true";
+    }
+  }
+
+  window.googleTranslateElementInit = function () {
+    initGoogleTranslate();
+  };
 
   /* ---------------------------------------------------------- Theme */
   var root = document.documentElement;
