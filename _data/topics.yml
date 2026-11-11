@@ -7,7 +7,7 @@
   icon: 🖥️
   description: Autopilot, WSUS, Group Policy, feature update và troubleshooting log.
 - key: macos
-  name: macOS trong doanh nghiệp
+  name: MacOS
   icon: 🍎
   description: Intune MDM, DDM, script bash và quản lý update cho Mac fleet.
 - key: security
