@@ -38,9 +38,7 @@ Trước khi bắt đầu, chuẩn bị:
 - Công cụ **Microsoft Win32 Content Prep Tool**, thường gọi theo tên file `IntuneWinAppUtil.exe`.
 - Tài khoản quản trị được phép tạo và cấu hình ứng dụng trong Intune.
 
-Tài liệu nguồn liệt kê Windows 10 từ phiên bản 1607, các edition Enterprise, Pro hoặc Education, và giới hạn **30 GB mỗi ứng dụng**. Đây là các thông số ghi trong tài liệu nguồn, không phải khuyến nghị triển khai hệ điều hành cũ. Khi áp dụng thực tế, cần đối chiếu hệ điều hành và giới hạn dịch vụ được hỗ trợ tại thời điểm triển khai.
-
-Bài viết dùng **Google Telegram MSI** làm ví dụ như tài liệu gốc. Tên file, phiên bản và product code cần lấy từ bộ cài thực tế, không sao chép máy móc giữa các phiên bản.
+Tên file, phiên bản và product code cần lấy từ bộ cài thực tế, không sao chép máy móc giữa các phiên bản.
 
 ## 2. Đóng gói thành intunewin
 
@@ -81,7 +79,7 @@ Giữ file `.intunewin` để upload ở bước tiếp theo. Kích thước đ�
 ### Upload và điền App information
 
 1. Đăng nhập **Intune admin center** bằng tài khoản quản trị.
-2. Theo đường dẫn trong tài liệu: `Apps` → `All apps` → `Add`.
+2. Theo đường dẫn: `Apps` → `All apps` → `Add`.
 3. Chọn `Windows app (Win32)`.
 4. Chọn `Select app package file`, upload `.intunewin` rồi xác nhận.
 
@@ -114,15 +112,14 @@ Lệnh gỡ dùng product code thực tế của ứng dụng:
 msiexec /x "{PRODUCT-CODE-CUA-BO-CAI}" /qn
 ```
 
-`{PRODUCT-CODE-CUA-BO-CAI}` là placeholder, **phải thay trước khi sử dụng**. Bài viết không giữ GUID của phiên bản Telegram trong tài liệu gốc để tránh dùng nhầm.
-
-**Ví dụ EXE trong tài liệu:**
+`{PRODUCT-CODE-CUA-BO-CAI}` là placeholder, **phải thay trước khi sử dụng**. 
+**Ví dụ EXE:**
 
 ```cmd
 "Telegram.exe" /silent /install
 ```
 
-Không mặc định `/silent /install` dùng được cho mọi EXE. Tài liệu đề xuất kiểm tra các tùy chọn installer bằng `/?` hoặc `-help` khi bộ cài hỗ trợ.
+Không mặc định `/silent /install` dùng được cho mọi EXE. Kiểm tra các tùy chọn installer bằng `/?` hoặc `-help` khi bộ cài hỗ trợ.
 
 Ví dụ lệnh gỡ Telegram EXE trong nguồn có đường dẫn phụ thuộc phiên bản:
 
@@ -146,7 +143,7 @@ Cần thay `<APPLICATION_VERSION>` và kiểm tra đúng đường dẫn trướ
 
 ### Các thiết lập Program khác
 
-- **Installation time required:** thời gian chờ installer hoàn tất. Tài liệu ghi mặc định 60 phút, tối đa 1.440 phút; vượt thời gian cấu hình sẽ bị báo thất bại.
+- **Installation time required:** thời gian chờ installer hoàn tất. Mặc định 60 phút, tối đa 1.440 phút; vượt thời gian cấu hình sẽ bị báo thất bại.
 - **Install behavior:** chọn `System` hoặc `User`. Quy trình nguồn khuyến nghị `System`; vẫn cần chọn theo thiết kế bộ cài và phạm vi ứng dụng.
 - **Allow available uninstall:** quyết định có cho user gỡ app từ Company Portal hay không, không phải cơ chế ngăn mọi cách gỡ ứng dụng trên Windows.
 
@@ -170,13 +167,13 @@ Cấu hình theo yêu cầu ứng dụng:
 
 Với file rule, xác định path, tên file/folder và thuộc tính cần so sánh. Với registry rule, xác định key, value và kiểu so sánh.
 
-Với script requirement, tài liệu mô tả việc đánh giá **STDOUT khi script trả exit code 0**, rồi so sánh kết quả theo output data type đã chọn. Không nhầm cơ chế này với detection script.
+Với script requirement, việc đánh giá **STDOUT khi script trả exit code 0**, rồi so sánh kết quả theo output data type đã chọn. Không nhầm cơ chế này với detection script.
 
 Các lựa chọn khác gồm chạy script theo credentials người đang đăng nhập, kiểm tra chữ ký và chọn ngữ cảnh 32-bit hoặc 64-bit.
 
 ### Detection: xác nhận ứng dụng đã cài
 
-Tài liệu yêu cầu ít nhất một detection rule và đưa ra các lựa chọn:
+Yêu cầu ít nhất một detection rule và đưa ra các lựa chọn:
 
 | Kiểu | Dữ liệu kiểm tra | Điểm cần chú ý |
 |---|---|---|
@@ -194,9 +191,9 @@ Tài liệu yêu cầu ít nhất một detection rule và đưa ra các lựa c
 1. Trả **exit code `0`**.
 2. Ghi một chuỗi ra **STDOUT**.
 
-Chỉ `exit 0` mà không có output là chưa đủ. Tài liệu cũng đề cập agent đọc STDERR, STDOUT và exit code; cần kiểm soát cả thông báo lỗi khi kiểm thử script.
+Chỉ `exit 0` mà không có output là chưa đủ. Agent đọc STDERR, STDOUT và exit code; cần kiểm soát cả thông báo lỗi khi kiểm thử script.
 
-Tài liệu khuyến nghị lưu script bằng **UTF-8 BOM**. Cấu hình thêm ngữ cảnh chạy 32-bit/64-bit và kiểm tra chữ ký theo yêu cầu môi trường.
+Khuyến nghị lưu script bằng **UTF-8 BOM**. Cấu hình thêm ngữ cảnh chạy 32-bit/64-bit và kiểm tra chữ ký theo yêu cầu môi trường.
 
 > **Lưu ý:** Detection rule cần phản ánh kết quả thực sự muốn quản lý. Kiểm tra file tồn tại và kiểm tra đúng phiên bản là hai tiêu chí khác nhau; hãy chọn tiêu chí phù hợp trước khi triển khai rộng.
 
@@ -219,11 +216,11 @@ Trong bước `Supersedence`:
 | Installer mới tự cập nhật app cũ | Không cần gửi lệnh gỡ riêng; tắt `Uninstall previous version` |
 | Cần gỡ app cũ để thay bằng app khác | Bật `Uninstall previous version` nếu thiết kế triển khai yêu cầu |
 
-Tài liệu nguồn nêu giới hạn 10 ứng dụng được cập nhật hoặc thay thế, bao gồm các quan hệ tham chiếu trong chuỗi. Không nên chỉ đếm số app trực tiếp được thêm ở một màn hình nếu đang thiết kế quan hệ nhiều tầng.
+Giới hạn 10 ứng dụng được cập nhật hoặc thay thế, bao gồm các quan hệ tham chiếu trong chuỗi. Không nên chỉ đếm số app trực tiếp được thêm ở một màn hình nếu đang thiết kế quan hệ nhiều tầng.
 
 ### Scope tags
 
-Kiểm tra `Scope tags` trước khi hoàn tất. Tài liệu có bước này nhưng không mô tả mô hình RBAC cụ thể; bài viết không tự đặt tên tag hoặc vai trò quản trị cho môi trường của bạn.
+Kiểm tra `Scope tags` trước khi hoàn tất.
 
 ### Assignments: chọn đúng mục đích
 
@@ -244,8 +241,6 @@ Thực hiện:
 Không coi `Required`, `Available` và `Uninstall` là ba nhãn tương đương. Đây là ba mục đích triển khai khác nhau, cần rà soát trước khi gán nhóm.
 
 ## 6. Các điểm dễ sai và checklist kiểm tra
-
-Tài liệu nguồn không cung cấp nhật ký sự cố hoặc log thực tế. Vì vậy, phần này là **checklist phòng tránh rút ra từ các thiết lập trong quy trình**, không phải lời kể về lỗi tác giả đã trực tiếp gặp.
 
 | Biểu hiện cần kiểm tra | Thiết lập cần đối chiếu | Cách phòng tránh |
 |---|---|---|
