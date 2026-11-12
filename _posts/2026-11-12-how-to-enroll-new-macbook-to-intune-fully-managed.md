@@ -21,7 +21,7 @@ redirect_from:
   - /posts/how-to-enroll-new-macbook-to-intune.html
 ---
 
-Mỗi lần có MacBook mới, câu hỏi quen thuộc của team EUS là: "Máy này enroll vào Intune thế nào để thành máy công ty quản lý hoàn toàn?" Câu trả lời là enroll dạng **Fully Managed qua Apple Business Manager (ABM)**. Khác với Windows chỉ cần một máy, quy trình này **cần nhiều thiết bị cùng tương tác**: một thiết bị iOS của admin/EUS, chính chiếc MacBook cần enroll, cổng Apple Business Manager và Intune admin center. Mình viết lại các bước này thành hướng dẫn để ai trong team cũng làm theo được.
+Mỗi lần có MacBook mới, câu hỏi quen thuộc của team Helpdesk là: "Máy này enroll vào Intune thế nào để thành máy công ty quản lý hoàn toàn?" Câu trả lời là enroll dạng **Fully Managed qua Apple Business Manager (ABM)**. Khác với Windows chỉ cần một máy, quy trình này **cần nhiều thiết bị cùng tương tác**: một thiết bị iOS của admin/Helpdesk, chính chiếc MacBook cần enroll, cổng Apple Business Manager và Intune admin center. Mình viết lại các bước này thành hướng dẫn để ai trong team cũng làm theo được.
 
 **Tóm tắt nhanh:** Dùng **Apple Configurator** trên iOS để quét màn hình setup của Mac và thêm máy vào ABM. System Admin gán MDM server trong ABM, Intune admin bấm **Sync** enrollment program token. Cuối cùng restart Mac là máy được thêm vào Intune.
 
@@ -37,12 +37,12 @@ Quy trình gồm 4 phần, mỗi phần do một vai trò thực hiện:
 
 | Phần | Thực hiện trên | Người thực hiện |
 |---|---|---|
-| Chuẩn bị Apple Configurator | Thiết bị iOS | Admin / EUS |
-| Thêm Mac vào ABM | MacBook + thiết bị iOS | Admin / EUS |
+| Chuẩn bị Apple Configurator | Thiết bị iOS | Admin / Helpdesk |
+| Thêm Mac vào ABM | MacBook + thiết bị iOS | Admin / Helpdesk |
 | Gán MDM server | Apple Business Manager | System Admin |
 | Sync token và restart Mac | Intune admin center, MacBook | Intune admin; restart thì không cần quyền admin |
 
-## Trên thiết bị iOS của admin/EUS
+## Trên thiết bị iOS của admin/Helpdesk
 
 1. Cài app **Apple Configurator**.
 2. Mở app → đăng nhập bằng **Apple ID do Apple Business Manager cấp** (thường là email công ty).
@@ -100,7 +100,7 @@ Các bước dưới đây do **Intune admin** thực hiện.
 
 ## Kết luận
 
-Enroll MacBook mới vào Intune qua ABM gồm 4 phần rõ ràng: iOS quét Mac vào ABM → System Admin gán MDM server → Intune admin Sync token → restart Mac. Hai điểm quan trọng nhất là **không bấm Continue** ở màn hình chọn ngôn ngữ và **không restart Mac** trước khi Sync xong. Việc tiếp theo bạn nên làm: lưu hướng dẫn này cho team EUS và thống nhất ai là người xác nhận đã Sync trước khi restart máy.
+Enroll MacBook mới vào Intune qua ABM gồm 4 phần rõ ràng: iOS quét Mac vào ABM → System Admin gán MDM server → Intune admin Sync token → restart Mac. Hai điểm quan trọng nhất là **không bấm Continue** ở màn hình chọn ngôn ngữ và **không restart Mac** trước khi Sync xong. Việc tiếp theo bạn nên làm: lưu hướng dẫn này cho team Helpdesk và thống nhất ai là người xác nhận đã Sync trước khi restart máy.
 
 Team bạn đang enroll MacBook theo cách nào? Bạn đã từng gặp lỗi "Failed to add Mac" chưa? Chia sẻ ở phần bình luận nhé!
 
