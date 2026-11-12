@@ -5,7 +5,7 @@ description: "Sau khi học DITS, mình nhận ra sự thay đổi lớn nhất 
 date: 2026-10-03
 author: "Tam Nguyen"
 reading_time: 7
-topic: dx
+topic: career
 thumb_label: "DIGITAL & IT STRATEGY"
 image: /images/photo/2.jpg
 tags:
