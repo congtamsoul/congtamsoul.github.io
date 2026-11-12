@@ -5,7 +5,7 @@ description: "Sau môn Enterprise Architecture, mình hiểu rõ hơn rằng cô
 date: 2026-10-03
 author: "Tam Nguyen"
 reading_time: 7
-topic: dx
+topic: career
 thumb_label: "ENTERPRISE ARCHITECTURE"
 image: /images/photo/3.jpg
 tags:
