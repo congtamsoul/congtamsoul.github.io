@@ -22,7 +22,7 @@ redirect_from:
   - /posts/intune-remote-help-license-rbac-scope-group.html
 ---
 
-Helpdesk gọi điện: *"Anh ơi, em không mở được file, anh vô máy em xem giúp."* Bạn mở Intune, bấm **Begin a remote assistance session**, máy user hiện thông báo, user bấm Allow… rồi màn hình cứ xoay **Connecting** mãi và báo lỗi thiếu quyền. Đó chính là trải nghiệm của mình khi pilot **Intune Remote Help** cho một môi trường vài nghìn thiết bị Windows và macBook, toàn bộ user dùng license **EMS E3**, quyền Intune được quản lý tập trung bởi team global và chia theo *scope tag* từng quốc gia. Tính năng thì đã enable, role cũng đã tạo, nhưng phải mất vài vòng ticket mới connect được phiên đầu tiên.
+User gọi điện: *"Anh ơi, em không mở được file, anh vô máy em xem giúp."* Bạn mở Intune, bấm **Begin a remote assistance session**, máy user hiện thông báo, user bấm Allow… rồi màn hình cứ xoay **Connecting** mãi và báo lỗi thiếu quyền. Đó chính là trải nghiệm của mình khi pilot **Intune Remote Help** cho một môi trường vài nghìn thiết bị Windows và macBook, toàn bộ user dùng license **EMS E3**, quyền Intune được quản lý tập trung bởi team global và chia theo *scope tag* từng quốc gia. Tính năng thì đã enable, role cũng đã tạo, nhưng phải mất vài vòng ticket mới connect được phiên đầu tiên.
 
 **Tóm tắt nhanh:** Remote Help chỉ chạy khi đủ 4 điều kiện: **(1)** cả IT (helper) và user (sharer) đều có license bao gồm Remote Help (EMS E3 đã có sẵn), **(2)** Remote Help được enable ở Tenant admin, **(3)** IT được gán Intune role có đủ quyền tối thiểu, với Scope Group chứa cả IT và user cần hỗ trợ, **(4)** app Remote Help được cài trên cả máy IT và máy user. Thiếu bất kỳ điều kiện nào, phiên sẽ không kết nối được.
 
