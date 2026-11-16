@@ -29,7 +29,7 @@ redirect_from:
 
 ## Bối cảnh: từ Sysmon standalone sang built-in
 
-Theo [Microsoft Learn – Sysmon](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sysmon), Sysmon có sẵn dưới dạng **optional feature built-in cho Windows 11 từ tháng 2/2026**; tài liệu cũng đề cập Windows Server 2025. Một số điểm cần lưu ý:
+Theo [Microsoft Learn – Sysmon](https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sysmon), Sysmon có sẵn dưới dạng **optional feature built-in cho Windows 11 từ tháng 2/2026**. Một số điểm cần lưu ý:
 
 - **Mặc định bị tắt** — phải bật feature, sau đó chạy `sysmon -i` để bắt đầu ghi log ([Microsoft Learn: How to enable Sysmon](https://learn.microsoft.com/en-us/windows/security/operating-system-security/sysmon/how-to-enable-sysmon)).
 - **Không chạy song song với bản standalone** — cần gỡ bản Sysmon Sysinternals trước khi bật bản built-in.

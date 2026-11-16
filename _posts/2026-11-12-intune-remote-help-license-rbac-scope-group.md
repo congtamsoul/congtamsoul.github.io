@@ -49,12 +49,6 @@ Theo [tài liệu Microsoft](https://learn.microsoft.com/en-us/intune/remote-hel
 
 Trong tenant của mình, gói **Enterprise Mobility + Security E3** đã có sẵn service plan *Remote help* (inherited từ group license). Bảng so sánh gói Microsoft 365 cũng đánh dấu *Microsoft Intune Remote Help* có trong EMS E3.
 
-![Service plan Remote help trong EMS E3](/images/intune-remote-help-license-rbac/01-ems-e3-service-plan.png){: width="480"}
-*Hình 1: Service plan "Remote help" nằm trong license EMS E3, được gán qua group license.*
-
-![Bảng so sánh gói Microsoft 365 - Remote Help](/images/intune-remote-help-license-rbac/02-license-matrix.png){: width="720"}
-*Hình 2: Bảng Subscriptions của Microsoft, dòng Microsoft Intune Remote Help ở cột EMS E3.*
-
 <div class="callout">
   <span>💡</span>
   <div><b>Tip</b>Đừng chỉ dựa vào bảng so sánh. Hãy kiểm tra service plan thực tế trên chính tài khoản helper và user, vì cách đóng gói license có thể khác nhau theo hợp đồng và thay đổi theo thời gian.</div>
@@ -83,9 +77,6 @@ Nếu kết quả trống hoặc `ProvisioningStatus` không phải `Success`, t
 5. `Disable chat` = tùy chính sách (mặc định chat được bật).
 6. **Save**.
 
-![Enable Remote Help trong Tenant admin](/images/intune-remote-help-license-rbac/03-tenant-admin-enable.png){: width="640"}
-*Hình 3: Tenant administration → Remote Help → Settings, trạng thái Enabled.*
-
 Ở môi trường nhiều quốc gia dùng chung tenant, bước này thường do team global thực hiện. Bạn chỉ cần xác nhận trạng thái **Enabled** là được.
 
 ## Điều kiện 3: Intune role tối thiểu và Scope Group
@@ -105,9 +96,6 @@ Nếu kết quả trống hoặc `ProvisioningStatus` không phải `Success`, t
 | Remote tasks | `Offer remote assistance` | **Yes** | **Bắt buộc** — để helper bắt đầu phiên hỗ trợ |
 
 Hai dòng cuối là hai quyền mình bị thiếu ở lần test đầu: role ban đầu chỉ có 3 quyền nhóm *Remote Help app*, kết quả là phiên luôn fail.
-
-![Custom role Remote Help](/images/intune-remote-help-license-rbac/04-intune-role-permissions.png){: width="640"}
-*Hình 4: Custom role với đủ quyền tối thiểu: Remote Help app, Remote assistance connectors - Read, Remote tasks - Offer remote assistance.*
 
 <div class="callout warn">
   <span>⚠️</span>
@@ -174,15 +162,6 @@ Với macOS, tải gói `.pkg` Remote Help từ trang [Deploy Remote Help](https
 2. Bấm `...` → `Remote actions` → **Begin a remote assistance session**.
 3. Panel Remote Help hiện **Sent notification to user's device** → bấm **Open Remote Help** để mở app phía IT.
 4. User nhận thông báo từ *Microsoft Intune Management Extension*, bấm **Open Remote Help**, kiểm tra thông tin helper (tên, công ty, domain đã xác minh) rồi chọn cho phép xem màn hình hoặc điều khiển.
-
-![Begin a remote assistance session](/images/intune-remote-help-license-rbac/05-begin-remote-session.png){: width="640"}
-*Hình 5: Devices → thiết bị → ... → Remote actions → Begin a remote assistance session.*
-
-![Panel Remote Help](/images/intune-remote-help-license-rbac/06-remote-help-panel.png){: width="640"}
-*Hình 6: Intune đã gửi thông báo đến thiết bị, IT bấm Open Remote Help để tiếp tục.*
-
-![Thông báo trên máy user](/images/intune-remote-help-license-rbac/07-user-notification.png){: width="420"}
-*Hình 7: Thông báo trên máy user, user bấm Open Remote Help để chấp nhận hoặc từ chối.*
 
 Cách này nhanh vì user không phải nhập gì. Nếu máy user đang bật *Do not disturb*, thông báo có thể không hiện; khi đó hướng dẫn user tự mở app Remote Help hoặc kiểm tra Notification Center ([Microsoft Learn](https://learn.microsoft.com/en-us/intune/remote-help/start-session)).
 

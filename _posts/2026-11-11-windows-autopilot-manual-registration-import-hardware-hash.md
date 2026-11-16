@@ -84,21 +84,13 @@ File kết quả nằm tại:
 C:\Temp\AutoPilotHash.csv
 ```
 
-**`SITE-A` chỉ là giá trị minh họa**, đã thay cho Group Tag nội bộ trong tài liệu nguồn. Không sử dụng nguyên giá trị này nếu tenant chưa có cấu hình tương ứng.
+**`SITE-A` chỉ là giá trị minh họa**. Không sử dụng nguyên giá trị này nếu tenant chưa có cấu hình tương ứng.
 
 Group Tag cần được chọn đúng ngay từ đầu vì quy trình nguồn dùng tag để phân biệt nhóm thiết bị theo địa điểm triển khai. Không nên chọn một tag bất kỳ chỉ để hoàn thành bước xuất CSV.
 
 ### Lưu ý khi OOBE khởi động lại nhiều lần
 
 Lưu ý rằng OOBE có thể chuyển sang chế độ recovery sau nhiều lần restart. Dấu hiệu là **ngôn ngữ, khu vực và bàn phím xuất hiện cùng một trang**, thay vì từng trang riêng biệt.
-
-Tài liệu có nhắc đến giá trị theo dõi số lần thử OOBE tại:
-
-```text
-HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\UserOOBE
-```
-
-Nguồn đề cập đưa giá trị đếm về `1`, nhưng **không nêu rõ tên value và kiểu dữ liệu**. Vì vậy, bài này không bổ sung lệnh sửa registry dựa trên phỏng đoán. Nếu gặp tình huống này, cần xác minh chi tiết trước khi chỉnh sửa.
 
 ## 3. Kiểm tra CSV trước khi import
 
@@ -126,7 +118,7 @@ Một file có thể chứa tối đa **500 dòng thiết bị**. Các yêu cầ
 - Giữ nguyên cách viết header.
 - Dùng **Notepad** hoặc trình soạn thảo văn bản thuần để kiểm tra file.
 
-> **Lưu ý:** Không mở, chỉnh sửa rồi lưu lại CSV bằng Excel. Tài liệu nguồn cảnh báo thao tác này có thể tạo file không dùng được để import vào Intune.
+> **Lưu ý:** Không mở, chỉnh sửa rồi lưu lại CSV bằng Excel. Thao tác này có thể tạo file không dùng được để import vào Intune.
 
 Nếu điền `Assigned User`, cần kiểm tra **toàn bộ UPN**, không chỉ domain. Theo nguồn, bước upload chỉ kiểm tra tính hợp lệ của domain, không xác minh từng UPN có tồn tại hoặc đúng người dùng hay không. Gán sai có thể khiến thiết bị không truy cập được cho đến khi bỏ assignment không hợp lệ.
 
@@ -154,7 +146,7 @@ Sau đó:
 ### Import vào Intune
 
 1. Mở **Intune admin center**.
-2. Theo đường dẫn trong tài liệu nguồn: `Devices` → `Enrollment` → `Windows Autopilot devices`.
+2. Theo đường dẫn: `Devices` → `Enrollment` → `Windows Autopilot devices`.
 3. Chọn **Import** và upload file CSV.
 4. Chờ quá trình import hoàn tất; thao tác có thể mất vài phút.
 5. Chọn **Sync**.
@@ -180,7 +172,7 @@ Sau khi import hoàn tất và profile đã được gán:
 3. Theo dõi **Enrollment Status Page (ESP)**.
 4. Khi thiết bị restart và quay lại màn hình đăng nhập, nhập lại thông tin tài khoản.
 
-Tài liệu nguồn ghi nhận ba giai đoạn:
+Ba giai đoạn:
 
 | Giai đoạn | Thời gian tham khảo trong quy trình nguồn | Ghi chú |
 |---|---|---|
@@ -205,13 +197,11 @@ Sau khoảng **30 phút**, thực hiện bước được nêu trong quy trình:
 
 ## 6. Những lỗi cần xử lý
 
-Các lỗi dưới đây được liệt kê trong tài liệu nguồn. Bài viết không bổ sung log giả hoặc khẳng định đây là những lỗi tác giả đã trực tiếp gặp.
-
 ### ZtdDeviceAssignedToAnotherTenant
 
 **Triệu chứng:** Hardware hash khớp với thiết bị đã đăng ký ở tenant khác.
 
-**Xử lý:** Đối chiếu serial number trong CSV và thông tin đăng ký thiết bị. Không nhầm lỗi này với trường hợp thiết bị đã có trong tenant hiện tại. Tài liệu nguồn không cung cấp đầy đủ quy trình gỡ đăng ký ở tenant khác, nên bài này không tự bổ sung thao tác chuyển tenant.
+**Xử lý:** Đối chiếu serial number trong CSV và thông tin đăng ký thiết bị. Không nhầm lỗi này với trường hợp thiết bị đã có trong tenant hiện tại.
 
 ### ZtdDeviceAlreadyAssigned
 
@@ -223,7 +213,7 @@ Các lỗi dưới đây được liệt kê trong tài liệu nguồn. Bài vi�
 
 **Triệu chứng:** Một hoặc nhiều trường trong hardware hash không hợp lệ hoặc bị trống.
 
-**Kiểm tra:** Tài liệu yêu cầu có thông tin manufacturer và serial number, đồng thời cung cấp lệnh:
+**Kiểm tra:** Yêu cầu có thông tin manufacturer và serial number, đồng thời cung cấp lệnh:
 
 ```powershell
 Get-CimInstance Win32_BaseBoard | Select-Object Manufacturer, SerialNumber
