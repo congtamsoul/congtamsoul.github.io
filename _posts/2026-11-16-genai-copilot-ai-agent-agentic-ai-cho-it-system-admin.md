@@ -3,7 +3,7 @@ layout: post
 title: "GenAI, Copilot, AI Agent hay Agentic AI: phân biệt từ góc nhìn thực chiến của một IT System Admin"
 seo_title: "Phân biệt GenAI, Copilot, AI Agent, Agentic AI"
 description: "Phân biệt Traditional AI, GenAI, RAG, Copilot, AI Workflow, AI Agent, Agentic AI và Multi-Agent qua các ví dụ thật với Intune, Power Automate, Power BI."
-date: 2026-11-17
+date: 2026-11-16
 author: "Tam Nguyen"
 reading_time: 10
 topic: dx
