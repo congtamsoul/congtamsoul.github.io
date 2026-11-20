@@ -19,6 +19,8 @@ goatcounter:
 markdown: kramdown
 plugins:
   - jekyll-redirect-from
+  - jekyll-feed
+  - jekyll-sitemap
 
 defaults:
   - scope:
