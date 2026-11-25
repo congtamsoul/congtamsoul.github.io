@@ -825,6 +825,20 @@ html[data-theme="light"] .comments-section .giscus { background: var(--bg-card);
 .prose th, .prose td { border: 1px solid var(--border); padding: 10px 13px; text-align: left; }
 .prose th { background: var(--bg-soft); font-weight: 650; }
 
+.post-cta {
+  margin: 32px 0;
+  padding: 20px 22px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  font-size: 15px;
+  line-height: 1.65;
+}
+.post-cta h2 { margin: 0 0 8px; font-size: 19px; }
+.post-cta p { margin: 0 0 8px; }
+.post-cta .post-cta-signature { margin-bottom: 0; font-weight: 600; color: var(--text); }
+
 /* TOC sidebar */
 .toc { position: sticky; top: 90px; align-self: start; }
 .toc h5 {
@@ -938,6 +952,7 @@ html[data-theme="light"] .comments-section .giscus { background: var(--bg-card);
     -webkit-overflow-scrolling: touch;
   }
   .prose blockquote { padding: 12px 14px; }
+  .post-cta { padding: 16px; }
   .callout { gap: 10px; padding: 14px 12px; }
   .share-row { flex-wrap: wrap; }
   .share-row .btn { flex: 1 1 calc(50% - 4px); justify-content: center; text-align: center; }

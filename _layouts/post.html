@@ -26,6 +26,8 @@ layout: default
       <div class="prose">
         {{ content }}
 
+        {% include post-cta.html %}
+
         <div class="share-row">
           <a class="btn btn-ghost" href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer" data-i18n="share_linkedin">Chia sẻ LinkedIn</a>
           <a class="btn btn-ghost" href="https://www.facebook.com/sharer/sharer.php?u={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener noreferrer" data-i18n="share_facebook">Chia sẻ Facebook</a>
